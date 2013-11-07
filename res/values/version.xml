@@ -15,16 +15,5 @@
   limitations under the License.
 -->
 <resources>
-    <string-array name="titles_array">
-        <item>List files (w/ pagination)</item>
-        <item>Query files</item>
-        <item>Create a file</item>
-        <item>Create a folder</item>
-        <item>Edit metadata</item>
-        <item>Edit contents</item>
-        <item>Batch requests</item>
-        <item>Synchronous requests</item>
-        <item>Create a file with creator activity</item>
-        <item>Open a file with opener activity</item>
-    </string-array>
+    <integer name="google_play_services_version">4105030</integer>
 </resources>

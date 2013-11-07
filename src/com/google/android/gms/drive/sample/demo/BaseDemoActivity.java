@@ -16,6 +16,7 @@ package com.google.android.gms.drive.sample.demo;
 
 import com.google.android.gms.GoogleApiClient;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.drive.Drive;
 
 import android.accounts.Account;
@@ -167,6 +168,8 @@ public abstract class BaseDemoActivity extends Activity implements
     public void onConnectionFailed(ConnectionResult result) {
         Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
         if (!result.hasResolution()) {
+            // show the localized error dialog.
+            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this, 0).show();
             return;
         }
         try {
