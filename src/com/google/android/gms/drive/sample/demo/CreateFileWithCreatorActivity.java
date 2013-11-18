@@ -55,6 +55,7 @@ public class CreateFileWithCreatorActivity extends BaseDemoActivity {
                         OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
                 showMessage("File created with ID: " + driveId);
             }
+            finish();
             break;
         default:
             super.onActivityResult(requestCode, resultCode, data);

@@ -33,6 +33,16 @@
         <activity android:name=".ListFilesActivity"></activity>
         <activity android:name=".QueryFilesActivity"></activity>
         
+        <activity android:name=".BatchRequestsActivity"></activity>
+        <activity android:name=".SyncRequestsActivity"></activity>
+        
+        <activity android:name=".CreateFileActivity"></activity>
+        <activity android:name=".CreateFolderActivity"></activity>
+        <activity android:name=".EditContentsActivity"></activity>
+        <activity android:name=".EditMetadataActivity"></activity>
+        <activity android:name=".CreateFileWithCreatorActivity"></activity>
+        <activity android:name=".OpenFileWithOpenerActivity"></activity>
+        
     </application>
 
 </manifest>

@@ -53,8 +53,7 @@ public class SyncRequestsActivity extends BaseDemoActivity {
                 // create a new text file with empty contents
                 MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                         .setTitle("Hello world")
-                        .setMimeType("text/plain")
-                        .build();
+                        .setMimeType("text/plain").build();
                 DriveFileResult fileResult = Drive.DriveApi.getRootFolder().createFile(
                         getGoogleApiClient(), changeSet, contentsResult.getContents()).await();
                 if (!fileResult.getStatus().isSuccess()) {

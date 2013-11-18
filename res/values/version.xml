@@ -15,5 +15,5 @@
   limitations under the License.
 -->
 <resources>
-    <integer name="google_play_services_version">4105030</integer>
+    <integer name="google_play_services_version">4106000</integer>
 </resources>

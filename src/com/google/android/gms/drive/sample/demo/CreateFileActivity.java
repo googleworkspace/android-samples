@@ -49,8 +49,7 @@ public class CreateFileActivity extends BaseDemoActivity implements
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                 .setTitle("New file")
                 .setMimeType("text/plain")
-                .setStarred(true)
-                .build();
+                .setStarred(true).build();
         // create a file on root folder
         Drive.DriveApi.getRootFolder().createFile(
                 getGoogleApiClient(), changeSet, result.getContents()).addResultCallback(this);

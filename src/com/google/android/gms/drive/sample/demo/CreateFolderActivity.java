@@ -24,16 +24,10 @@ import android.os.Bundle;
 public class CreateFolderActivity extends BaseDemoActivity implements OnCreateFolderCallback {
 
     @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
-    }
-
-    @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                .setTitle("New folder")
-                .build();
+                .setTitle("New folder").build();
         Drive.DriveApi.getRootFolder().createFolder(
                 getGoogleApiClient(), changeSet).addResultCallback(this);
     }
