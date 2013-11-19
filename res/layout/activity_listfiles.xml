@@ -22,7 +22,7 @@
     <ListView
         android:id="@+id/listViewResults"
         android:layout_width="match_parent"
-        android:layout_height="200dip">
+        android:layout_height="match_parent">
     </ListView>
 
 </LinearLayout>
