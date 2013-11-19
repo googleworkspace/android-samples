@@ -16,7 +16,7 @@
 -->
 <resources>
 
-    <string name="app_name">Google Play Services Drive Demos</string>
+    <string name="app_name">Google Drive Android API Demos</string>
     <string name="menu_settings">Settings</string>
 
 </resources>

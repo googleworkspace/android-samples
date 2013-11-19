@@ -1,6 +1,6 @@
-# Google Play Services Drive Demos
+# Google Drive Android API Demos
 
-Google Play Services Drive Demos app illustrates all possible ways to talk to Drive service with the use of interfaces available in Google Play Services. The calls illustrated within the app are:
+Google Drive Android API Demos app illustrates all possible ways to talk to Drive service with the use of interfaces available in [Google Play Services](http://developer.android.com/google/play-services). The calls illustrated within the app are:
 
 * Listing files with pagination
 * Querying files
