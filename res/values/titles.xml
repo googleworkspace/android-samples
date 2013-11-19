@@ -16,7 +16,7 @@
 -->
 <resources>
     <string-array name="titles_array">
-        <item>List files (w/ pagination)</item>
+        <item>List files with pagination</item>
         <item>Query files</item>
         <item>Create a file</item>
         <item>Create a folder</item>

@@ -14,6 +14,50 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-public class QueryFilesActivity extends BaseDemoActivity {
+import android.os.Bundle;
+import android.widget.ListView;
 
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
+import com.google.android.gms.drive.DriveFolder.OnChildrenRetrievedCallback;
+import com.google.android.gms.drive.query.Filters;
+import com.google.android.gms.drive.query.Query;
+import com.google.android.gms.drive.query.SearchableField;
+
+/**
+ * An activity to illustrate how to query files.
+ */
+public class QueryFilesActivity extends BaseDemoActivity
+        implements OnChildrenRetrievedCallback {
+
+    private ListView mResultsListView;
+    private ResultsAdapter mResultsAdapter;
+
+    @Override
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
+        setContentView(R.layout.activity_listfiles);
+        mResultsListView = (ListView) findViewById(R.id.listViewResults);
+        mResultsAdapter = new ResultsAdapter(this);
+        mResultsListView.setAdapter(mResultsAdapter);
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        super.onConnected(connectionHint);
+        Query query = new Query.Builder()
+                .addFilters(Filters.eq(SearchableField.mimeType(), "text/plain"))
+                .build();
+        Drive.DriveApi.query(getGoogleApiClient(), query).addResultCallback(this);
+    }
+
+    @Override
+    public void onChildrenRetrieved(MetadataBufferResult result) {
+        if (!result.getStatus().isSuccess()) {
+            showMessage("Problem while retrieving results");
+            return;
+        }
+        mResultsAdapter.clear();
+        mResultsAdapter.append(result.getMetadataBuffer());
+    }
 }

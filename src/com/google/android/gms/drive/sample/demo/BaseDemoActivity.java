@@ -112,9 +112,12 @@ public abstract class BaseDemoActivity extends Activity implements
         }
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(Drive.API).addScope(Drive.SCOPE_FILE)
-                    .setAccountName(mAccountName).addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this).build();
+                    .addApi(Drive.API)
+                    .addScope(Drive.SCOPE_FILE)
+                    .setAccountName(mAccountName)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListeners(this)
+                    .build();
         }
         mGoogleApiClient.connect();
     }

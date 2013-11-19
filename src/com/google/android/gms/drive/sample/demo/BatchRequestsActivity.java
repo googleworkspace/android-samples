@@ -14,6 +14,8 @@
 
 package com.google.android.gms.drive.sample.demo;
 
+import android.os.Bundle;
+
 import com.google.android.gms.Batch;
 import com.google.android.gms.Batch.BatchCallback;
 import com.google.android.gms.PendingResult;
@@ -26,16 +28,16 @@ import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResource.MetadataResult;
 import com.google.android.gms.drive.DriveResource.OnMetadataRetrievedCallback;
 
-import android.os.Bundle;
-
+/**
+ * An activity to illustrate how to make batch requests to Drive
+ * service backend.
+ */
 public class BatchRequestsActivity extends BaseDemoActivity {
 
-    @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
-        setContentView(R.layout.activity_batchrequests);
-    }
-
+    /**
+     * Handles the Drive service initialization. Batches two requests to read
+     * a file's metadata and contents, and handles the batch request's response.
+     */
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);

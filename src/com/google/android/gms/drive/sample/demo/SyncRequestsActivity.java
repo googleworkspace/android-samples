@@ -14,25 +14,23 @@
 
 package com.google.android.gms.drive.sample.demo;
 
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.MetadataChangeSet;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-
+/**
+ * An activity to illustrate making synchronous requests to
+ * the Drive service backend.
+ */
 public class SyncRequestsActivity extends BaseDemoActivity {
 
     private static String TAG = "SyncRequestsActivity";
-
-    @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
-        setContentView(R.layout.activity_syncrequests);
-    }
 
     @Override
     public void onConnected(Bundle connectionHint) {
@@ -40,6 +38,10 @@ public class SyncRequestsActivity extends BaseDemoActivity {
         new CreateFileAsyncTask().execute();
     }
 
+    /**
+     * An async task that creates a new text file by
+     * creating new contents and metadata entities on user's root folder.
+     */
     public class CreateFileAsyncTask extends AsyncTask<Void, Void, DriveFile> {
 
         @Override

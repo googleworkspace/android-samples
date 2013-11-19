@@ -14,13 +14,17 @@
 
 package com.google.android.gms.drive.sample.demo;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
-import android.content.Intent;
-import android.os.Bundle;
-
+/**
+ * An activity to illustrate how to open a file with the
+ * opener intent.
+ */
 public class OpenFileWithOpenerActivity extends BaseDemoActivity {
 
     private static final int REQUEST_CODE_OPENER = 1;

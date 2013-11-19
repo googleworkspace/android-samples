@@ -14,6 +14,9 @@
 
 package com.google.android.gms.drive.sample.demo;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveApi.OnNewContentsCallback;
@@ -21,9 +24,10 @@ import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
-import android.content.Intent;
-import android.os.Bundle;
-
+/**
+ * An activity that illustrates how to use the creator
+ * intent to create a new file.
+ */
 public class CreateFileWithCreatorActivity extends BaseDemoActivity {
 
     protected static final int REQUEST_CODE_CREATOR = 1;

@@ -14,6 +14,8 @@
 
 package com.google.android.gms.drive.sample.demo;
 
+import android.os.Bundle;
+
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveApi.OnNewContentsCallback;
@@ -21,16 +23,11 @@ import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.DriveFolder.OnCreateFileCallback;
 import com.google.android.gms.drive.MetadataChangeSet;
 
-import android.os.Bundle;
-
+/**
+ * An activity to illustrate how to create a file.
+ */
 public class CreateFileActivity extends BaseDemoActivity implements
         OnNewContentsCallback, OnCreateFileCallback {
-
-    @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
-        setContentView(R.layout.activity_createfile);
-    }
 
     @Override
     public void onConnected(Bundle connectionHint) {

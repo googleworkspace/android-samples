@@ -14,13 +14,16 @@
 
 package com.google.android.gms.drive.sample.demo;
 
+import android.os.Bundle;
+
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveFolder.DriveFolderResult;
 import com.google.android.gms.drive.DriveFolder.OnCreateFolderCallback;
 import com.google.android.gms.drive.MetadataChangeSet;
 
-import android.os.Bundle;
-
+/**
+ * An activity to illustrate how to create a new folder.
+ */
 public class CreateFolderActivity extends BaseDemoActivity implements OnCreateFolderCallback {
 
     @Override

@@ -64,5 +64,14 @@ public class EditContentsActivity extends BaseDemoActivity {
             }
             return false;
         }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!result) {
+                showMessage("Error while editing contents");
+                return;
+            }
+            showMessage("Succesfully edited contents");
+        }
     }
 }

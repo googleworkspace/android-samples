@@ -23,10 +23,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+/**
+ * An activity to list all available demo activities.
+ */
 public class HomeActivity extends Activity {
 
   @SuppressWarnings("rawtypes")
-  private Class[] sActivities = new Class[] {
+  private final Class[] sActivities = new Class[] {
       ListFilesActivity.class,
       QueryFilesActivity.class,
       CreateFileActivity.class,

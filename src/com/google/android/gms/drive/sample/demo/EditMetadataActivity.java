@@ -14,6 +14,8 @@
 
 package com.google.android.gms.drive.sample.demo;
 
+import android.os.Bundle;
+
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
@@ -21,8 +23,9 @@ import com.google.android.gms.drive.DriveResource.MetadataResult;
 import com.google.android.gms.drive.DriveResource.OnMetadataUpdatedCallback;
 import com.google.android.gms.drive.MetadataChangeSet;
 
-import android.os.Bundle;
-
+/**
+ * An activity to edit metadata of a file.
+ */
 public class EditMetadataActivity extends BaseDemoActivity implements OnMetadataUpdatedCallback {
 
     @Override
