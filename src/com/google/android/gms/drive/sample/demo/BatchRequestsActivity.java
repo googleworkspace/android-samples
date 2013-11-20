@@ -43,6 +43,7 @@ public class BatchRequestsActivity extends BaseDemoActivity {
         super.onConnected(connectionHint);
         // retrieve meta data and open contents of a file.
         DriveFile file = Drive.DriveApi.getFile(
+                getGoogleApiClient(),
                 DriveId.createFromResourceId("0ByfSjdPVs9MZcEE3bzJCc3NsRkE"));
         final PendingResult<MetadataResult, OnMetadataRetrievedCallback> metadataResult = file
                 .getMetadata(getGoogleApiClient());

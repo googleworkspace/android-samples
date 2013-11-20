@@ -46,7 +46,7 @@ public class QueryFilesActivity extends BaseDemoActivity
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
         Query query = new Query.Builder()
-                .addFilters(Filters.eq(SearchableField.mimeType(), "text/plain"))
+                .addFilter(Filters.eq(SearchableField.MIME_TYPE, "text/plain"))
                 .build();
         Drive.DriveApi.query(getGoogleApiClient(), query).addResultCallback(this);
     }

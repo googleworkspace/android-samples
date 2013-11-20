@@ -16,11 +16,11 @@ package com.google.android.gms.drive.sample.demo;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.MetadataChangeSet;
 
@@ -46,26 +46,22 @@ public class SyncRequestsActivity extends BaseDemoActivity {
 
         @Override
         protected DriveFile doInBackground(Void... arg0) {
-            try {
-                ContentsResult contentsResult =
-                        Drive.DriveApi.newContents(getGoogleApiClient()).await();
-                if (!contentsResult.getStatus().isSuccess()) {
-                    return null;
-                }
-                // create a new text file with empty contents
-                MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                        .setTitle("Hello world")
-                        .setMimeType("text/plain").build();
-                DriveFileResult fileResult = Drive.DriveApi.getRootFolder().createFile(
-                        getGoogleApiClient(), changeSet, contentsResult.getContents()).await();
-                if (!fileResult.getStatus().isSuccess()) {
-                    return null;
-                }
-                return fileResult.getDriveFile();
-            } catch (InterruptedException e) {
-                Log.e(TAG, "InterruptedException during contents creation", e);
+            ContentsResult contentsResult =
+                    Drive.DriveApi.newContents(getGoogleApiClient()).await();
+            if (!contentsResult.getStatus().isSuccess()) {
+                return null;
             }
-            return null;
+            // create a new text file with empty contents
+            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                    .setTitle("Hello world")
+                    .setMimeType("text/plain").build();
+            DriveFolder rootFolder = Drive.DriveApi.getRootFolder(getGoogleApiClient());
+            DriveFileResult fileResult = rootFolder.createFile(
+                    getGoogleApiClient(), changeSet, contentsResult.getContents()).await();
+            if (!fileResult.getStatus().isSuccess()) {
+                return null;
+            }
+            return fileResult.getDriveFile();
         }
 
         @Override
@@ -77,6 +73,5 @@ public class SyncRequestsActivity extends BaseDemoActivity {
             }
             showMessage("File created: " + result.getDriveId());
         }
-
     }
 }

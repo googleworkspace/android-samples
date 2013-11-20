@@ -32,6 +32,7 @@ public class EditMetadataActivity extends BaseDemoActivity implements OnMetadata
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
         DriveFile file = Drive.DriveApi.getFile(
+                getGoogleApiClient(),
                 DriveId.createFromResourceId("0ByfSjdPVs9MZcEE3bzJCc3NsRkE"));
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                 .setStarred(true)

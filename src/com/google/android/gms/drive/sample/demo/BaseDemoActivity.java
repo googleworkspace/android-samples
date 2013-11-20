@@ -14,11 +14,6 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-import com.google.android.gms.GoogleApiClient;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.drive.Drive;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -27,6 +22,11 @@ import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.android.gms.GoogleApiClient;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.drive.Drive;
 
 /**
  * An abstract activity that handles authorization and connection to the Drive
@@ -116,7 +116,7 @@ public abstract class BaseDemoActivity extends Activity implements
                     .addScope(Drive.SCOPE_FILE)
                     .setAccountName(mAccountName)
                     .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListeners(this)
+                    .addOnConnectionFailedListener(this)
                     .build();
         }
         mGoogleApiClient.connect();

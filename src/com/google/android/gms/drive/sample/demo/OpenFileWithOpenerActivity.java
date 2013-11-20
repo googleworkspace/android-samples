@@ -15,7 +15,10 @@
 package com.google.android.gms.drive.sample.demo;
 
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveId;
@@ -27,15 +30,23 @@ import com.google.android.gms.drive.OpenFileActivityBuilder;
  */
 public class OpenFileWithOpenerActivity extends BaseDemoActivity {
 
+    private static final String TAG = "OpenFileWithOpenerActivity";
+
     private static final int REQUEST_CODE_OPENER = 1;
 
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        Intent i = Drive.DriveApi
-                .newOpenFileActivityBuilder(getGoogleApiClient())
-                .setMimeType(new String[] { "text/plain", "text/html" }).build();
-        startActivityForResult(i, REQUEST_CODE_OPENER);
+        IntentSender intentSender = Drive.DriveApi
+                .newOpenFileActivityBuilder()
+                .setMimeType(new String[] { "text/plain", "text/html" })
+                .build(getGoogleApiClient());
+        try {
+            startIntentSenderForResult(
+                    intentSender, REQUEST_CODE_OPENER, null, 0, 0, 0);
+        } catch (SendIntentException e) {
+          Log.w(TAG, "Unable to send intent", e);
+        }
     }
 
     @Override

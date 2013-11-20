@@ -48,7 +48,7 @@ public class CreateFileActivity extends BaseDemoActivity implements
                 .setMimeType("text/plain")
                 .setStarred(true).build();
         // create a file on root folder
-        Drive.DriveApi.getRootFolder().createFile(
+        Drive.DriveApi.getRootFolder(getGoogleApiClient()).createFile(
                 getGoogleApiClient(), changeSet, result.getContents()).addResultCallback(this);
     }
 

@@ -14,17 +14,17 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveId;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveId;
 
 /**
  * An activity to illustrate how to edit contents of a Drive file.
@@ -37,6 +37,7 @@ public class EditContentsActivity extends BaseDemoActivity {
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
         DriveFile file = Drive.DriveApi.getFile(
+                getGoogleApiClient(),
                 DriveId.createFromResourceId("0ByfSjdPVs9MZTHBmMVdSeWxaNTg"));
         new EditContentsAsyncTask().execute(file);
     }
@@ -57,8 +58,6 @@ public class EditContentsActivity extends BaseDemoActivity {
                 com.google.android.gms.Status status = file.commitAndCloseContents(
                         getGoogleApiClient(), contentsResult.getContents()).await();
                 return status.getStatus().isSuccess();
-            } catch (InterruptedException e) {
-                Log.e(TAG, "Call interrupted", e);
             } catch (IOException e) {
                 Log.e(TAG, "IOException while appending to the output stream", e);
             }

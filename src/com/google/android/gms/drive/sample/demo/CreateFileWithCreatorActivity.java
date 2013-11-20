@@ -15,7 +15,10 @@
 package com.google.android.gms.drive.sample.demo;
 
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
@@ -30,21 +33,30 @@ import com.google.android.gms.drive.OpenFileActivityBuilder;
  */
 public class CreateFileWithCreatorActivity extends BaseDemoActivity {
 
+    private static final String TAG = "CreateFileWithCreatorActivity";
+
     protected static final int REQUEST_CODE_CREATOR = 1;
 
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
         OnNewContentsCallback onContentsCallback = new OnNewContentsCallback() {
+
             @Override
             public void onNewContents(ContentsResult result) {
                 MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
                         .setMimeType("text/html").build();
-                Intent createIntent = Drive.DriveApi
-                        .newCreateFileActivityBuilder(getGoogleApiClient())
+                IntentSender intentSender = Drive.DriveApi
+                        .newCreateFileActivityBuilder()
                         .setInitialMetadata(metadataChangeSet)
-                        .setInitialContents(result.getContents()).build();
-                startActivityForResult(createIntent, REQUEST_CODE_CREATOR);
+                        .setInitialContents(result.getContents())
+                        .build(getGoogleApiClient());
+                try {
+                    startIntentSenderForResult(
+                            intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
+                } catch (SendIntentException e) {
+                  Log.w(TAG, "Unable to send intent", e);
+                }
             }
         };
         Drive.DriveApi.newContents(getGoogleApiClient()).addResultCallback(onContentsCallback);

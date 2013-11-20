@@ -31,7 +31,7 @@ public class CreateFolderActivity extends BaseDemoActivity implements OnCreateFo
         super.onConnected(connectionHint);
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                 .setTitle("New folder").build();
-        Drive.DriveApi.getRootFolder().createFolder(
+        Drive.DriveApi.getRootFolder(getGoogleApiClient()).createFolder(
                 getGoogleApiClient(), changeSet).addResultCallback(this);
     }
 
