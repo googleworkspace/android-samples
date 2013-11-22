@@ -28,38 +28,40 @@ import android.widget.ListView;
  */
 public class HomeActivity extends Activity {
 
-  @SuppressWarnings("rawtypes")
-  private final Class[] sActivities = new Class[] {
-      ListFilesActivity.class,
-      QueryFilesActivity.class,
-      CreateFileActivity.class,
-      CreateFolderActivity.class,
-      EditMetadataActivity.class,
-      EditContentsActivity.class,
-      BatchRequestsActivity.class,
-      SyncRequestsActivity.class,
-      CreateFileWithCreatorActivity.class,
-      OpenFileWithOpenerActivity.class
-  };
+    @SuppressWarnings("rawtypes")
+    private final Class[] sActivities = new Class[] {
+            ListFilesActivity.class,
+            QueryFilesActivity.class,
+            CreateFileActivity.class,
+            CreateFolderActivity.class,
+            RetreiveMetadataActivity.class,
+            EditMetadataActivity.class,
+            EditContentsActivity.class,
+            BatchRequestsActivity.class,
+            SyncRequestsActivity.class,
+            CreateFileWithCreatorActivity.class,
+            OpenFileWithOpenerActivity.class
+    };
 
-  private ListView mListViewSamples;
+    private ListView mListViewSamples;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_home);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
 
-    String[] titles = getResources().getStringArray(R.array.titles_array);
-    mListViewSamples = (ListView) findViewById(R.id.listViewSamples);
-    mListViewSamples.setAdapter(
-        new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles));
-    mListViewSamples.setOnItemClickListener(new OnItemClickListener() {
+        String[] titles = getResources().getStringArray(R.array.titles_array);
+        mListViewSamples = (ListView) findViewById(R.id.listViewSamples);
+        mListViewSamples.setAdapter(
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles));
+        mListViewSamples.setOnItemClickListener(new OnItemClickListener() {
 
-      @Override
-      public void onItemClick(AdapterView<?> arg0, View arg1, int i, long arg3) {
-          Intent intent = new Intent(getBaseContext(), sActivities[i]);
-          startActivity(intent);
-      }});
-  }
+                @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int i, long arg3) {
+                Intent intent = new Intent(getBaseContext(), sActivities[i]);
+                startActivity(intent);
+            }
+        });
+    }
 
 }
