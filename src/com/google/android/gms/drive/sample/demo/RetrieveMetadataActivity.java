@@ -21,7 +21,6 @@ public class RetrieveMetadataActivity extends BaseDemoActivity implements
         DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(),
                 DriveId.createFromResourceId("0ByfSjdPVs9MZcEE3bzJCc3NsRkE"));
         file.getMetadata(getGoogleApiClient()).addResultCallback(this);
-
     }
 
     @Override
