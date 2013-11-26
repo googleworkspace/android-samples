@@ -55,7 +55,7 @@ public class EditContentsActivity extends BaseDemoActivity {
                 }
                 OutputStream outputStream = contentsResult.getContents().getOutputStream();
                 outputStream.write("Hello world".getBytes());
-                com.google.android.gms.Status status = file.commitAndCloseContents(
+                com.google.android.gms.common.api.Status status = file.commitAndCloseContents(
                         getGoogleApiClient(), contentsResult.getContents()).await();
                 return status.getStatus().isSuccess();
             } catch (IOException e) {
