@@ -35,6 +35,7 @@ public class HomeActivity extends Activity {
             CreateFileActivity.class,
             CreateFolderActivity.class,
             RetrieveMetadataActivity.class,
+            RetrieveContentsActivity.class,
             EditMetadataActivity.class,
             EditContentsActivity.class,
             SyncRequestsActivity.class,
