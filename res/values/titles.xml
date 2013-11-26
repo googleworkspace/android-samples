@@ -23,7 +23,6 @@
         <item>Retrieve metadata</item>
         <item>Edit metadata</item>
         <item>Edit contents</item>
-        <item>Batch requests</item>
         <item>Synchronous requests</item>
         <item>Create a file with creator activity</item>
         <item>Open a file with opener activity</item>
