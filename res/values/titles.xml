@@ -27,5 +27,9 @@
         <item>Synchronous requests</item>
         <item>Create a file with creator activity</item>
         <item>Open a file with opener activity</item>
+        <item>Create a file in a folder</item>
+        <item>Create a folder in a folder</item>
+        <item>List files in a folder</item>
+        <item>Query files in a folder</item>
     </string-array>
 </resources>

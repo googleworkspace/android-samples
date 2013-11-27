@@ -55,7 +55,11 @@
         <activity android:name="com.google.android.gms.drive.sample.demo.EditMetadataActivity"></activity>
         <activity android:name="com.google.android.gms.drive.sample.demo.CreateFileWithCreatorActivity"></activity>
         <activity android:name="com.google.android.gms.drive.sample.demo.OpenFileWithOpenerActivity"></activity>
-        
+        <activity android:name="com.google.android.gms.drive.sample.demo.RetrieveMetadataActivity"></activity>
+        <activity android:name="com.google.android.gms.drive.sample.demo.CreateFileInFolderActivity"></activity>
+        <activity android:name="com.google.android.gms.drive.sample.demo.CreateFolderInFolderActivity"></activity>
+        <activity android:name="com.google.android.gms.drive.sample.demo.ListFilesInFolderActivity"></activity>
+        <activity android:name="com.google.android.gms.drive.sample.demo.QueryFilesInFolderActivity"></activity>
     </application>
 
 </manifest>

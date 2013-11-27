@@ -40,7 +40,11 @@ public class HomeActivity extends Activity {
             EditContentsActivity.class,
             SyncRequestsActivity.class,
             CreateFileWithCreatorActivity.class,
-            OpenFileWithOpenerActivity.class
+            OpenFileWithOpenerActivity.class,
+            CreateFileInFolderActivity.class,
+            CreateFolderInFolderActivity.class,
+            ListFilesInFolderActivity.class,
+            QueryFilesInFolderActivity.class
     };
 
     private ListView mListViewSamples;
