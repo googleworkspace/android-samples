@@ -5,21 +5,31 @@ Drive service with the use of interfaces available in [Google Play
 Services](http://developer.android.com/google/play-services). The calls
 illustrated within the app are:
 
-* List files with pagination
-* Query files
-* Create a file
-* Create a folder
-* Retrieve metadata
-* Retrieve contents
-* Edit metadata
-* Edit contents
-* Synchronous requests
-* Create a file with creator activity
-* Open a file with opener activity
-* Create a file in a folder
-* Create a folder in a folder
-* List files in a folder
-* Query files in a folder
+### Listing and querying
+* [List files with pagination](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/ListFilesActivity.java)
+* [Query files](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/QueryFilesActivity.java)
+ 
+### Working with files and folders
+* [Create a file](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFileActivity.java)
+* [Create a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFolderActivity.java)
+* [Retrieve metadata](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/RetrieveMetadataActivity.java)
+* [Retrieve contents](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/RetrieveContentsActivity.java)
+* [Edit metadata](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/EditMetadataActivity.java)
+* [Edit contents](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/EditContentsActivity.java)
+
+### Intents
+* [Create a file with creator activity](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFileWithCreatorActivity.java)
+* [Open a file with opener activity](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/OpenFileWithOpenerActivity.java)
+
+### Hierarchical operations
+* [Create a file in a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFileInFolderActivity.java)
+* [Create a folder in a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFolderInFolderActivity.java)
+* [List files in a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/ListFilesInFolderActivity.java)
+* [Query files in a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/QueryFilesInFolderActivity.java)
+
+### Others
+* [Authorization, authentication and connection](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/BaseDemoActivity.java)
+* [Synchronous requests](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/SyncRequestsActivity.java)
 
 ## Can I run this app?
 
