@@ -32,6 +32,7 @@ illustrated within the app are:
 ### Others
 * [Authorization, authentication and connection](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/BaseDemoActivity.java)
 * [Synchronous requests](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/SyncRequestsActivity.java)
+* [Check file sync status](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CheckFileSyncStatusActivity.java)
 
 ## Can I run this app?
 

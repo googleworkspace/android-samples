@@ -46,7 +46,8 @@ public class HomeActivity extends Activity {
             CreateFileInFolderActivity.class,
             CreateFolderInFolderActivity.class,
             ListFilesInFolderActivity.class,
-            QueryFilesInFolderActivity.class
+            QueryFilesInFolderActivity.class,
+            CheckFileSyncStatusActivity.class
     };
 
     private ListView mListViewSamples;

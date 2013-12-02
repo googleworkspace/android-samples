@@ -33,5 +33,6 @@
         <item>Create a folder in a folder</item>
         <item>List files in a folder</item>
         <item>Query files in a folder</item>
+        <item>Check file sync status</item>
     </string-array>
 </resources>
