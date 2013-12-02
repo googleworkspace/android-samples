@@ -49,6 +49,7 @@
         <activity android:name="com.google.android.gms.drive.sample.demo.QueryFilesActivity"></activity>
         <activity android:name="com.google.android.gms.drive.sample.demo.SyncRequestsActivity"></activity>
         <activity android:name="com.google.android.gms.drive.sample.demo.RetrieveContentsActivity"></activity>
+        <activity android:name="com.google.android.gms.drive.sample.demo.RetrieveContentsWithProgressDialogActivity"></activity>
         <activity android:name="com.google.android.gms.drive.sample.demo.CreateFileActivity"></activity>
         <activity android:name="com.google.android.gms.drive.sample.demo.CreateFolderActivity"></activity>
         <activity android:name="com.google.android.gms.drive.sample.demo.EditContentsActivity"></activity>
