@@ -25,21 +25,22 @@ import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
 /**
- * An activity to illustrate how to open a file with the
+ * An activity to illustrate how to pick a folder with the
  * opener intent.
  */
-public class OpenFileWithOpenerActivity extends BaseDemoActivity {
+public class PickFolderWithOpenerActivity extends BaseDemoActivity {
 
-    private static final String TAG = "OpenFileWithOpenerActivity";
+    private static final String TAG = "PickFolderWithOpenerActivity";
 
     private static final int REQUEST_CODE_OPENER = 1;
 
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
+
         IntentSender intentSender = Drive.DriveApi
                 .newOpenFileActivityBuilder()
-                .setMimeType(new String[] { "text/plain", "text/html" })
+                .setMimeType(new String[] { "application/vnd.google-apps.folder" })
                 .build(getGoogleApiClient());
         try {
             startIntentSenderForResult(
@@ -51,17 +52,18 @@ public class OpenFileWithOpenerActivity extends BaseDemoActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
+        switch(requestCode) {
         case REQUEST_CODE_OPENER:
             if (resultCode == RESULT_OK) {
                 DriveId driveId = (DriveId) data.getParcelableExtra(
                         OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-                showMessage("Selected file's ID: " + driveId);
+                showMessage("Selected folder's ID: " + driveId);
             }
             finish();
             break;
         default:
             super.onActivityResult(requestCode, resultCode, data);
+            break;
         }
     }
 }

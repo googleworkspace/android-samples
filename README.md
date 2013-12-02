@@ -20,7 +20,8 @@ illustrated within the app are:
 
 ### Intents
 * [Create a file with creator activity](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFileWithCreatorActivity.java)
-* [Open a file with opener activity](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/OpenFileWithOpenerActivity.java)
+* [Pick a file with opener activity](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/PickFileWithOpenerActivity.java)
+* [Pick a folder with opener activity](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/PickFolderWithOpenerActivity.java)
 
 ### Hierarchical operations
 * [Create a file in a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFileInFolderActivity.java)
