@@ -22,7 +22,7 @@
         <item>Create a folder</item>
         <item>Retrieve metadata</item>
         <item>Retrieve contents</item>
-        <item>Retrieve contents and listen download progress</item>
+        <item>Listen download progress</item>
         <item>Edit metadata</item>
         <item>Edit contents</item>
         <item>Synchronous requests</item>
