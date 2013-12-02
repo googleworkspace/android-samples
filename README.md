@@ -14,6 +14,7 @@ illustrated within the app are:
 * [Create a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFolderActivity.java)
 * [Retrieve metadata](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/RetrieveMetadataActivity.java)
 * [Retrieve contents](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/RetrieveContentsActivity.java)
+* [Retrieve contents with download progress](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/RetrieveContentsWithProgressDialogActivity.java)
 * [Edit metadata](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/EditMetadataActivity.java)
 * [Edit contents](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/EditContentsActivity.java)
 
