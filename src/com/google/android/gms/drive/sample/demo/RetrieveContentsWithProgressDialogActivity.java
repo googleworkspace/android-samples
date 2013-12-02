@@ -38,15 +38,20 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
 
     private static final String TAG = "RetrieveFileWithProgressDialogActivity";
 
+    /**
+     * Request code to handle the result from file opening activity.
+     */
     private static final int REQUEST_CODE_OPENER = 1;
 
-    public enum WaitingOp { RETRIEVE }
-
+    /**
+     * Progress bar to show the current download progress of the file.
+     */
     private ProgressBar mProgressBar;
 
-    private WaitingOp mWaitingOp;
-
-    private DriveId mSelectedDriveId;
+    /**
+     * File that is selected with the open file activity.
+     */
+    private DriveId mSelectedFileDriveId;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -59,19 +64,21 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        if (mWaitingOp == WaitingOp.RETRIEVE) {
+
+        // If there is a selected file, open its contents.
+        if (mSelectedFileDriveId != null) {
             open();
             return;
         }
 
-        // let the user pick any file
+        // Let the user pick an mp4 or a jpeg file if there are
+        // no files selected by the user.
         IntentSender intentSender = Drive.DriveApi
                 .newOpenFileActivityBuilder()
                 .setMimeType(new String[]{ "video/mp4", "image/jpeg" })
                 .build(getGoogleApiClient());
         try {
             startIntentSenderForResult(intentSender, REQUEST_CODE_OPENER, null, 0, 0, 0);
-            mWaitingOp = WaitingOp.RETRIEVE;
         } catch (SendIntentException e) {
           Log.w(TAG, "Unable to send intent", e);
         }
@@ -80,7 +87,7 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_OPENER && resultCode == RESULT_OK) {
-            mSelectedDriveId = (DriveId) data.getParcelableExtra(
+            mSelectedFileDriveId = (DriveId) data.getParcelableExtra(
                     OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -88,21 +95,22 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
     }
 
     private void open() {
-        mWaitingOp = null;
-        // reset progress dialog
+        // Reset progress dialog back to zero as we're
+        // initiating an opening request.
         mProgressBar.setProgress(0);
         DownloadProgressListener listener = new DownloadProgressListener() {
             @Override
             public void onProgress(long bytesDownloaded, long bytesExpected) {
-                // update progress dialog with the latest status
+                // Update progress dialog with the latest progress.
                 int progress = (int)(bytesDownloaded*100/bytesExpected);
                 Log.d(TAG, String.format("Loading progress: %d percent", progress));
                 mProgressBar.setProgress(progress);
             }
         };
-        Drive.DriveApi.getFile(getGoogleApiClient(), mSelectedDriveId)
+        Drive.DriveApi.getFile(getGoogleApiClient(), mSelectedFileDriveId)
             .openContents(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, listener)
             .addResultCallback(this);
+        mSelectedFileDriveId = null;
     }
 
     @Override
