@@ -1,0 +1,5 @@
+bin/*
+gen/*
+.settings/*
+project.properties
+.project
