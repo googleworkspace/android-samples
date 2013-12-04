@@ -22,8 +22,6 @@
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="19" />
-
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     
     <application
         android:allowBackup="true"
