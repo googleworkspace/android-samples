@@ -52,38 +52,18 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     private static final int REQUEST_CODE_CREATOR = 2;
     private static final int REQUEST_CODE_RESOLUTION = 3;
 
-    private Bitmap mImage;
     private GoogleApiClient mGoogleApiClient;
-
-    /**
-     * Create the API client.
-     */
-    private void createClient() {
-        // Create the API client and bind it to an instance variable.
-        // We use this instance as the callback for connection and connection
-        // failures.
-        // Since no account name is passed, the user is prompted to choose.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Drive.API)
-                .addScope(Drive.SCOPE_FILE)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        // API calls don't have to wait for connection to complete, they are
-        // queued.
-        mGoogleApiClient.connect();
-    }
 
     /**
      * Create a new file and save it to Drive.
      */
-    private void saveFileToDrive() {
+    private void saveFileToDrive(final Bitmap image) {
+        // Start by creating a new contents, and setting a callback.
         Log.i(TAG, "Creating new contents.");
-        // Start by creating a new contents.
         Drive.DriveApi.newContents(mGoogleApiClient).addResultCallback(new OnNewContentsCallback() {
 
             /*
-             * Called when contents creation has completed or failed.
+             * (non-Javadoc)
              * @see com.google.android.gms.drive.DriveApi.OnNewContentsCallback#
              * onNewContents
              * (com.google.android.gms.drive.DriveApi.ContentsResult)
@@ -103,7 +83,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                 OutputStream outputStream = result.getContents().getOutputStream();
                 // Write the bitmap data from it.
                 ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
-                mImage.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
+                image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
                 try {
                     outputStream.write(bitmapStream.toByteArray());
                 } catch (IOException e1) {
@@ -129,14 +109,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         });
     }
 
-    /**
-     * Start an intent to launch the camera.
-     */
-    private void startCameraIntent() {
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, REQUEST_CODE_CAPTURE_IMAGE);
-    }
-
     /*
      * (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -144,10 +116,18 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Create the API client.
-        createClient();
-        // This activity has no UI of its own. Just start the camera.
-        startCameraIntent();
+        // Create the API client and bind it to an instance variable.
+        // We use this instance as the callback for connection and connection
+        // failures.
+        // Since no account name is passed, the user is prompted to choose.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Drive.API)
+                .addScope(Drive.SCOPE_FILE)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        // Connect the client. Once connected, the camera is launched.
+        mGoogleApiClient.connect();
     }
 
     /*
@@ -158,20 +138,20 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
-        // Called after a photo has been taken.
             case REQUEST_CODE_CAPTURE_IMAGE:
+                // Called after a photo has been taken.
                 if (resultCode == Activity.RESULT_OK) {
                     // Store the image data as a bitmap for writing later.
-                    mImage = (Bitmap) data.getExtras().get("data");
-                    saveFileToDrive();
+                    saveFileToDrive((Bitmap) data.getExtras().get("data"));
                 }
                 break;
-            // Called after a file is saved to Drive.
             case REQUEST_CODE_CREATOR:
+                // Called after a file is saved to Drive.
                 if (resultCode == RESULT_OK) {
                     Log.i(TAG, "Image successfully saved.");
                     // Just start the camera again for another photo.
-                    startCameraIntent();
+                    startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+                            REQUEST_CODE_CAPTURE_IMAGE);
                 }
                 break;
         }
@@ -212,6 +192,9 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "API client connected.");
+        // This activity has no UI of its own. Just start the camera.
+        startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+                REQUEST_CODE_CAPTURE_IMAGE);
     }
 
     /*
