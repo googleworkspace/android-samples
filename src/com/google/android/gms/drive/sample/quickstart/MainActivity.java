@@ -41,8 +41,6 @@ import com.google.android.gms.drive.MetadataChangeSet;
  * Android Drive Quickstart activity. This activity takes a photo and saves it
  * in Google Drive. The user is prompted with a pre-made dialog which allows
  * them to choose the file location.
- * 
- * @author afshar@google.com
  */
 public class MainActivity extends Activity implements ConnectionCallbacks,
         OnConnectionFailedListener {
@@ -136,11 +134,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         super.onPause();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#onActivityResult(int, int,
-     * android.content.Intent)
-     */
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
@@ -163,12 +156,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.google.android.gms.common.GooglePlayServicesClient.
-     * OnConnectionFailedListener
-     * #onConnectionFailed(com.google.android.gms.common.ConnectionResult)
-     */
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         // Called whenever the API client fails to connect.
@@ -189,12 +176,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks
-     * #onConnected(android.os.Bundle)
-     */
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "API client connected.");
@@ -203,12 +184,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                 REQUEST_CODE_CAPTURE_IMAGE);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks
-     * #onDisconnected()
-     */
     @Override
     public void onDisconnected() {
         Log.i(TAG, "API client disconnected.");
