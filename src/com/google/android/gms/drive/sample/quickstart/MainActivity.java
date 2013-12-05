@@ -51,21 +51,17 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     private static final int REQUEST_CODE_RESOLUTION = 3;
 
     private GoogleApiClient mGoogleApiClient;
+    private Bitmap mBitmapToSave;
 
     /**
      * Create a new file and save it to Drive.
      */
-    private void saveFileToDrive(final Bitmap image) {
+    private void saveFileToDrive() {
         // Start by creating a new contents, and setting a callback.
         Log.i(TAG, "Creating new contents.");
+        final Bitmap image = mBitmapToSave;
         Drive.DriveApi.newContents(mGoogleApiClient).addResultCallback(new OnNewContentsCallback() {
 
-            /*
-             * (non-Javadoc)
-             * @see com.google.android.gms.drive.DriveApi.OnNewContentsCallback#
-             * onNewContents
-             * (com.google.android.gms.drive.DriveApi.ContentsResult)
-             */
             @Override
             public void onNewContents(ContentsResult result) {
                 // If the operation was not successful, we cannot do anything
@@ -141,13 +137,14 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                 // Called after a photo has been taken.
                 if (resultCode == Activity.RESULT_OK) {
                     // Store the image data as a bitmap for writing later.
-                    saveFileToDrive((Bitmap) data.getExtras().get("data"));
+                    mBitmapToSave = (Bitmap) data.getExtras().get("data");
                 }
                 break;
             case REQUEST_CODE_CREATOR:
                 // Called after a file is saved to Drive.
                 if (resultCode == RESULT_OK) {
                     Log.i(TAG, "Image successfully saved.");
+                    mBitmapToSave = null;
                     // Just start the camera again for another photo.
                     startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
                             REQUEST_CODE_CAPTURE_IMAGE);
@@ -179,9 +176,13 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "API client connected.");
-        // This activity has no UI of its own. Just start the camera.
-        startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-                REQUEST_CODE_CAPTURE_IMAGE);
+        if (mBitmapToSave == null) {
+        	// This activity has no UI of its own. Just start the camera.
+            startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+                    REQUEST_CODE_CAPTURE_IMAGE);
+            return;
+        }
+        saveFileToDrive();
     }
 
     @Override
