@@ -108,26 +108,32 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
             }
         });
     }
-
-    /*
-     * (non-Javadoc)
-     * @see android.app.Activity#onCreate(android.os.Bundle)
-     */
+    
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Create the API client and bind it to an instance variable.
-        // We use this instance as the callback for connection and connection
-        // failures.
-        // Since no account name is passed, the user is prompted to choose.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Drive.API)
-                .addScope(Drive.SCOPE_FILE)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+    protected void onResume() {
+    	super.onResume();
+    	if (mGoogleApiClient == null) {
+    		// Create the API client and bind it to an instance variable.
+            // We use this instance as the callback for connection and connection
+            // failures.
+            // Since no account name is passed, the user is prompted to choose.
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(Drive.API)
+                    .addScope(Drive.SCOPE_FILE)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+    	}
         // Connect the client. Once connected, the camera is launched.
         mGoogleApiClient.connect();
+    }
+    
+    @Override
+    protected void onPause() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onPause();
     }
 
     /*
