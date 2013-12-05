@@ -11,11 +11,12 @@ designed to get you up and running with the [Google Drive API for Android](https
 * Shows you how to write file content
 * Shows you how to set file metadata including title and MIME type
 
-![File chooser to create files](https://developers.google.com/drive/android/images/Create_picker.png)
-
 # How can I run it?
 
 1. Create an OAuth 2.0 client as described in the [Getting Started guide](https://developers.google.com/drive/android/get-started).
 1. Make sure you have [Google Play Services development](http://developer.android.com/google/play-services/setup.html) set up correctly.
 1. Grab the source and create a project in your IDE
 1. Run and edit!
+
+![File chooser to create files](https://developers.google.com/drive/android/images/Create_picker.png)
+
