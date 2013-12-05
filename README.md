@@ -11,6 +11,13 @@ designed to get you up and running with the [Google Drive API for Android](https
 * Shows you how to write file content
 * Shows you how to set file metadata including title and MIME type
 
+![File chooser to create files](https://developers.google.com/drive/android/images/Create_picker.png)
+
+# How can I run it?
+
+1. Grab the source and create a project in your IDE
+1. Create an OAuth 2.0 client
+
 # Create an OAuth 2.0 client
 
 To run the quickstart, or access the Drive API from any other app, you must
@@ -53,7 +60,6 @@ first register your digitally signed .apk file's public certificate in the
            Signature algorithm name: SHA1withRSA
            Version: 3
         Copy the SHA1 fingerprint, which is highlighted in the example above.
-
 
 1. Paste the SHA1 fingerprint into the certificate fingerprint field in the Cloud Console.
 1. Click Register.
