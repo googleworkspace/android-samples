@@ -4,6 +4,8 @@ This application provides a
 [single activity](src/com/google/android/gms/drive/sample/quickstart/MainActivity.java)
 designed to get you up and running with the [Google Drive API for Android](https://developers.google.com/drive/android).
 
+![Quickstart logo](
+
 # What does it do?
 
 * Takes photos and stores them in Drive
@@ -18,7 +20,7 @@ designed to get you up and running with the [Google Drive API for Android](https
 1. Grab the source and create a project in your IDE
 1. Create an OAuth 2.0 client
 
-# Create an OAuth 2.0 client
+# Create an OAuth 2.0 client - cheat sheet
 
 To run the quickstart, or access the Drive API from any other app, you must
 first register your digitally signed .apk file's public certificate in the
@@ -26,11 +28,11 @@ first register your digitally signed .apk file's public certificate in the
 
 1. Go to the [Google Cloud Console](https://cloud.google.com/console).
 1. Select a project, or create a new one.
-1. In the sidebar on the left, select APIs & auth. In the displayed list of APIs, make sure the Drive API status is set to ON.
-1. In the sidebar on the left, select Registered apps.
-1. At the top of the page, select Register App.
-1. Type a name for the application and select Android.
-1. Choose Accessing APIs directly from Android.
+1. In the sidebar on the left, select *APIs & auth*. In the displayed list of APIs, make sure the *Drive API* status is set to `ON`.
+1. In the sidebar on the left, select *Registered apps*.
+1. At the top of the page, select *Register App*.
+1. Type a name for the application and select *Android*.
+1. Choose Accessing APIs directly from *Android*.
 1. In the Package name field, enter the app's package name `com.google.android.gms.drive.sample.quickstart`
 1. In a terminal, run the the Keytool utility to get the SHA1 fingerprint of the certificate. For the debug.keystore, the password is android.
 
