@@ -3,3 +3,4 @@ gen/*
 .settings/*
 project.properties
 .project
+.classpath
