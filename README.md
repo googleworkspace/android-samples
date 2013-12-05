@@ -18,5 +18,7 @@ designed to get you up and running with the [Google Drive API for Android](https
 1. Grab the source and create a project in your IDE
 1. Run and edit!
 
+# What does it look like?
+
 ![File chooser to create files](https://developers.google.com/drive/android/images/Create_picker.png)
 
