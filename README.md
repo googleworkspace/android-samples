@@ -22,3 +22,4 @@ designed to get you up and running with the [Google Drive API for Android](https
 
 ![File chooser to create files](https://developers.google.com/drive/android/images/Create_picker.png)
 
+![Analytics](https://ga-beacon.appspot.com/UA-46884138-1/android-quickstart)
