@@ -40,3 +40,6 @@ If you actually want to run this sample app (though it is mostly provided so you
 can read the code), you will need to register an OAuth 2.0 client for the
 package `com.google.android.gms.drive.sample.demo` with your own debug keys
 and set any resource IDs to those that you have access to.
+
+![Analytics](https://ga-beacon.appspot.com/UA-46884138-1/android-demos)
+
