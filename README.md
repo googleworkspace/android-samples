@@ -8,7 +8,7 @@ illustrated within the app are:
 ### Listing and querying
 * [List files with pagination](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/ListFilesActivity.java)
 * [Query files](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/QueryFilesActivity.java)
- 
+
 ### Working with files and folders
 * [Create a file](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFileActivity.java)
 * [Create a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFolderActivity.java)
@@ -39,7 +39,11 @@ illustrated within the app are:
 If you actually want to run this sample app (though it is mostly provided so you
 can read the code), you will need to register an OAuth 2.0 client for the
 package `com.google.android.gms.drive.sample.demo` with your own debug keys
-and set any resource IDs to those that you have access to.
+and set any resource IDs to those that you have access to. Resource ID definitions
+are on:
 
-![Analytics](https://ga-beacon.appspot.com/UA-46884138-1/android-demos)
+* com.google.android.gms.drive.sample.demo.BaseDemoActivity.EXISTING_FOLDER_ID
+* com.google.android.gms.drive.sample.demo.BaseDemoActivity.EXISTING_FILE_ID
+
+![Analytics](https://ga-beacon.appspot.com/UA-46884138-1/android-demos?pixel)
 

@@ -37,6 +37,17 @@ public abstract class BaseDemoActivity extends Activity implements
     private static final String TAG = "BaseDriveActivity";
 
     /**
+     * DriveId of an existing folder to be used as a parent folder in
+     * folder operations samples.
+     */
+    public static final String EXISTING_FOLDER_ID = "0B2EEtIjPUdX6MERsWlYxN3J6RU0";
+
+    /**
+     * DriveId of an existing file to be used in file operation samples..
+     */
+    public static final String EXISTING_FILE_ID = "0ByfSjdPVs9MZTHBmMVdSeWxaNTg";
+
+    /**
      * Extra for account name.
      */
     protected static final String EXTRA_ACCOUNT_NAME = "account_name";
@@ -112,8 +123,8 @@ public abstract class BaseDemoActivity extends Activity implements
      * Called when {@code mGoogleApiClient} is disconnected.
      */
     @Override
-    public void onDisconnected() {
-        Log.i(TAG, "GoogleApiClient disconnected");
+    public void onConnectionSuspended(int cause) {
+        Log.i(TAG, "GoogleApiClient connection suspended");
     }
 
     /**

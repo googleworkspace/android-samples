@@ -17,14 +17,15 @@ package com.google.android.gms.drive.sample.demo;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveId;
 
 /**
  * An activity to illustrate how to edit contents of a Drive file.
@@ -36,16 +37,30 @@ public class EditContentsActivity extends BaseDemoActivity {
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        DriveFile file = Drive.DriveApi.getFile(
-                getGoogleApiClient(),
-                DriveId.createFromResourceId("0ByfSjdPVs9MZTHBmMVdSeWxaNTg"));
-        new EditContentsAsyncTask().execute(file);
+
+        final ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
+            @Override
+            public void onResult(DriveIdResult result) {
+                if (!result.getStatus().isSuccess()) {
+                    showMessage("Cannot find DriveId. Are you authorized to view this file?");
+                    return;
+                }
+                DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), result.getDriveId());
+                new EditContentsAsyncTask(EditContentsActivity.this).execute(file);
+            }
+        };
+        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FILE_ID)
+              .setResultCallback(idCallback);
     }
 
-    public class EditContentsAsyncTask extends AsyncTask<DriveFile, Void, Boolean> {
+    public class EditContentsAsyncTask extends ApiClientAsyncTask<DriveFile, Void, Boolean> {
+
+        public EditContentsAsyncTask(Context context) {
+            super(context);
+        }
 
         @Override
-        protected Boolean doInBackground(DriveFile... args) {
+        protected Boolean doInBackgroundConnected(DriveFile... args) {
             DriveFile file = args[0];
             try {
                 ContentsResult contentsResult = file.openContents(
@@ -70,7 +85,7 @@ public class EditContentsActivity extends BaseDemoActivity {
                 showMessage("Error while editing contents");
                 return;
             }
-            showMessage("Succesfully edited contents");
+            showMessage("Successfully edited contents");
         }
     }
 }

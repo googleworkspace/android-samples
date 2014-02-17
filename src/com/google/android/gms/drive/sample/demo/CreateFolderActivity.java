@@ -16,15 +16,15 @@ package com.google.android.gms.drive.sample.demo;
 
 import android.os.Bundle;
 
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveFolder.DriveFolderResult;
-import com.google.android.gms.drive.DriveFolder.OnCreateFolderCallback;
 import com.google.android.gms.drive.MetadataChangeSet;
 
 /**
  * An activity to illustrate how to create a new folder.
  */
-public class CreateFolderActivity extends BaseDemoActivity implements OnCreateFolderCallback {
+public class CreateFolderActivity extends BaseDemoActivity {
 
     @Override
     public void onConnected(Bundle connectionHint) {
@@ -32,15 +32,17 @@ public class CreateFolderActivity extends BaseDemoActivity implements OnCreateFo
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                 .setTitle("New folder").build();
         Drive.DriveApi.getRootFolder(getGoogleApiClient()).createFolder(
-                getGoogleApiClient(), changeSet).addResultCallback(this);
+                getGoogleApiClient(), changeSet).setResultCallback(callback);
     }
 
-    @Override
-    public void onCreateFolder(DriveFolderResult result) {
-        if (!result.getStatus().isSuccess()) {
-            showMessage("Error while trying to create the folder");
-            return;
+    final ResultCallback<DriveFolderResult> callback = new ResultCallback<DriveFolderResult>() {
+        @Override
+        public void onResult(DriveFolderResult result) {
+            if (!result.getStatus().isSuccess()) {
+                showMessage("Error while trying to create the folder");
+                return;
+            }
+            showMessage("Created a folder: " + result.getDriveFolder().getDriveId());
         }
-        showMessage("Created a folder: " + result.getDriveFolder().getDriveId());
-    }
+    };
 }

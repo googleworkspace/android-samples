@@ -19,9 +19,9 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
-import com.google.android.gms.drive.DriveFolder.OnChildrenRetrievedCallback;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.widget.DataBufferAdapter;
@@ -30,8 +30,7 @@ import com.google.android.gms.drive.widget.DataBufferAdapter;
  * An activity illustrates how to list file results and infinitely
  * populate the results list view with data if there are more results.
  */
-public class ListFilesActivity extends BaseDemoActivity implements
-        OnChildrenRetrievedCallback {
+public class ListFilesActivity extends BaseDemoActivity {
 
     private ListView mListView;
     private DataBufferAdapter<Metadata> mResultsAdapter;
@@ -78,20 +77,6 @@ public class ListFilesActivity extends BaseDemoActivity implements
     }
 
     /**
-     * Appends the retrieved results to the result buffer.
-     */
-    @Override
-    public void onChildrenRetrieved(MetadataBufferResult result) {
-        if (!result.getStatus().isSuccess()) {
-            showMessage("Problem while retrieving files");
-            return;
-        }
-        mResultsAdapter.append(result.getMetadataBuffer());
-        mNextPageToken = result.getMetadataBuffer().getNextPageToken();
-        mHasMore = mNextPageToken != null;
-    }
-
-    /**
      * Retrieves results for the next page. For the first run,
      * it retrieves results for the first page.
      */
@@ -105,6 +90,24 @@ public class ListFilesActivity extends BaseDemoActivity implements
         Query query = new Query.Builder()
             .setPageToken(mNextPageToken)
             .build();
-        Drive.DriveApi.query(getGoogleApiClient(), query).addResultCallback(this);
+        Drive.DriveApi.query(getGoogleApiClient(), query)
+                .setResultCallback(metadataBufferCallback);
     }
+
+    /**
+     * Appends the retrieved results to the result buffer.
+     */
+    private final ResultCallback<MetadataBufferResult> metadataBufferCallback = new
+            ResultCallback<MetadataBufferResult>() {
+        @Override
+        public void onResult(MetadataBufferResult result) {
+            if (!result.getStatus().isSuccess()) {
+                showMessage("Problem while retrieving files");
+                return;
+            }
+            mResultsAdapter.append(result.getMetadataBuffer());
+            mNextPageToken = result.getMetadataBuffer().getNextPageToken();
+            mHasMore = mNextPageToken != null;
+        }
+    };
 }

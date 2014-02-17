@@ -23,7 +23,7 @@ import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.widget.DataBufferAdapter;
 
 /**
- * A DataBufferAdapter to list file listing and querying results.
+ * A DataBufferAdapter to display the results of file listing/querying requests.
  */
 public class ResultsAdapter extends DataBufferAdapter<Metadata> {
 

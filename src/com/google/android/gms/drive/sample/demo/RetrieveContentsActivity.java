@@ -18,12 +18,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
 
@@ -37,14 +39,27 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        new RetrieveDriveFileContentsAsyncTask()
-                .execute(DriveId.createFromResourceId("0ByfSjdPVs9MZcEE3bzJCc3NsRkE"));
+        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FILE_ID)
+                .setResultCallback(idCallback);
     }
 
-    private class RetrieveDriveFileContentsAsyncTask extends AsyncTask<DriveId, Boolean, String> {
+    final private ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
+        @Override
+        public void onResult(DriveIdResult result) {
+            new RetrieveDriveFileContentsAsyncTask(
+                    RetrieveContentsActivity.this).execute(result.getDriveId());
+        }
+    };
+
+    final private class RetrieveDriveFileContentsAsyncTask
+            extends ApiClientAsyncTask<DriveId, Boolean, String> {
+
+        public RetrieveDriveFileContentsAsyncTask(Context context) {
+            super(context);
+        }
 
         @Override
-        protected String doInBackground(DriveId... params) {
+        protected String doInBackgroundConnected(DriveId... params) {
             String contents = null;
             DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), params[0]);
             ContentsResult contentsResult =

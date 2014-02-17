@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
@@ -37,10 +38,9 @@ public class PickFolderWithOpenerActivity extends BaseDemoActivity {
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-
         IntentSender intentSender = Drive.DriveApi
                 .newOpenFileActivityBuilder()
-                .setMimeType(new String[] { "application/vnd.google-apps.folder" })
+                .setMimeType(new String[] { DriveFolder.MIME_TYPE })
                 .build(getGoogleApiClient());
         try {
             startIntentSenderForResult(

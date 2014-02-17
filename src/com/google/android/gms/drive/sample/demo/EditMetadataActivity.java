@@ -16,36 +16,49 @@ package com.google.android.gms.drive.sample.demo;
 
 import android.os.Bundle;
 
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResource.MetadataResult;
-import com.google.android.gms.drive.DriveResource.OnMetadataUpdatedCallback;
 import com.google.android.gms.drive.MetadataChangeSet;
 
 /**
  * An activity to edit metadata of a file.
  */
-public class EditMetadataActivity extends BaseDemoActivity implements OnMetadataUpdatedCallback {
+public class EditMetadataActivity extends BaseDemoActivity {
 
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        DriveFile file = Drive.DriveApi.getFile(
-                getGoogleApiClient(),
-                DriveId.createFromResourceId("0ByfSjdPVs9MZcEE3bzJCc3NsRkE"));
-        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                .setStarred(true)
-                .setTitle("A new title").build();
-        file.updateMetadata(getGoogleApiClient(), changeSet).addResultCallback(this);
+        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FILE_ID)
+                .setResultCallback(idCallback);
     }
 
-    @Override
-    public void onMetadataUpdated(MetadataResult result) {
-        if (!result.getStatus().isSuccess()) {
-            showMessage("Problem while trying to update metadata");
-            return;
+    final ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
+        @Override
+        public void onResult(DriveIdResult result) {
+            if (!result.getStatus().isSuccess()) {
+                showMessage("Cannot find DriveId. Are you authorized to view this file?");
+                return;
+            }
+            DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), result.getDriveId());
+            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                    .setStarred(true)
+                    .setTitle("A new title").build();
+            file.updateMetadata(getGoogleApiClient(), changeSet)
+                    .setResultCallback(metadataCallback);
         }
-        showMessage("Metadata succesfully updated");
-    }
+    };
+
+    final ResultCallback<MetadataResult> metadataCallback = new ResultCallback<MetadataResult>() {
+        @Override
+        public void onResult(MetadataResult result) {
+            if (!result.getStatus().isSuccess()) {
+                showMessage("Problem while trying to update metadata");
+                return;
+            }
+            showMessage("Metadata successfully updated");
+        }
+    };
 }

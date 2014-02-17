@@ -17,7 +17,7 @@ package com.google.android.gms.drive.sample.demo;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.gms.drive.Contents;
@@ -40,7 +40,7 @@ public class SyncRequestsActivity extends BaseDemoActivity {
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        new CreateFileAsyncTask().execute();
+        new CreateFileAsyncTask(this).execute();
     }
 
     /**
@@ -49,10 +49,14 @@ public class SyncRequestsActivity extends BaseDemoActivity {
      * performed serially in a thread. Each time, await() is called on the
      * result which blocks until the request has been completed.
      */
-    public class CreateFileAsyncTask extends AsyncTask<Void, Void, Metadata> {
+    public class CreateFileAsyncTask extends ApiClientAsyncTask<Void, Void, Metadata> {
+
+        public CreateFileAsyncTask(Context context) {
+            super(context);
+        }
 
         @Override
-        protected Metadata doInBackground(Void... arg0) {
+        protected Metadata doInBackgroundConnected(Void... arg0) {
 
             // First we start by creating a new contents, and blocking on the
             // result by calling await().

@@ -17,9 +17,9 @@ package com.google.android.gms.drive.sample.demo;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
-import com.google.android.gms.drive.DriveFolder.OnChildrenRetrievedCallback;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
@@ -27,8 +27,7 @@ import com.google.android.gms.drive.query.SearchableField;
 /**
  * An activity to illustrate how to query files.
  */
-public class QueryFilesActivity extends BaseDemoActivity
-        implements OnChildrenRetrievedCallback {
+public class QueryFilesActivity extends BaseDemoActivity {
 
     private ListView mResultsListView;
     private ResultsAdapter mResultsAdapter;
@@ -48,16 +47,20 @@ public class QueryFilesActivity extends BaseDemoActivity
         Query query = new Query.Builder()
                 .addFilter(Filters.eq(SearchableField.MIME_TYPE, "text/plain"))
                 .build();
-        Drive.DriveApi.query(getGoogleApiClient(), query).addResultCallback(this);
+        Drive.DriveApi.query(getGoogleApiClient(), query)
+                .setResultCallback(metadataCallback);
     }
 
-    @Override
-    public void onChildrenRetrieved(MetadataBufferResult result) {
-        if (!result.getStatus().isSuccess()) {
-            showMessage("Problem while retrieving results");
-            return;
+    final private ResultCallback<MetadataBufferResult> metadataCallback = new
+            ResultCallback<MetadataBufferResult>() {
+        @Override
+        public void onResult(MetadataBufferResult result) {
+            if (!result.getStatus().isSuccess()) {
+                showMessage("Problem while retrieving results");
+                return;
+            }
+            mResultsAdapter.clear();
+            mResultsAdapter.append(result.getMetadataBuffer());
         }
-        mResultsAdapter.clear();
-        mResultsAdapter.append(result.getMetadataBuffer());
-    }
+    };
 }

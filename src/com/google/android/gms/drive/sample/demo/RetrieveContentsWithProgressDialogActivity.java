@@ -21,11 +21,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFile.DownloadProgressListener;
-import com.google.android.gms.drive.DriveFile.OnContentsOpenedCallback;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
@@ -33,8 +33,7 @@ import com.google.android.gms.drive.OpenFileActivityBuilder;
  * An activity to illustrate how to open contents and listen
  * the download progress if the file is not already sync'ed.
  */
-public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
-        implements OnContentsOpenedCallback {
+public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity {
 
     private static final String TAG = "RetrieveFileWithProgressDialogActivity";
 
@@ -109,16 +108,18 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
         };
         Drive.DriveApi.getFile(getGoogleApiClient(), mSelectedFileDriveId)
             .openContents(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, listener)
-            .addResultCallback(this);
+            .setResultCallback(contentsCallback);
         mSelectedFileDriveId = null;
     }
 
-    @Override
-    public void onOpen(ContentsResult result) {
-        if (!result.getStatus().isSuccess()) {
-            showMessage("Error while opening the file contents");
-            return;
+    private ResultCallback<ContentsResult> contentsCallback = new ResultCallback<ContentsResult>() {
+        @Override
+        public void onResult(ContentsResult result) {
+            if (!result.getStatus().isSuccess()) {
+                showMessage("Error while opening the file contents");
+                return;
+            }
+            showMessage("File contents opened");
         }
-        showMessage("File contents opened");
-    }
+    };
 }

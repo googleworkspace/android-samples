@@ -17,6 +17,7 @@
 <resources>
 
     <string name="app_name">Google Drive Android API Demos</string>
+    <string name="download_progress">Download Progress:</string>
     <string name="menu_settings">Settings</string>
 
 </resources>

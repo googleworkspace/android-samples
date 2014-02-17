@@ -15,53 +15,72 @@
 package com.google.android.gms.drive.sample.demo;
 import android.os.Bundle;
 
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
-import com.google.android.gms.drive.DriveApi.OnNewContentsCallback;
+import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
-import com.google.android.gms.drive.DriveFolder.OnCreateFileCallback;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.MetadataChangeSet;
+
+import java.lang.Override;
 
 
 /**
  * An activity to create a file inside a folder.
  */
-public class CreateFileInFolderActivity extends BaseDemoActivity implements OnCreateFileCallback,
-        OnNewContentsCallback {
+public class CreateFileInFolderActivity extends BaseDemoActivity {
 
-    private static final DriveId sFolderId =
-            DriveId.createFromResourceId("0B2EEtIjPUdX6MERsWlYxN3J6RU0");
+    private DriveId mFolderDriveId;
 
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        Drive.DriveApi.newContents(getGoogleApiClient()).addResultCallback(this);
+        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FOLDER_ID)
+                .setResultCallback(idCallback);
     }
 
-    @Override
-    public void onNewContents(ContentsResult result) {
-        if (!result.getStatus().isSuccess()) {
-            showMessage("Error while trying to create new file contents");
-            return;
+    final private ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
+        @Override
+        public void onResult(DriveIdResult result) {
+            if (!result.getStatus().isSuccess()) {
+                showMessage("Cannot find DriveId. Are you authorized to view this file?");
+                return;
+            }
+            mFolderDriveId = result.getDriveId();
+            Drive.DriveApi.newContents(getGoogleApiClient())
+                    .setResultCallback(contentsResult);
         }
-        DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), sFolderId);
-        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                .setTitle("New file")
-                .setMimeType("text/plain")
-                .setStarred(true).build();
-        folder.createFile(getGoogleApiClient(), changeSet, result.getContents())
-                .addResultCallback(this);
-    }
+    };
 
-    @Override
-    public void onCreateFile(DriveFileResult result) {
-        if (!result.getStatus().isSuccess()) {
-            showMessage("Error while trying to create the file");
-            return;
+    final private ResultCallback<ContentsResult> contentsResult = new
+            ResultCallback<ContentsResult>() {
+        @Override
+        public void onResult(ContentsResult result) {
+            if (!result.getStatus().isSuccess()) {
+                showMessage("Error while trying to create new file contents");
+                return;
+            }
+            DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), mFolderDriveId);
+            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                    .setTitle("New file")
+                    .setMimeType("text/plain")
+                    .setStarred(true).build();
+            folder.createFile(getGoogleApiClient(), changeSet, result.getContents())
+                    .setResultCallback(fileCallback);
         }
-        showMessage("Created a file: " + result.getDriveFile().getDriveId());
-    }
+    };
 
+    final private ResultCallback<DriveFileResult> fileCallback = new
+            ResultCallback<DriveFileResult>() {
+        @Override
+        public void onResult(DriveFileResult result) {
+            if (!result.getStatus().isSuccess()) {
+                showMessage("Error while trying to create the file");
+                return;
+            }
+            showMessage("Created a file: " + result.getDriveFile().getDriveId());
+        }
+    };
 }
