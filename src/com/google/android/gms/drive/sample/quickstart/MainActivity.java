@@ -32,9 +32,9 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
-import com.google.android.gms.drive.DriveApi.OnNewContentsCallback;
 import com.google.android.gms.drive.MetadataChangeSet;
 
 /**
@@ -60,10 +60,10 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         // Start by creating a new contents, and setting a callback.
         Log.i(TAG, "Creating new contents.");
         final Bitmap image = mBitmapToSave;
-        Drive.DriveApi.newContents(mGoogleApiClient).addResultCallback(new OnNewContentsCallback() {
+        Drive.DriveApi.newContents(mGoogleApiClient).setResultCallback(new ResultCallback<ContentsResult>() {
 
             @Override
-            public void onNewContents(ContentsResult result) {
+            public void onResult(ContentsResult result) {
                 // If the operation was not successful, we cannot do anything
                 // and must
                 // fail.
@@ -102,7 +102,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
             }
         });
     }
-    
+
     @Override
     protected void onResume() {
     	super.onResume();
@@ -121,7 +121,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         // Connect the client. Once connected, the camera is launched.
         mGoogleApiClient.connect();
     }
-    
+
     @Override
     protected void onPause() {
         if (mGoogleApiClient != null) {
@@ -186,8 +186,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     }
 
     @Override
-    public void onDisconnected() {
-        Log.i(TAG, "API client disconnected.");
+    public void onConnectionSuspended(int cause) {
+        Log.i(TAG, "GoogleApiClient connection suspended");
     }
-
 }
