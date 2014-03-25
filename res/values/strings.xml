@@ -20,4 +20,7 @@
     <string name="download_progress">Download Progress:</string>
     <string name="menu_settings">Settings</string>
 
+    <string name="button_subscribe">Listen for Changes</string>
+    <string name="button_unsubscribe">Stop Listening for Changes</string>
+
 </resources>

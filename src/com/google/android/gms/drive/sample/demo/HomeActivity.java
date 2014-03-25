@@ -23,6 +23,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.drive.sample.demo.events.ListenChangeEventsForFilesActivity;
+
 /**
  * An activity to list all available demo activities.
  */
@@ -33,12 +35,14 @@ public class HomeActivity extends Activity {
             ListFilesActivity.class,
             QueryFilesActivity.class,
             CreateFileActivity.class,
+            CreateFileInAppFolderActivity.class,
             CreateFolderActivity.class,
             RetrieveMetadataActivity.class,
             RetrieveContentsActivity.class,
             RetrieveContentsWithProgressDialogActivity.class,
             EditMetadataActivity.class,
             EditContentsActivity.class,
+            PinFileActivity.class,
             SyncRequestsActivity.class,
             CreateFileWithCreatorActivity.class,
             PickFileWithOpenerActivity.class,
@@ -46,7 +50,9 @@ public class HomeActivity extends Activity {
             CreateFileInFolderActivity.class,
             CreateFolderInFolderActivity.class,
             ListFilesInFolderActivity.class,
-            QueryFilesInFolderActivity.class
+            QueryFilesInFolderActivity.class,
+            TrashFileActivity.class,
+            ListenChangeEventsForFilesActivity.class
     };
 
     private ListView mListViewSamples;

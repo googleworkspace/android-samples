@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Google Inc. All Rights Reserved.
+ * Copyright 2014 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,16 +17,17 @@ package com.google.android.gms.drive.sample.demo;
 import android.os.Bundle;
 
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveResource.MetadataResult;
-import com.google.android.gms.drive.MetadataChangeSet;
 
 /**
- * An activity to edit metadata of a file.
+ * An activity that trashes a file. The application is
+ * only authorized to trash the files whose ownership is
+ * held by the current user.
  */
-public class EditMetadataActivity extends BaseDemoActivity {
+public class TrashFileActivity extends BaseDemoActivity {
 
     @Override
     public void onConnected(Bundle connectionHint) {
@@ -42,24 +43,20 @@ public class EditMetadataActivity extends BaseDemoActivity {
                 showMessage("Cannot find DriveId. Are you authorized to view this file?");
                 return;
             }
-            DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), result.getDriveId());
-            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                    .setStarred(true)
-                    .setIndexableText("Description about the file")
-                    .setTitle("A new title").build();
-            file.updateMetadata(getGoogleApiClient(), changeSet)
-                    .setResultCallback(metadataCallback);
+            DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(),
+                    result.getDriveId());
+            file.trash(getGoogleApiClient()).setResultCallback(trashCallback);
         }
     };
 
-    final ResultCallback<MetadataResult> metadataCallback = new ResultCallback<MetadataResult>() {
+    final ResultCallback<Status> trashCallback = new ResultCallback<Status>() {
         @Override
-        public void onResult(MetadataResult result) {
+        public void onResult(Status result) {
             if (!result.getStatus().isSuccess()) {
-                showMessage("Problem while trying to update metadata");
+                showMessage("Problem while trying to trash the file");
                 return;
             }
-            showMessage("Metadata successfully updated");
+            showMessage("File trashed successfully");
         }
     };
 }

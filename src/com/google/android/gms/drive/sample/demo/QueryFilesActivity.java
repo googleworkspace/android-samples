@@ -41,6 +41,16 @@ public class QueryFilesActivity extends BaseDemoActivity {
         mResultsListView.setAdapter(mResultsAdapter);
     }
 
+    /**
+     * Clears the result buffer to avoid memory leaks as soon
+     * as the activity is no longer visible by the user.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mResultsAdapter.clear();
+    }
+
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);

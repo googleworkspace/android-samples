@@ -31,11 +31,9 @@ import com.google.android.gms.drive.MetadataChangeSet;
 
 /**
  * An activity to illustrate making synchronous requests to the Drive service
- * backend.
+ * back-end.
  */
 public class SyncRequestsActivity extends BaseDemoActivity {
-
-    private static String TAG = "SyncRequestsActivity";
 
     @Override
     public void onConnected(Bundle connectionHint) {

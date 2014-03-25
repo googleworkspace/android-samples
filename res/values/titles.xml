@@ -19,12 +19,14 @@
         <item>List files with pagination</item>
         <item>Query files</item>
         <item>Create a file</item>
+        <item>Create a file in App Folder</item>
         <item>Create a folder</item>
         <item>Retrieve metadata</item>
         <item>Retrieve contents</item>
         <item>Listen download progress</item>
         <item>Edit metadata</item>
         <item>Edit contents</item>
+        <item>Pin a file to the device</item>
         <item>Synchronous requests</item>
         <item>Create a file with creator activity</item>
         <item>Pick a file with opener activity</item>
@@ -33,5 +35,7 @@
         <item>Create a folder in a folder</item>
         <item>List files in a folder</item>
         <item>Query files in a folder</item>
+        <item>Trash a file or a folder</item>
+        <item>Listening for file changes</item>
     </string-array>
 </resources>

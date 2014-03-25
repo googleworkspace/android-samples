@@ -67,6 +67,16 @@ public class ListFilesActivity extends BaseDemoActivity {
     }
 
     /**
+     * Clears the result buffer to avoid memory leaks as soon
+     * as the activity is no longer visible by the user.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mResultsAdapter.clear();
+    }
+
+    /**
      * Handles the Drive service connection initialization
      * and inits the first listing request.
      */

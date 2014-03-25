@@ -11,12 +11,15 @@ illustrated within the app are:
 
 ### Working with files and folders
 * [Create a file](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFileActivity.java)
+* [Create a file in App Folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFileInAppFolderActivity.java)
 * [Create a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFolderActivity.java)
 * [Retrieve metadata](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/RetrieveMetadataActivity.java)
 * [Retrieve contents](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/RetrieveContentsActivity.java)
 * [Listen download progress](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/RetrieveContentsWithProgressDialogActivity.java)
 * [Edit metadata](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/EditMetadataActivity.java)
 * [Edit contents](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/EditContentsActivity.java)
+* [Trash a file](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/TrashFileActivity.java)
+* [Pin file to the device](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/PinFileActivity.java)
 
 ### Intents
 * [Create a file with creator activity](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CreateFileWithCreatorActivity.java)
@@ -30,9 +33,9 @@ illustrated within the app are:
 * [Query files in a folder](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/QueryFilesInFolderActivity.java)
 
 ### Others
-* [Authorization, authentication and connection](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/BaseDemoActivity.java)
+* [Authorization, authentication and client connection](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/BaseDemoActivity.java)
 * [Synchronous requests](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/SyncRequestsActivity.java)
-* [Check file sync status](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/CheckFileSyncStatusActivity.java)
+* [Listen for metadata and contents change events](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/events/ListenChangeEventsForFilesActivity.java)
 
 ## Can I run this app?
 
