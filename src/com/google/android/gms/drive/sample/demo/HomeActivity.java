@@ -51,7 +51,6 @@ public class HomeActivity extends Activity {
             CreateFolderInFolderActivity.class,
             ListFilesInFolderActivity.class,
             QueryFilesInFolderActivity.class,
-            TrashFileActivity.class,
             ListenChangeEventsForFilesActivity.class
     };
 

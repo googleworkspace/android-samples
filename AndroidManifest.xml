@@ -62,7 +62,6 @@
         <activity android:name=".CreateFolderInFolderActivity"></activity>
         <activity android:name=".ListFilesInFolderActivity"></activity>
         <activity android:name=".QueryFilesInFolderActivity"></activity>
-        <activity android:name=".TrashFileActivity"></activity>
         <activity android:name=".PinFileActivity"></activity>
         <activity android:name=".events.ListenChangeEventsForFilesActivity"></activity>
     </application>

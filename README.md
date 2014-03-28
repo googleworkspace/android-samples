@@ -18,7 +18,6 @@ illustrated within the app are:
 * [Listen download progress](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/RetrieveContentsWithProgressDialogActivity.java)
 * [Edit metadata](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/EditMetadataActivity.java)
 * [Edit contents](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/EditContentsActivity.java)
-* [Trash a file](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/TrashFileActivity.java)
 * [Pin file to the device](https://github.com/googledrive/android-demos/blob/master/src/com/google/android/gms/drive/sample/demo/PinFileActivity.java)
 
 ### Intents

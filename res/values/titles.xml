@@ -35,7 +35,6 @@
         <item>Create a folder in a folder</item>
         <item>List files in a folder</item>
         <item>Query files in a folder</item>
-        <item>Trash a file or a folder</item>
         <item>Listening for file changes</item>
     </string-array>
 </resources>
