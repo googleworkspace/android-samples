@@ -22,7 +22,7 @@ import android.util.Log;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
@@ -42,8 +42,8 @@ public class CreateFileWithCreatorActivity extends BaseDemoActivity {
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        Drive.DriveApi.newContents(getGoogleApiClient())
-                .setResultCallback(contentsCallback);
+        Drive.DriveApi.newDriveContents(getGoogleApiClient())
+                .setResultCallback(driveContentsCallback);
     }
 
     @Override
@@ -63,15 +63,16 @@ public class CreateFileWithCreatorActivity extends BaseDemoActivity {
         }
     }
 
-    final ResultCallback<ContentsResult> contentsCallback = new ResultCallback<ContentsResult>() {
+    final ResultCallback<DriveContentsResult> driveContentsCallback =
+            new ResultCallback<DriveContentsResult>() {
         @Override
-        public void onResult(ContentsResult result) {
+        public void onResult(DriveContentsResult result) {
             MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
                     .setMimeType("text/html").build();
             IntentSender intentSender = Drive.DriveApi
                     .newCreateFileActivityBuilder()
                     .setInitialMetadata(metadataChangeSet)
-                    .setInitialContents(result.getContents())
+                    .setInitialDriveContents(result.getDriveContents())
                     .build(getGoogleApiClient());
             try {
                 startIntentSenderForResult(

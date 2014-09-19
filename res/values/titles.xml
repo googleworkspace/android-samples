@@ -16,8 +16,6 @@
 -->
 <resources>
     <string-array name="titles_array">
-        <item>List files with pagination</item>
-        <item>Query files</item>
         <item>Create a file</item>
         <item>Create a file in App Folder</item>
         <item>Create a folder</item>
@@ -25,6 +23,8 @@
         <item>Retrieve contents</item>
         <item>Listen download progress</item>
         <item>Edit metadata</item>
+        <item>Insert/Update custom property</item>
+        <item>Delete custom porperty</item>
         <item>Edit contents</item>
         <item>Pin a file to the device</item>
         <item>Synchronous requests</item>
@@ -34,7 +34,16 @@
         <item>Create a file in a folder</item>
         <item>Create a folder in a folder</item>
         <item>List files in a folder</item>
+        <item>List files with pagination</item>
+        <item>Query text files</item>
         <item>Query files in a folder</item>
+        <item>Query non text files</item>
+        <item>Query sorted files</item>
+        <item>Query files shared with me</item>
+        <item>Query files with \"a\" in title</item>
+        <item>Query files with custom properties</item>
+        <item>Query starred text files</item>
+        <item>Query text or html files</item>
         <item>Listening for file changes</item>
     </string-array>
 </resources>

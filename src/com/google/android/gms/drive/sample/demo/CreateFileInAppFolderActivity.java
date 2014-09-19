@@ -18,7 +18,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.MetadataChangeSet;
 
@@ -31,14 +31,14 @@ public class CreateFileInAppFolderActivity extends BaseDemoActivity {
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
         // create new contents resource
-        Drive.DriveApi.newContents(getGoogleApiClient())
-                .setResultCallback(contentsCallback);
+        Drive.DriveApi.newDriveContents(getGoogleApiClient())
+                .setResultCallback(driveContentsCallback);
     }
 
-    final private ResultCallback<ContentsResult> contentsCallback = new
-            ResultCallback<ContentsResult>() {
+    final private ResultCallback<DriveContentsResult> driveContentsCallback =
+            new ResultCallback<DriveContentsResult>() {
         @Override
-        public void onResult(ContentsResult result) {
+        public void onResult(DriveContentsResult result) {
             if (!result.getStatus().isSuccess()) {
                 showMessage("Error while trying to create new file contents");
                 return;
@@ -49,7 +49,7 @@ public class CreateFileInAppFolderActivity extends BaseDemoActivity {
                     .setMimeType("text/plain")
                     .build();
             Drive.DriveApi.getAppFolder(getGoogleApiClient())
-                    .createFile(getGoogleApiClient(), changeSet, result.getContents())
+                    .createFile(getGoogleApiClient(), changeSet, result.getDriveContents())
                     .setResultCallback(fileCallback);
         }
     };

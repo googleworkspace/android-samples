@@ -24,8 +24,9 @@ import android.util.Log;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
+import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
 
@@ -62,13 +63,14 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
         protected String doInBackgroundConnected(DriveId... params) {
             String contents = null;
             DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), params[0]);
-            ContentsResult contentsResult =
-                    file.openContents(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null).await();
-            if (!contentsResult.getStatus().isSuccess()) {
+            DriveContentsResult driveContentsResult =
+                    file.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null).await();
+            if (!driveContentsResult.getStatus().isSuccess()) {
                 return null;
             }
+            DriveContents driveContents = driveContentsResult.getDriveContents();
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(contentsResult.getContents().getInputStream()));
+                    new InputStreamReader(driveContents.getInputStream()));
             StringBuilder builder = new StringBuilder();
             String line;
             try {
@@ -80,7 +82,7 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
                 Log.e(TAG, "IOException while reading from the stream", e);
             }
 
-            file.discardContents(getGoogleApiClient(), contentsResult.getContents()).await();
+            driveContents.discard(getGoogleApiClient());
             return contents;
         }
 

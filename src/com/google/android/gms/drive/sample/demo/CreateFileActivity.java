@@ -15,43 +15,72 @@
 package com.google.android.gms.drive.sample.demo;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
+import com.google.android.gms.drive.DriveContents;
+import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.MetadataChangeSet;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 /**
  * An activity to illustrate how to create a file.
  */
 public class CreateFileActivity extends BaseDemoActivity {
 
+    private static final String TAG = "CreateFileActivity";
+
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
         // create new contents resource
-        Drive.DriveApi.newContents(getGoogleApiClient())
-                .setResultCallback(contentsCallback);
+        Drive.DriveApi.newDriveContents(getGoogleApiClient())
+                .setResultCallback(driveContentsCallback);
     }
 
-    final private ResultCallback<ContentsResult> contentsCallback = new
-            ResultCallback<ContentsResult>() {
+    final private ResultCallback<DriveContentsResult> driveContentsCallback = new
+            ResultCallback<DriveContentsResult>() {
         @Override
-        public void onResult(ContentsResult result) {
+        public void onResult(DriveContentsResult result) {
             if (!result.getStatus().isSuccess()) {
                 showMessage("Error while trying to create new file contents");
                 return;
             }
+            final DriveContents driveContents = result.getDriveContents();
 
-            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                    .setTitle("New file")
-                    .setMimeType("text/plain")
-                    .setStarred(true).build();
-            // create a file on root folder
-            Drive.DriveApi.getRootFolder(getGoogleApiClient())
-                    .createFile(getGoogleApiClient(), changeSet, result.getContents())
-                    .setResultCallback(fileCallback);
+            // Perform I/O off the UI thread.
+            new Thread() {
+                @Override
+                public void run() {
+                    // write content to DriveContents
+                    OutputStream outputStream = driveContents.getOutputStream();
+                    Writer writer = new OutputStreamWriter(outputStream);
+                    try {
+                        writer.write("Hello World!");
+                        writer.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+
+                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                            .setTitle("New file")
+                            .setMimeType("text/plain")
+                            .setStarred(true).build();
+
+                    // create a file on root folder
+                    Drive.DriveApi.getRootFolder(getGoogleApiClient())
+                            .createFile(getGoogleApiClient(), changeSet, driveContents)
+                            .setResultCallback(fileCallback);
+                }
+            }.start();
         }
     };
 
@@ -63,7 +92,9 @@ public class CreateFileActivity extends BaseDemoActivity {
                 showMessage("Error while trying to create the file");
                 return;
             }
-            showMessage("Created a file: " + result.getDriveFile().getDriveId());
+            showMessage("Created a file with content: " + result.getDriveFile().getDriveId());
         }
     };
+
+
 }

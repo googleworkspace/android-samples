@@ -23,8 +23,9 @@ import android.util.Log;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
+import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 
 /**
@@ -63,15 +64,16 @@ public class EditContentsActivity extends BaseDemoActivity {
         protected Boolean doInBackgroundConnected(DriveFile... args) {
             DriveFile file = args[0];
             try {
-                ContentsResult contentsResult = file.openContents(
+                DriveContentsResult driveContentsResult = file.open(
                         getGoogleApiClient(), DriveFile.MODE_WRITE_ONLY, null).await();
-                if (!contentsResult.getStatus().isSuccess()) {
+                if (!driveContentsResult.getStatus().isSuccess()) {
                     return false;
                 }
-                OutputStream outputStream = contentsResult.getContents().getOutputStream();
+                DriveContents driveContents = driveContentsResult.getDriveContents();
+                OutputStream outputStream = driveContents.getOutputStream();
                 outputStream.write("Hello world".getBytes());
-                com.google.android.gms.common.api.Status status = file.commitAndCloseContents(
-                        getGoogleApiClient(), contentsResult.getContents()).await();
+                com.google.android.gms.common.api.Status status =
+                        driveContents.commit(getGoogleApiClient(), null).await();
                 return status.getStatus().isSuccess();
             } catch (IOException e) {
                 Log.e(TAG, "IOException while appending to the output stream", e);

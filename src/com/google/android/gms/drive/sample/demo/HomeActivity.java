@@ -32,8 +32,6 @@ public class HomeActivity extends Activity {
 
     @SuppressWarnings("rawtypes")
     private final Class[] sActivities = new Class[] {
-            ListFilesActivity.class,
-            QueryFilesActivity.class,
             CreateFileActivity.class,
             CreateFileInAppFolderActivity.class,
             CreateFolderActivity.class,
@@ -50,7 +48,15 @@ public class HomeActivity extends Activity {
             CreateFileInFolderActivity.class,
             CreateFolderInFolderActivity.class,
             ListFilesInFolderActivity.class,
+            ListFilesActivity.class,
+            QueryFilesActivity.class,
             QueryFilesInFolderActivity.class,
+            QueryNonTextFilesActivity.class,
+            QuerySortedFilesActivity.class,
+            QueryFilesSharedWithMeActivity.class,
+            QueryFilesWithAInTitleActivity.class,
+            QueryStarredTextFilesActivity.class,
+            QueryTextOrHtmlFilesActivity.class,
             ListenChangeEventsForFilesActivity.class
     };
 

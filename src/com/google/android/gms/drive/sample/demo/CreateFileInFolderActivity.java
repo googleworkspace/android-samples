@@ -17,7 +17,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
@@ -49,15 +49,15 @@ public class CreateFileInFolderActivity extends BaseDemoActivity {
                 return;
             }
             mFolderDriveId = result.getDriveId();
-            Drive.DriveApi.newContents(getGoogleApiClient())
-                    .setResultCallback(contentsResult);
+            Drive.DriveApi.newDriveContents(getGoogleApiClient())
+                    .setResultCallback(driveContentsCallback);
         }
     };
 
-    final private ResultCallback<ContentsResult> contentsResult = new
-            ResultCallback<ContentsResult>() {
+    final private ResultCallback<DriveContentsResult> driveContentsCallback =
+            new ResultCallback<DriveContentsResult>() {
         @Override
-        public void onResult(ContentsResult result) {
+        public void onResult(DriveContentsResult result) {
             if (!result.getStatus().isSuccess()) {
                 showMessage("Error while trying to create new file contents");
                 return;
@@ -67,13 +67,13 @@ public class CreateFileInFolderActivity extends BaseDemoActivity {
                     .setTitle("New file")
                     .setMimeType("text/plain")
                     .setStarred(true).build();
-            folder.createFile(getGoogleApiClient(), changeSet, result.getContents())
+            folder.createFile(getGoogleApiClient(), changeSet, result.getDriveContents())
                     .setResultCallback(fileCallback);
         }
     };
 
-    final private ResultCallback<DriveFileResult> fileCallback = new
-            ResultCallback<DriveFileResult>() {
+    final private ResultCallback<DriveFileResult> fileCallback =
+            new ResultCallback<DriveFileResult>() {
         @Override
         public void onResult(DriveFileResult result) {
             if (!result.getStatus().isSuccess()) {

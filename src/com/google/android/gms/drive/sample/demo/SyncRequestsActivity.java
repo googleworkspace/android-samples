@@ -20,9 +20,9 @@ import java.io.OutputStream;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.google.android.gms.drive.Contents;
+import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.DriveResource.MetadataResult;
@@ -58,16 +58,16 @@ public class SyncRequestsActivity extends BaseDemoActivity {
 
             // First we start by creating a new contents, and blocking on the
             // result by calling await().
-            ContentsResult contentsResult =
-                    Drive.DriveApi.newContents(getGoogleApiClient()).await();
-            if (!contentsResult.getStatus().isSuccess()) {
+            DriveContentsResult driveContentsResult =
+                    Drive.DriveApi.newDriveContents(getGoogleApiClient()).await();
+            if (!driveContentsResult.getStatus().isSuccess()) {
                 // We failed, stop the task and return.
                 return null;
             }
 
             // Read the contents and open its output stream for writing, then
             // write a short message.
-            Contents originalContents = contentsResult.getContents();
+            DriveContents originalContents = driveContentsResult.getDriveContents();
             OutputStream os = originalContents.getOutputStream();
             try {
                 os.write("Hello world!\n".getBytes());

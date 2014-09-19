@@ -23,7 +23,7 @@ import android.widget.ProgressBar;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFile.DownloadProgressListener;
 import com.google.android.gms.drive.DriveId;
@@ -107,14 +107,15 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
             }
         };
         Drive.DriveApi.getFile(getGoogleApiClient(), mSelectedFileDriveId)
-            .openContents(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, listener)
-            .setResultCallback(contentsCallback);
+            .open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, listener)
+            .setResultCallback(driveContentsCallback);
         mSelectedFileDriveId = null;
     }
 
-    private ResultCallback<ContentsResult> contentsCallback = new ResultCallback<ContentsResult>() {
+    private ResultCallback<DriveContentsResult> driveContentsCallback =
+            new ResultCallback<DriveContentsResult>() {
         @Override
-        public void onResult(ContentsResult result) {
+        public void onResult(DriveContentsResult result) {
             if (!result.getStatus().isSuccess()) {
                 showMessage("Error while opening the file contents");
                 return;
