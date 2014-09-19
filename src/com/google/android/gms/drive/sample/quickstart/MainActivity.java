@@ -34,7 +34,7 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.MetadataChangeSet;
 
 /**
@@ -60,10 +60,11 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         // Start by creating a new contents, and setting a callback.
         Log.i(TAG, "Creating new contents.");
         final Bitmap image = mBitmapToSave;
-        Drive.DriveApi.newContents(mGoogleApiClient).setResultCallback(new ResultCallback<ContentsResult>() {
+        Drive.DriveApi.newDriveContents(mGoogleApiClient)
+                .setResultCallback(new ResultCallback<DriveContentsResult>() {
 
             @Override
-            public void onResult(ContentsResult result) {
+            public void onResult(DriveContentsResult result) {
                 // If the operation was not successful, we cannot do anything
                 // and must
                 // fail.
@@ -74,7 +75,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                 // Otherwise, we can write our data to the new contents.
                 Log.i(TAG, "New contents created.");
                 // Get an output stream for the contents.
-                OutputStream outputStream = result.getContents().getOutputStream();
+                OutputStream outputStream = result.getDriveContents().getOutputStream();
                 // Write the bitmap data from it.
                 ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
@@ -91,7 +92,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                 IntentSender intentSender = Drive.DriveApi
                         .newCreateFileActivityBuilder()
                         .setInitialMetadata(metadataChangeSet)
-                        .setInitialContents(result.getContents())
+                        .setInitialDriveContents(result.getDriveContents())
                         .build(mGoogleApiClient);
                 try {
                     startIntentSenderForResult(
