@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Conflict Resolution Demo</string>
+    <string name="glist_heading">Grocery List</string>
+    <string name="action_settings">setting</string>
+    <string name="groceryListFileName">groceryList17</string>
+    <string name="conflict_instruction">Start app on two devices. Add items to the list on one device then hit the \"Update List\" button. Then  add items on second device and hit \"Update List\" button. Notice the resolved list on second device.</string>
+</resources>
