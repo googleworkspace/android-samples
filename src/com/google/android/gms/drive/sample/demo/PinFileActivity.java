@@ -95,7 +95,7 @@ public class PinFileActivity extends BaseDemoActivity {
                 showMessage("Problem while trying to retrieve the file metadata");
                 return;
             }
-            if (result.getMetadata().isPinnable()) {
+            if (!result.getMetadata().isPinnable()) {
                 showMessage("File is not pinnable");
                 return;
             }
