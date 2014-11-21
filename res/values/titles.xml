@@ -17,6 +17,7 @@
 <resources>
     <string-array name="titles_array">
         <item>Create a file</item>
+        <item>Create an empty file</item>
         <item>Create a file in App Folder</item>
         <item>Create a folder</item>
         <item>Retrieve metadata</item>
