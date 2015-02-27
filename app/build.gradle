@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+//TODO(arthurthompson): Remove local file repository.
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.google.android.gms.drive.sample.drivetrashsample"
+        minSdkVersion 9
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+
+    // When including the Google Play Services library in your application you have two options:
+
+    // Option 1: Include all of Google Play services (enables better auto-complete), but you should
+    // be sure to use "minifyEnabled" on any APKs you upload to the Google Play store.
+    // compile 'com.google.android.gms:google-play-services:7.0.+'
+
+    // Option 2: Include lower level libraries if you are using Google Play services v6.5 or
+    // greater. A detail of the client libs can be found at https://goo.gl/jKNdLm.
+    // Note: If you use a service that has a specific client lib you DO NOT need to depend on
+    // the "base" lib as it is included transitively. The "base" lib is included below for
+    // documentation purposes but is not required in this sample's current configuration.
+    compile 'com.google.android.gms:play-services-base:7.0.+'
+    compile 'com.google.android.gms:play-services-drive:7.0.+'
+    // P.S. Use of + for build numbers is discouraged, especially for production apps.
+}
+
