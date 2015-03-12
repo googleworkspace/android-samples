@@ -1,12 +1,5 @@
 apply plugin: 'com.android.application'
 
-//TODO(arthurthompson): Remove local file repository.
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
