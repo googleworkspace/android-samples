@@ -29,7 +29,7 @@ import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 import com.google.android.gms.drive.events.ChangeEvent;
-import com.google.android.gms.drive.events.DriveEvent.Listener;
+import com.google.android.gms.drive.events.ChangeListener;
 import com.google.android.gms.drive.sample.demo.BaseDemoActivity;
 import com.google.android.gms.drive.sample.demo.R;
 
@@ -166,9 +166,9 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
     /**
      * A listener to handle file change events.
      */
-    final private Listener<ChangeEvent> changeListener = new Listener<ChangeEvent>() {
+    final private ChangeListener changeListener = new ChangeListener() {
         @Override
-        public void onEvent(ChangeEvent event) {
+        public void onChange(ChangeEvent event) {
             mLogTextView.setText(String.format("File change event: %s", event));
         }
     };
