@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DriveTrashSample</string>
+    <string name="add_file">Add File</string>
+    <string name="trashable_error">Resource is not trashable by your app. Resources are
+        only trashable if the authenticated user owns the resource and the resource is not app data.
+    </string>
+    <string name="empty_message">There are no files or folders in the selected folder. Use the
+        \"ADD FOLDER\" and \"ADD FILE\" buttons to add children to the currently selected
+        folder.</string>
+    <string name="instructions">Long press on any file or folder to change its trashed status.
+        Note that if a folder is trashed all of its children are also trashed.</string>
+    <string name="file_folder_icon">Resource Icon</string>
+    <string name="previous">Previous</string>
+    <string name="current_folder_label">Current Folder:</string>
+    <string name="my_drive">My Drive</string>
+    <string name="add_folder">Add Folder</string>
+    <string name="resource_name">Resource Name</string>
+    <string name="trash_status">Trash Status</string>
+    <string name="trashed_status">(Trashed)</string>
+    <string name="not_trashed_status">(Not Trashed)</string>
+    <string name="unable_to_trash_error">Unable to update DriveResource trash status. Note that if
+        the resource is a folder the trash/untrash will only be successful if all children of the
+        folder are accessible by this user and is not app data.</string>
+
+</resources>
+
