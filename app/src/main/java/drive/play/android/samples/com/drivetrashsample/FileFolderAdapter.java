@@ -76,7 +76,7 @@ public class FileFolderAdapter extends ArrayAdapter<Metadata> {
                 getContext().getResources().getString(R.string.trashed_status) :
                 getContext().getResources().getString(R.string.not_trashed_status));
         if (metadata.isFolder()) {
-            viewHolder.fileFolderImageView.setImageDrawable(getContext()
+            viewHolder.fileFolderImageView.setImageDrawable(getContext().getResources()
                     .getDrawable(R.drawable.ic_folder_black_18dp));
         } else {
             viewHolder.fileFolderImageView.setImageDrawable(getContext().getResources()
@@ -109,4 +109,3 @@ public class FileFolderAdapter extends ArrayAdapter<Metadata> {
         this.enabled = enabled;
     }
 }
-
