@@ -23,6 +23,8 @@ import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
 import com.google.android.gms.drive.DriveFolder;
 
+import java.lang.Override;
+
 /**
  * An activity illustrates how to list files in a folder. For an example of
  * pagination and displaying results, please see {@link ListFilesActivity}.
@@ -33,13 +35,17 @@ public class ListFilesInFolderActivity extends BaseDemoActivity {
     private ResultsAdapter mResultsAdapter;
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onCreate(connectionHint);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         setContentView(R.layout.activity_listfiles);
         mResultsListView = (ListView) findViewById(R.id.listViewResults);
         mResultsAdapter = new ResultsAdapter(this);
         mResultsListView.setAdapter(mResultsAdapter);
+    }
 
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        super.onConnected(connectionHint);
         Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FOLDER_ID)
                 .setResultCallback(idCallback);
     }

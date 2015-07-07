@@ -47,6 +47,7 @@
         <activity android:name=".RetrieveContentsActivity" />
         <activity android:name=".RetrieveContentsWithProgressDialogActivity" />
         <activity android:name=".CreateFileActivity" />
+        <activity android:name=".CreateEmptyFileActivity" />
         <activity android:name=".CreateFileInAppFolderActivity" />
         <activity android:name=".CreateFolderActivity" />
         <activity android:name=".EditContentsActivity" />
