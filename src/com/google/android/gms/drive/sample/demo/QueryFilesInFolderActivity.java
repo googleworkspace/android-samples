@@ -36,13 +36,17 @@ public class QueryFilesInFolderActivity extends BaseDemoActivity {
     private ResultsAdapter mResultsAdapter;
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onCreate(connectionHint);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         setContentView(R.layout.activity_listfiles);
         mResultsListView = (ListView) findViewById(R.id.listViewResults);
         mResultsAdapter = new ResultsAdapter(this);
         mResultsListView.setAdapter(mResultsAdapter);
+    }
 
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        super.onConnected(connectionHint);
         Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FOLDER_ID)
                 .setResultCallback(idCallback);
     }
