@@ -30,21 +30,15 @@ public class CreateEmptyFileActivity extends BaseDemoActivity {
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
 
-        // Perform I/O off the UI thread.
-        new Thread() {
-            @Override
-            public void run() {
-                MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                        .setTitle("New file")
-                        .setMimeType("text/plain")
-                        .setStarred(true).build();
+        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                .setTitle("New file")
+                .setMimeType("text/plain")
+                .setStarred(true).build();
 
-                // Create an empty file on root folder.
-                Drive.DriveApi.getRootFolder(getGoogleApiClient())
-                        .createFile(getGoogleApiClient(), changeSet, null /* DriveContents */)
-                        .setResultCallback(fileCallback);
-            }
-        }.start();
+        // Create an empty file on root folder.
+        Drive.DriveApi.getRootFolder(getGoogleApiClient())
+                .createFile(getGoogleApiClient(), changeSet, null /* DriveContents */)
+                .setResultCallback(fileCallback);
     }
 
     final private ResultCallback<DriveFileResult> fileCallback = new
