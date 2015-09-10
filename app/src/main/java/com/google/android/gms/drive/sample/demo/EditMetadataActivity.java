@@ -18,45 +18,50 @@ import android.os.Bundle;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveResource.MetadataResult;
-import com.google.android.gms.drive.Metadata;
+import com.google.android.gms.drive.MetadataChangeSet;
 
 /**
- * An activity to retrieve the metadata of a file.
+ * An activity to edit metadata of a file.
  */
-public class RetrieveMetadataActivity extends BaseDemoActivity {
+public class EditMetadataActivity extends BaseDemoActivity {
 
     @Override
     public void onConnected(Bundle connectionHint) {
-      Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FILE_ID)
-              .setResultCallback(idCallback);
+        super.onConnected(connectionHint);
+        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FILE_ID)
+                .setResultCallback(idCallback);
     }
 
-    final private ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
+    final ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
         @Override
         public void onResult(DriveIdResult result) {
             if (!result.getStatus().isSuccess()) {
                 showMessage("Cannot find DriveId. Are you authorized to view this file?");
                 return;
             }
-            DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), result.getDriveId());
-            file.getMetadata(getGoogleApiClient())
+            DriveId driveId = result.getDriveId();
+            DriveFile file = driveId.asDriveFile();
+            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                    .setStarred(true)
+                    .setIndexableText("Description about the file")
+                    .setTitle("A new title").build();
+            file.updateMetadata(getGoogleApiClient(), changeSet)
                     .setResultCallback(metadataCallback);
         }
     };
 
-    final private ResultCallback<MetadataResult> metadataCallback = new
-            ResultCallback<MetadataResult>() {
+    final ResultCallback<MetadataResult> metadataCallback = new ResultCallback<MetadataResult>() {
         @Override
         public void onResult(MetadataResult result) {
             if (!result.getStatus().isSuccess()) {
-                showMessage("Problem while trying to fetch metadata");
+                showMessage("Problem while trying to update metadata");
                 return;
             }
-            Metadata metadata = result.getMetadata();
-            showMessage("Metadata successfully fetched. Title: " + metadata.getTitle());
+            showMessage("Metadata successfully updated");
         }
     };
 }

@@ -22,6 +22,7 @@ import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
 import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
@@ -58,7 +59,8 @@ public class QueryFilesInFolderActivity extends BaseDemoActivity {
                 showMessage("Cannot find DriveId. Are you authorized to view this file?");
                 return;
             }
-            DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), result.getDriveId());
+            DriveId driveId = result.getDriveId();
+            DriveFolder folder = driveId.asDriveFolder(); 
             Query query = new Query.Builder()
                     .addFilter(Filters.eq(SearchableField.MIME_TYPE, "text/plain"))
                     .build();

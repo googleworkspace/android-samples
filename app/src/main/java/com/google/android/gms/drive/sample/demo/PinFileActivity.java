@@ -60,7 +60,7 @@ public class PinFileActivity extends BaseDemoActivity {
                 Log.w(TAG, "Unable to send intent", e);
             }
         } else {
-            DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), mFileId);
+            DriveFile file = mFileId.asDriveFile();
             file.getMetadata(getGoogleApiClient()).setResultCallback(metadataCallback);
         }
     }
@@ -103,7 +103,7 @@ public class PinFileActivity extends BaseDemoActivity {
                 showMessage("File is already pinned");
                 return;
             }
-            DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), mFileId);
+            DriveFile file = mFileId.asDriveFile();
             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                     .setPinned(true)
                     .build();

@@ -109,8 +109,7 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
             return;
         }
         synchronized (mSubscriptionStatusLock) {
-            DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(),
-                    mSelectedFileId);
+            DriveFile file = mSelectedFileId.asDriveFile();
             if (!isSubscribed) {
                 Log.d(TAG, "Starting to listen to the file changes.");
                 file.addChangeListener(getGoogleApiClient(), changeListener);

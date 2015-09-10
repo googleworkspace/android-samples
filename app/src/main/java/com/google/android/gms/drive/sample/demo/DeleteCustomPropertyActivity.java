@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResource;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.metadata.CustomPropertyKey;
@@ -45,7 +46,8 @@ public class DeleteCustomPropertyActivity extends BaseDemoActivity {
                         showMessage("Cannot find DriveId. Are you authorized to view this file?");
                         return;
                     }
-                    DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), result.getDriveId());
+                    DriveId driveId = result.getDriveId();
+                    DriveFile file = driveId.asDriveFile();
                     CustomPropertyKey approvalPropertyKey = new CustomPropertyKey("approved",
                             CustomPropertyKey.PUBLIC);
                     CustomPropertyKey submitPropertyKey = new CustomPropertyKey("submitted",

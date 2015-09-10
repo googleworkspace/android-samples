@@ -13,26 +13,36 @@
  */
 
 package com.google.android.gms.drive.sample.demo;
+
 import android.os.Bundle;
+import android.widget.ListView;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
+import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
 import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.MetadataChangeSet;
 
 import java.lang.Override;
 
-
 /**
- * An activity to create a file inside a folder.
+ * An activity illustrates how to list files in a folder. For an example of
+ * pagination and displaying results, please see {@link ListFilesActivity}.
  */
-public class CreateFileInFolderActivity extends BaseDemoActivity {
+public class ListFilesInFolderActivity extends BaseDemoActivity {
 
-    private DriveId mFolderDriveId;
+    private ListView mResultsListView;
+    private ResultsAdapter mResultsAdapter;
+
+    @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        setContentView(R.layout.activity_listfiles);
+        mResultsListView = (ListView) findViewById(R.id.listViewResults);
+        mResultsAdapter = new ResultsAdapter(this);
+        mResultsListView.setAdapter(mResultsAdapter);
+    }
 
     @Override
     public void onConnected(Bundle connectionHint) {
@@ -48,39 +58,24 @@ public class CreateFileInFolderActivity extends BaseDemoActivity {
                 showMessage("Cannot find DriveId. Are you authorized to view this file?");
                 return;
             }
-            mFolderDriveId = result.getDriveId();
-            Drive.DriveApi.newDriveContents(getGoogleApiClient())
-                    .setResultCallback(driveContentsCallback);
+            DriveId driveId = result.getDriveId();
+            DriveFolder folder = driveId.asDriveFolder();
+            folder.listChildren(getGoogleApiClient())
+                    .setResultCallback(metadataResult);
         }
     };
 
-    final private ResultCallback<DriveContentsResult> driveContentsCallback =
-            new ResultCallback<DriveContentsResult>() {
+    final private ResultCallback<MetadataBufferResult> metadataResult = new
+            ResultCallback<MetadataBufferResult>() {
         @Override
-        public void onResult(DriveContentsResult result) {
+        public void onResult(MetadataBufferResult result) {
             if (!result.getStatus().isSuccess()) {
-                showMessage("Error while trying to create new file contents");
+                showMessage("Problem while retrieving files");
                 return;
             }
-            DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), mFolderDriveId);
-            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                    .setTitle("New file")
-                    .setMimeType("text/plain")
-                    .setStarred(true).build();
-            folder.createFile(getGoogleApiClient(), changeSet, result.getDriveContents())
-                    .setResultCallback(fileCallback);
-        }
-    };
-
-    final private ResultCallback<DriveFileResult> fileCallback =
-            new ResultCallback<DriveFileResult>() {
-        @Override
-        public void onResult(DriveFileResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Error while trying to create the file");
-                return;
-            }
-            showMessage("Created a file: " + result.getDriveFile().getDriveId());
+            mResultsAdapter.clear();
+            mResultsAdapter.append(result.getMetadataBuffer());
+            showMessage("Successfully listed files.");
         }
     };
 }

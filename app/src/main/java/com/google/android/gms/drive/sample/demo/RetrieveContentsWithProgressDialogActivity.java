@@ -106,8 +106,8 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
                 mProgressBar.setProgress(progress);
             }
         };
-        Drive.DriveApi.getFile(getGoogleApiClient(), mSelectedFileDriveId)
-            .open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, listener)
+        DriveFile driveFile =  mSelectedFileDriveId.asDriveFile();
+        driveFile.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, listener)
             .setResultCallback(driveContentsCallback);
         mSelectedFileDriveId = null;
     }

@@ -62,7 +62,7 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
         @Override
         protected String doInBackgroundConnected(DriveId... params) {
             String contents = null;
-            DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), params[0]);
+            DriveFile file = params[0].asDriveFile();
             DriveContentsResult driveContentsResult =
                     file.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null).await();
             if (!driveContentsResult.getStatus().isSuccess()) {

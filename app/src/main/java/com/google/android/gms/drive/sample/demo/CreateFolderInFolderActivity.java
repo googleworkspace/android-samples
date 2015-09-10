@@ -19,19 +19,20 @@ import android.os.Bundle;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveResource.MetadataResult;
+import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.DriveFolder.DriveFolderResult;
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.MetadataChangeSet;
 
 /**
- * An activity to edit metadata of a file.
+ * An activity to create a folder inside a folder.
  */
-public class EditMetadataActivity extends BaseDemoActivity {
+public class CreateFolderInFolderActivity extends BaseDemoActivity {
 
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FILE_ID)
+        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FOLDER_ID)
                 .setResultCallback(idCallback);
     }
 
@@ -42,24 +43,25 @@ public class EditMetadataActivity extends BaseDemoActivity {
                 showMessage("Cannot find DriveId. Are you authorized to view this file?");
                 return;
             }
-            DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), result.getDriveId());
+            DriveId driveId = result.getDriveId();
+            DriveFolder folder = driveId.asDriveFolder();
             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                    .setStarred(true)
-                    .setIndexableText("Description about the file")
-                    .setTitle("A new title").build();
-            file.updateMetadata(getGoogleApiClient(), changeSet)
-                    .setResultCallback(metadataCallback);
+                    .setTitle("MyNewFolder").build();
+            folder.createFolder(getGoogleApiClient(), changeSet)
+                    .setResultCallback(createFolderCallback);
         }
     };
 
-    final ResultCallback<MetadataResult> metadataCallback = new ResultCallback<MetadataResult>() {
+    final ResultCallback<DriveFolderResult> createFolderCallback = new
+            ResultCallback<DriveFolderResult>() {
+
         @Override
-        public void onResult(MetadataResult result) {
+        public void onResult(DriveFolderResult result) {
             if (!result.getStatus().isSuccess()) {
-                showMessage("Problem while trying to update metadata");
+                showMessage("Problem while trying to create a folder");
                 return;
             }
-            showMessage("Metadata successfully updated");
+            showMessage("Folder successfully created");
         }
     };
 }

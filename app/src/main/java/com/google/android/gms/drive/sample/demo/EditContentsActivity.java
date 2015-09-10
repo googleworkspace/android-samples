@@ -27,6 +27,7 @@ import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveId;
 
 /**
  * An activity to illustrate how to edit contents of a Drive file.
@@ -46,7 +47,8 @@ public class EditContentsActivity extends BaseDemoActivity {
                     showMessage("Cannot find DriveId. Are you authorized to view this file?");
                     return;
                 }
-                DriveFile file = Drive.DriveApi.getFile(getGoogleApiClient(), result.getDriveId());
+                DriveId driveId = result.getDriveId();
+                DriveFile file = driveId.asDriveFile();
                 new EditContentsAsyncTask(EditContentsActivity.this).execute(file);
             }
         };

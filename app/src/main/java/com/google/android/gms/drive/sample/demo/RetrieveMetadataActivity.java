@@ -19,48 +19,46 @@ import android.os.Bundle;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.DriveIdResult;
-import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.DriveFolder.DriveFolderResult;
-import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveId;
+import com.google.android.gms.drive.DriveResource.MetadataResult;
+import com.google.android.gms.drive.Metadata;
 
 /**
- * An activity to create a folder inside a folder.
+ * An activity to retrieve the metadata of a file.
  */
-public class CreateFolderInFolderActivity extends BaseDemoActivity {
+public class RetrieveMetadataActivity extends BaseDemoActivity {
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        super.onConnected(connectionHint);
-        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FOLDER_ID)
-                .setResultCallback(idCallback);
+      Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FILE_ID)
+              .setResultCallback(idCallback);
     }
 
-    final ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
+    final private ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
         @Override
         public void onResult(DriveIdResult result) {
             if (!result.getStatus().isSuccess()) {
                 showMessage("Cannot find DriveId. Are you authorized to view this file?");
                 return;
             }
-            DriveFolder folder = Drive.DriveApi
-                    .getFolder(getGoogleApiClient(), result.getDriveId());
-            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                    .setTitle("MyNewFolder").build();
-            folder.createFolder(getGoogleApiClient(), changeSet)
-                    .setResultCallback(createFolderCallback);
+            DriveId driveId = result.getDriveId();
+            DriveFile file = driveId.asDriveFile();
+            file.getMetadata(getGoogleApiClient())
+                    .setResultCallback(metadataCallback);
         }
     };
 
-    final ResultCallback<DriveFolderResult> createFolderCallback = new
-            ResultCallback<DriveFolderResult>() {
-
+    final private ResultCallback<MetadataResult> metadataCallback = new
+            ResultCallback<MetadataResult>() {
         @Override
-        public void onResult(DriveFolderResult result) {
+        public void onResult(MetadataResult result) {
             if (!result.getStatus().isSuccess()) {
-                showMessage("Problem while trying to create a folder");
+                showMessage("Problem while trying to fetch metadata");
                 return;
             }
-            showMessage("Folder successfully created");
+            Metadata metadata = result.getMetadata();
+            showMessage("Metadata successfully fetched. Title: " + metadata.getTitle());
         }
     };
 }
