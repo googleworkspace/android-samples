@@ -149,7 +149,7 @@ public class MainActivity extends BaseDemoActivity {
             if (results > 0) {
                 // If the file exists then use it.
                 DriveId driveId = metadataBufferResult.getMetadataBuffer().get(0).getDriveId();
-                groceryListFile = Drive.DriveApi.getFile(getGoogleApiClient(), driveId);
+                groceryListFile = driveId.asDriveFile();
                 groceryListFile.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null)
                         .setResultCallback(driveContentsCallback);
             } else {

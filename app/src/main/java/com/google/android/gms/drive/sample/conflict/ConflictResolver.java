@@ -17,6 +17,7 @@ package com.google.android.gms.drive.sample.conflict;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
@@ -62,8 +63,8 @@ public class ConflictResolver implements GoogleApiClient.ConnectionCallbacks,
                     .getModifiedMetadataChangeSet();
 
             // Get current contents.
-            DriveFile currentFile = Drive.DriveApi.getFile(mGoogleApiClient,
-                    mConflictedCompletionEvent.getDriveId());
+            DriveId driveId = mConflictedCompletionEvent.getDriveId();
+            DriveFile currentFile = driveId.asDriveFile();
             DriveContentsResult currentDriveContentsResult = currentFile.open(mGoogleApiClient,
                     DriveFile.MODE_READ_ONLY, null).await();
             String serverStr;
