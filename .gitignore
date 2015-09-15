@@ -1,6 +1,12 @@
-bin/*
-gen/*
-.settings/*
-project.properties
-.project
-.classpath
+# AndroidStudio excludes
+.idea/
+*.iml
+
+# Gradle build excludes
+.gradle/
+build/
+local.properties
+gradle.properties
+
+# Misc
+.DS_Store
