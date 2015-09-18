@@ -75,7 +75,7 @@ public class MainActivity extends FragmentActivity implements
     private Stack<DriveId> mPreviousFolders;
     // List to keep track of the children of the currently selected folder.
     private List<Metadata> mChildren;
-    // Metadata of the currently selected folder, may be null when root folder is selected.
+    // DriveId of the currently selected folder.
     private DriveId mCurrentFolder;
     // Adapter to define how files and folders are displayed in the ListView.
     private FileFolderAdapter mFileFolderAdapter;
@@ -99,14 +99,7 @@ public class MainActivity extends FragmentActivity implements
                                            long id) {
                 // Metadata provides access to a DriveFile or DriveFolder's trash state.
                 Metadata metadata = mFileFolderAdapter.getItem(position);
-                DriveResource driveResource;
-                if (metadata.getDriveId().getResourceType() == DriveId.RESOURCE_TYPE_FOLDER) {
-                    driveResource = Drive.DriveApi.getFolder(mGoogleApiClient,
-                            metadata.getDriveId());
-                } else {
-                    driveResource = Drive.DriveApi.getFile(mGoogleApiClient,
-                            metadata.getDriveId());
-                }
+                DriveResource driveResource = metadata.getDriveId().asDriveResource();
 
                 // If a DriveResource is a folder it will only be trashed if all of its children
                 // are also accessible to this app.
@@ -293,7 +286,7 @@ public class MainActivity extends FragmentActivity implements
                 .setMimeType("text/plain")
                 .build();
 
-        DriveFolder driveFolder = Drive.DriveApi.getFolder(mGoogleApiClient, mCurrentFolder);
+        DriveFolder driveFolder = mCurrentFolder.asDriveFolder();
 
         driveFolder.createFile(mGoogleApiClient,
                 changeSet, null).setResultCallback(addFileCallback);
@@ -317,7 +310,7 @@ public class MainActivity extends FragmentActivity implements
                 .setTitle("sample folder " + folderCount)
                 .build();
 
-        DriveFolder driveFolder = Drive.DriveApi.getFolder(mGoogleApiClient, mCurrentFolder);
+        DriveFolder driveFolder = mCurrentFolder.asDriveFolder();
 
         driveFolder.createFolder(mGoogleApiClient, changeSet)
                 .setResultCallback(addFolderCallback);
@@ -330,12 +323,10 @@ public class MainActivity extends FragmentActivity implements
         if (mCurrentFolder == null) {
             mCurrentFolder = Drive.DriveApi.getRootFolder(mGoogleApiClient).getDriveId();
         }
-        Drive.DriveApi.getFolder(mGoogleApiClient, mCurrentFolder)
-                .getMetadata(mGoogleApiClient).setResultCallback(folderNameCallback);
+        DriveFolder driveFolder = mCurrentFolder.asDriveFolder();
+        driveFolder.getMetadata(mGoogleApiClient).setResultCallback(folderNameCallback);
 
         mChildren.clear();
-
-        DriveFolder driveFolder = Drive.DriveApi.getFolder(mGoogleApiClient, mCurrentFolder);
 
         SortOrder sortOrder = new SortOrder.Builder()
                 .addSortAscending(SortableField.CREATED_DATE).build();
@@ -352,7 +343,7 @@ public class MainActivity extends FragmentActivity implements
      * Query for all files in the currently selected folder.
      */
     private void queryFiles() {
-        DriveFolder driveFolder = Drive.DriveApi.getFolder(mGoogleApiClient, mCurrentFolder);
+        DriveFolder driveFolder = mCurrentFolder.asDriveFolder();
 
         SortOrder sortOrder = new SortOrder.Builder()
                 .addSortAscending(SortableField.CREATED_DATE).build();
