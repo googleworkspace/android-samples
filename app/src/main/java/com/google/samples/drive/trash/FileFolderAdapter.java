@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package drive.play.android.samples.com.drivetrashsample;
+package com.google.samples.drive.trash;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package drive.play.android.samples.com.drivetrashsample;
+package com.google.samples.drive.trash;
 
 import android.content.Intent;
 import android.content.IntentSender;
