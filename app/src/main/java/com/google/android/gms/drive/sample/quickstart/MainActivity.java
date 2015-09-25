@@ -28,7 +28,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
@@ -45,7 +45,7 @@ import com.google.android.gms.drive.MetadataChangeSet;
 public class MainActivity extends Activity implements ConnectionCallbacks,
         OnConnectionFailedListener {
 
-    private static final String TAG = "android-drive-quickstart";
+    private static final String TAG = "drive-quickstart";
     private static final int REQUEST_CODE_CAPTURE_IMAGE = 1;
     private static final int REQUEST_CODE_CREATOR = 2;
     private static final int REQUEST_CODE_RESOLUTION = 3;
@@ -160,7 +160,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
         if (!result.hasResolution()) {
             // show the localized error dialog.
-            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this, 0).show();
+            GoogleApiAvailability.getInstance().getErrorDialog(this, result.getErrorCode(), 0).show();
             return;
         }
         // The failure has a resolution. Resolve it.
