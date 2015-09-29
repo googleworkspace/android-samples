@@ -35,6 +35,7 @@ public class CreateFileInAppFolderActivity extends BaseDemoActivity {
                 .setResultCallback(driveContentsCallback);
     }
 
+    // [START drive_contents_callback]
     final private ResultCallback<DriveContentsResult> driveContentsCallback =
             new ResultCallback<DriveContentsResult>() {
         @Override
@@ -53,6 +54,7 @@ public class CreateFileInAppFolderActivity extends BaseDemoActivity {
                     .setResultCallback(fileCallback);
         }
     };
+    // [END drive_contents_callback]
 
     final private ResultCallback<DriveFileResult> fileCallback = new
             ResultCallback<DriveFileResult>() {
