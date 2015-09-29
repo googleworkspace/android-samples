@@ -161,6 +161,7 @@ public class MainActivity extends BaseDemoActivity {
     };
 
     // Callback when {@code groceryListContents} is reopened for writing.
+    // [START update_drive_contents]
     private ResultCallback<DriveApi.DriveContentsResult> updateDriveContensCallback =
             new ResultCallback<DriveApi.DriveContentsResult>() {
         @Override
@@ -180,6 +181,7 @@ public class MainActivity extends BaseDemoActivity {
             }
 
             // ExecutionOptions define the conflict strategy to be used.
+            // [START EXCLUDE]
             // [START execution_options]
             ExecutionOptions executionOptions = new ExecutionOptions.Builder()
                     .setNotifyOnCompletion(true)
@@ -188,10 +190,12 @@ public class MainActivity extends BaseDemoActivity {
             driveContents.commit(getGoogleApiClient(), null, executionOptions)
                     .setResultCallback(fileWrittenCallback);
             // [END execution_options]
+            // [END EXCLUDE]
 
             Log.d(TAG, "Saving file.");
         }
     };
+    // [END update_drive_contents]
 
     // Callback when file has been written locally.
     private ResultCallback<Status> fileWrittenCallback = new ResultCallback<Status>() {

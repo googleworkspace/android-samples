@@ -86,8 +86,10 @@ public class ConflictResolver implements GoogleApiClient.ConnectionCallbacks,
                     modifiedStr);
 
             // Commit resolved contents.
+            // [START reopen_file]
             DriveContentsResult driveContentsResult = currentDriveContents
                     .reopenForWrite(mGoogleApiClient).await();
+            // [END reopen_file]
             if (driveContentsResult.getStatus().isSuccess()) {
                 DriveContents writingDriveContents = driveContentsResult.getDriveContents();
 

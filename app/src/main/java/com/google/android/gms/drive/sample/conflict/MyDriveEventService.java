@@ -5,14 +5,17 @@ package com.google.android.gms.drive.sample.conflict;
 import com.google.android.gms.drive.events.CompletionEvent;
 import com.google.android.gms.drive.events.DriveEventService;
 
+// [START on_complete]
 public class MyDriveEventService extends DriveEventService {
 
     @Override
     public void onCompletion(CompletionEvent event) {
         if (event.getStatus() == CompletionEvent.STATUS_CONFLICT) {
             // Handle completion conflict.
+            // [START EXCLUDE]
             ConflictResolver conflictResolver = new ConflictResolver(event, this);
             conflictResolver.resolve();
+            // [END EXCLUDE]
         } else if (event.getStatus() == CompletionEvent.STATUS_FAILURE) {
             // Handle completion failure.
 
@@ -25,3 +28,4 @@ public class MyDriveEventService extends DriveEventService {
         }
     }
 }
+// [END on_completion]
