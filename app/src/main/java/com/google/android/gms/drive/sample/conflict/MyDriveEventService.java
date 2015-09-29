@@ -12,10 +12,10 @@ public class MyDriveEventService extends DriveEventService {
     public void onCompletion(CompletionEvent event) {
         if (event.getStatus() == CompletionEvent.STATUS_CONFLICT) {
             // Handle completion conflict.
-            // [START EXCLUDE]
+            // [START_EXCLUDE]
             ConflictResolver conflictResolver = new ConflictResolver(event, this);
             conflictResolver.resolve();
-            // [END EXCLUDE]
+            // [END_EXCLUDE]
         } else if (event.getStatus() == CompletionEvent.STATUS_FAILURE) {
             // Handle completion failure.
 
