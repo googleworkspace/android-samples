@@ -180,12 +180,14 @@ public class MainActivity extends BaseDemoActivity {
             }
 
             // ExecutionOptions define the conflict strategy to be used.
+            // [START execution_options]
             ExecutionOptions executionOptions = new ExecutionOptions.Builder()
                     .setNotifyOnCompletion(true)
                     .setConflictStrategy(ExecutionOptions.CONFLICT_STRATEGY_KEEP_REMOTE)
                     .build();
             driveContents.commit(getGoogleApiClient(), null, executionOptions)
                     .setResultCallback(fileWrittenCallback);
+            // [END execution_options]
 
             Log.d(TAG, "Saving file.");
         }
