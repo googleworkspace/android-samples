@@ -24,7 +24,7 @@ limitations under the License.
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <!-- [START_EXCLUDE(silent)] -->
+        <!-- [START_EXCLUDE silent] -->
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
         <!-- [END_EXCLUDE] -->
         <!-- Begin DriveEventService service declaration -->
