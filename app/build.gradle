@@ -25,5 +25,5 @@ dependencies {
 
     // Include lower level libraries if you are using Google Play services v6.5 or
     // greater. Details of the client libs can be found at https://goo.gl/jKNdLm.
-    compile 'com.google.android.gms:play-services-drive:8.1.0'
+    compile 'com.google.android.gms:play-services-drive:8.3.0'
 }
