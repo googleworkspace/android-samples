@@ -1,7 +1,7 @@
 # Google Drive Android Quickstart
 
 This application provides a
-[single activity](src/com/google/android/gms/drive/sample/quickstart/MainActivity.java)
+[single activity](https://github.com/googledrive/android-quickstart/blob/master/app/src/main/java/com/google/android/gms/drive/sample/quickstart/MainActivity.java)
 designed to get you up and running with the [Google Drive API for Android](https://developers.google.com/drive/android).
 
 # What does it do?
