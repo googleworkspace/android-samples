@@ -27,14 +27,12 @@ limitations under the License.
         <!-- [START_EXCLUDE silent] -->
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
         <!-- [END_EXCLUDE] -->
-        <!-- Begin DriveEventService service declaration -->
         <service android:name=".MyDriveEventService"
                  android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.android.gms.drive.events.HANDLE_EVENT" />
             </intent-filter>
         </service>
-        <!-- End DriveEventService service declaration -->
         <!-- [START_EXCLUDE silent] -->
         <activity
             android:name=".MainActivity"

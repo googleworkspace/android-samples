@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -23,33 +23,31 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class ConflictUtil {
-
+class ConflictUtil {
     /**
      * Performs a three-way merge of three sets of "grocery items" into one set.
      *
-     * @param baseStr Items local modifications are based on.
-     * @param currentStr Items currently on the server.
+     * @param baseStr     Items local modifications are based on.
+     * @param currentStr  Items currently on the server.
      * @param modifiedStr Locally modified items.
      * @return Items merged from three sets of items provided.
      */
-    public static String resolveConflict(String baseStr, String currentStr, String modifiedStr) {
+    static String resolveConflict(String baseStr, String currentStr, String modifiedStr) {
         List<String> baseItems = Arrays.asList(baseStr.split("\n"));
         List<String> currentItems = Arrays.asList(currentStr.split("\n"));
         List<String> modifiedItems = Arrays.asList(modifiedStr.split("\n"));
-
-        List<String> allItems = new ArrayList<String>();
+        List<String> allItems = new ArrayList<>();
 
         // Add unique items to allItems.
         allItems.addAll(baseItems);
 
-        for(String item: currentItems) {
+        for (String item : currentItems) {
             if (!allItems.contains(item)) {
                 allItems.add(item);
             }
         }
 
-        for(String item: modifiedItems) {
+        for (String item : modifiedItems) {
             if (!allItems.contains(item)) {
                 allItems.add(item);
             }
@@ -58,8 +56,8 @@ public class ConflictUtil {
         // Remove items that were removed from currentItems or modifiedItems.
         for (Iterator<String> iter = allItems.iterator(); iter.hasNext();) {
             String item = iter.next();
-            if (baseItems.contains(item) && (!currentItems.contains(item)
-                    || !modifiedItems.contains(item))) {
+            if (baseItems.contains(item)
+                    && (!currentItems.contains(item) || !modifiedItems.contains(item))) {
                 iter.remove();
             }
         }
@@ -79,30 +77,17 @@ public class ConflictUtil {
      * @param is InputStream used to read into String.
      * @return String resulting from reading is.
      */
-    public static String getStringFromInputStream(InputStream is) {
-        BufferedReader br = null;
+    static String getStringFromInputStream(InputStream is) {
         StringBuilder sb = new StringBuilder();
 
         String line;
-        try {
-
-            br = new BufferedReader(new InputStreamReader(is));
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
-
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            throw new RuntimeException("Unable to read string content.");
         }
-
         return sb.toString();
     }
 }
