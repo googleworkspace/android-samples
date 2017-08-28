@@ -23,6 +23,9 @@
     <string name="unable_to_trash_error">Unable to update DriveResource trash status. Note that if
         the resource is a folder the trash/untrash will only be successful if all children of the
         folder are accessible by this user and is not app data.</string>
+    <string name="unable_to_create_folder">Unable to create folder.</string>
+    <string name="change_folder_error">An unexpected error occurred while changing folders.</string>
+    <string name="unexpected_error">An unexpected error occurred while performing the operation.</string>
 
 </resources>
 

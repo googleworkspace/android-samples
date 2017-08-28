@@ -17,6 +17,7 @@
 package com.google.samples.drive.trash;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,7 @@ import java.util.List;
 /**
  * Adapter for displaying files and folders in the ListView.
  */
-public class FileFolderAdapter extends ArrayAdapter<Metadata> {
-
+class FileFolderAdapter extends ArrayAdapter<Metadata> {
     /**
      * ViewHolder to store each of the component views that need to be updated by the Adapter.
      */
@@ -45,22 +45,24 @@ public class FileFolderAdapter extends ArrayAdapter<Metadata> {
     private List<Metadata> fileMetadata;
     private boolean enabled;
 
-    public FileFolderAdapter(Context context, int resource, List<Metadata> fileMetadata) {
+    FileFolderAdapter(Context context, int resource, List<Metadata> fileMetadata) {
         super(context, resource);
         this.fileMetadata = fileMetadata;
         enabled = true;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater =
+                    (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rootView = inflater.inflate(R.layout.resource_item, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.filenameTextView = (TextView) rootView.findViewById(R.id.filenameTextView);
-            viewHolder.trashStatusTextView = (TextView) rootView.findViewById(R.id.trashStatusTextView);
+            viewHolder.trashStatusTextView =
+                    (TextView) rootView.findViewById(R.id.trashStatusTextView);
             viewHolder.fileFolderImageView = (ImageView) rootView.findViewById(R.id.imageView);
 
             convertView = rootView;
@@ -71,16 +73,18 @@ public class FileFolderAdapter extends ArrayAdapter<Metadata> {
 
         final Metadata metadata = getItem(position);
 
+        assert metadata != null;
+
         viewHolder.filenameTextView.setText(metadata.getTitle());
-        viewHolder.trashStatusTextView.setText(metadata.isTrashed() ?
-                getContext().getResources().getString(R.string.trashed_status) :
-                getContext().getResources().getString(R.string.not_trashed_status));
+        viewHolder.trashStatusTextView.setText(metadata.isTrashed()
+                        ? getContext().getResources().getString(R.string.trashed_status)
+                        : getContext().getResources().getString(R.string.not_trashed_status));
         if (metadata.isFolder()) {
-            viewHolder.fileFolderImageView.setImageDrawable(getContext().getResources()
-                    .getDrawable(R.drawable.ic_folder_black_18dp));
+            viewHolder.fileFolderImageView.setImageDrawable(getContext().getResources().getDrawable(
+                    R.drawable.ic_folder_black_18dp, getContext().getTheme()));
         } else {
-            viewHolder.fileFolderImageView.setImageDrawable(getContext().getResources()
-                    .getDrawable(R.drawable.ic_description_black_18dp));
+            viewHolder.fileFolderImageView.setImageDrawable(getContext().getResources().getDrawable(
+                    R.drawable.ic_description_black_18dp, getContext().getTheme()));
         }
 
         return convertView;
@@ -101,12 +105,11 @@ public class FileFolderAdapter extends ArrayAdapter<Metadata> {
         return enabled;
     }
 
-    public void setFiles(List<Metadata> fileMetadata) {
+    void setFiles(List<Metadata> fileMetadata) {
         this.fileMetadata = fileMetadata;
     }
 
-    public void setEnabled(boolean enabled) {
+    void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 }
-
