@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,27 +14,20 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.Metadata;
-import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.metadata.CustomPropertyKey;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 /**
- * An activity to illustrate how update or insert (if it does not exist) a custom property onto a
- * file.
+ * An activity to illustrate how to delete a file.
  */
-public class InsertUpdateCustomPropertyActivity extends BaseDemoActivity {
-    private static final String TAG = "DeleteCustomProperty";
+public class DeleteFileActivity extends BaseDemoActivity {
+    private static final String TAG = "DeleteFileActivity";
 
     @Override
     protected void onDriveClientReady() {
@@ -43,7 +36,7 @@ public class InsertUpdateCustomPropertyActivity extends BaseDemoActivity {
                         new OnSuccessListener<DriveId>() {
                             @Override
                             public void onSuccess(DriveId driveId) {
-                                updateCustomProperty(driveId.asDriveFile());
+                                deleteFile(driveId.asDriveFile());
                             }
                         })
                 .addOnFailureListener(this, new OnFailureListener() {
@@ -55,36 +48,26 @@ public class InsertUpdateCustomPropertyActivity extends BaseDemoActivity {
                     }
                 });
     }
-
-    private void updateCustomProperty(DriveFile file) {
-        // [START update_custom_property]
-        CustomPropertyKey approvalPropertyKey =
-                new CustomPropertyKey("approved", CustomPropertyKey.PUBLIC);
-        CustomPropertyKey submitPropertyKey =
-                new CustomPropertyKey("submitted", CustomPropertyKey.PUBLIC);
-        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                              .setCustomProperty(approvalPropertyKey, "yes")
-                                              .setCustomProperty(submitPropertyKey, "no")
-                                              .build();
-        Task<Metadata> updateMetadataTask =
-                getDriveResourceClient().updateMetadata(file, changeSet);
-        updateMetadataTask
+    private void deleteFile(DriveFile file) {
+        // [START delete_file]
+        getDriveResourceClient()
+                .delete(file)
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<Metadata>() {
+                        new OnSuccessListener<Void>() {
                             @Override
-                            public void onSuccess(Metadata metadata) {
-                                showMessage(getString(R.string.custom_property_updated));
+                            public void onSuccess(Void aVoid) {
+                                showMessage(getString(R.string.file_deleted));
                                 finish();
                             }
                         })
                 .addOnFailureListener(this, new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to update metadata", e);
-                        showMessage(getString(R.string.update_failed));
+                        Log.e(TAG, "Unable to delete file", e);
+                        showMessage(getString(R.string.delete_failed));
                         finish();
                     }
                 });
-        // [END update_custom_property]
+        // [END delete_file]
     }
 }

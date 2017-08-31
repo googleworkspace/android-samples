@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -14,18 +14,19 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveFolder.DriveFileResult;
+import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -34,66 +35,54 @@ import java.io.Writer;
  * An activity to illustrate how to create a file.
  */
 public class CreateFileActivity extends BaseDemoActivity {
-
     private static final String TAG = "CreateFileActivity";
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onConnected(connectionHint);
-        // create new contents resource
-        Drive.DriveApi.newDriveContents(getGoogleApiClient())
-                .setResultCallback(driveContentsCallback);
+    protected void onDriveClientReady() {
+        createFile();
     }
 
-    final private ResultCallback<DriveContentsResult> driveContentsCallback = new
-            ResultCallback<DriveContentsResult>() {
-        @Override
-        public void onResult(DriveContentsResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Error while trying to create new file contents");
-                return;
-            }
-            final DriveContents driveContents = result.getDriveContents();
+    private void createFile() {
+        // [START create_file]
+        final Task<DriveFolder> rootFolderTask = getDriveResourceClient().getRootFolder();
+        final Task<DriveContents> createContentsTask = getDriveResourceClient().createContents();
+        Tasks.whenAll(rootFolderTask, createContentsTask)
+                .continueWithTask(new Continuation<Void, Task<DriveFile>>() {
+                    @Override
+                    public Task<DriveFile> then(@NonNull Task<Void> task) throws Exception {
+                        DriveFolder parent = rootFolderTask.getResult();
+                        DriveContents contents = createContentsTask.getResult();
+                        OutputStream outputStream = contents.getOutputStream();
+                        try (Writer writer = new OutputStreamWriter(outputStream)) {
+                            writer.write("Hello World!");
+                        }
 
-            // Perform I/O off the UI thread.
-            new Thread() {
-                @Override
-                public void run() {
-                    // write content to DriveContents
-                    OutputStream outputStream = driveContents.getOutputStream();
-                    Writer writer = new OutputStreamWriter(outputStream);
-                    try {
-                        writer.write("Hello World!");
-                        writer.close();
-                    } catch (IOException e) {
-                        Log.e(TAG, e.getMessage());
+                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                                              .setTitle("HelloWorld.txt")
+                                                              .setMimeType("text/plain")
+                                                              .setStarred(true)
+                                                              .build();
+
+                        return getDriveResourceClient().createFile(parent, changeSet, contents);
                     }
-
-                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                            .setTitle("New file")
-                            .setMimeType("text/plain")
-                            .setStarred(true).build();
-
-                    // create a file on root folder
-                    Drive.DriveApi.getRootFolder(getGoogleApiClient())
-                            .createFile(getGoogleApiClient(), changeSet, driveContents)
-                            .setResultCallback(fileCallback);
-                }
-            }.start();
-        }
-    };
-
-    final private ResultCallback<DriveFileResult> fileCallback = new
-            ResultCallback<DriveFileResult>() {
-        @Override
-        public void onResult(DriveFileResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Error while trying to create the file");
-                return;
-            }
-            showMessage("Created a file with content: " + result.getDriveFile().getDriveId());
-        }
-    };
-
-
+                })
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<DriveFile>() {
+                            @Override
+                            public void onSuccess(DriveFile driveFile) {
+                                showMessage(getString(R.string.file_created,
+                                        driveFile.getDriveId().encodeToString()));
+                                finish();
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Unable to create file", e);
+                        showMessage(getString(R.string.file_create_error));
+                        finish();
+                    }
+                });
+        // [END create_file]
+    }
 }

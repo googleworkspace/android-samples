@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All Rights Reserved.
+ * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -21,18 +21,19 @@ import android.widget.ListView;
 
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;
-import com.google.android.gms.drive.metadata.CustomPropertyKey;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
+import com.google.android.gms.drive.query.SearchableField;
 import com.google.android.gms.drive.widget.DataBufferAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 /**
- * An activity to illustrate how to query for files with a matching custom property.
+ * An activity to illustrate how to query files with title equal to HelloWorld.txt.
  */
-public class QueryFilesWithCustomPropertyActivity extends BaseDemoActivity {
-    private static final String TAG = "QueryFilesWithProperty";
+public class QueryFilesWithTitleActivity extends BaseDemoActivity {
+    private static final String TAG = "QueryFilesWithTitle";
 
     private DataBufferAdapter<Metadata> mResultsAdapter;
 
@@ -65,25 +66,28 @@ public class QueryFilesWithCustomPropertyActivity extends BaseDemoActivity {
      * it retrieves results for the first page.
      */
     private void listFiles() {
-        CustomPropertyKey customPropertyKey =
-                new CustomPropertyKey("approved", CustomPropertyKey.PUBLIC);
-        Query query = new Query.Builder().addFilter(Filters.eq(customPropertyKey, "yes")).build();
-        getDriveResourceClient()
-                .query(query)
-                .addOnSuccessListener(this,
-                        new OnSuccessListener<MetadataBuffer>() {
+        // [START query_title]
+        Query query = new Query.Builder()
+                              .addFilter(Filters.eq(SearchableField.TITLE, "HelloWorld.txt"))
+                              .build();
+        // [END query_title]
+        Task<MetadataBuffer> queryTask =
+                getDriveResourceClient()
+                        .query(query)
+                        .addOnSuccessListener(this,
+                                new OnSuccessListener<MetadataBuffer>() {
+                                    @Override
+                                    public void onSuccess(MetadataBuffer metadataBuffer) {
+                                        mResultsAdapter.append(metadataBuffer);
+                                    }
+                                })
+                        .addOnFailureListener(this, new OnFailureListener() {
                             @Override
-                            public void onSuccess(MetadataBuffer metadataBuffer) {
-                                mResultsAdapter.append(metadataBuffer);
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, "Error retrieving files", e);
+                                showMessage(getString(R.string.query_failed));
+                                finish();
                             }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Error retrieving files", e);
-                        showMessage(getString(R.string.query_failed));
-                        finish();
-                    }
-                });
+                        });
     }
 }

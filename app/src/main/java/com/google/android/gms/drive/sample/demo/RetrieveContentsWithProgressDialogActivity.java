@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -14,33 +14,32 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-import android.content.Intent;
-import android.content.IntentSender;
-import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.DriveContentsResult;
+import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveFile.DownloadProgressListener;
 import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.OpenFileActivityBuilder;
+import com.google.android.gms.drive.events.OpenFileCallback;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * An activity to illustrate how to open contents and listen
  * the download progress if the file is not already sync'ed.
  */
 public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity {
-
-    private static final String TAG = "RetrieveFileWithProgressDialogActivity";
-
-    /**
-     * Request code to handle the result from file opening activity.
-     */
-    private static final int REQUEST_CODE_OPENER = 1;
+    private static final String TAG = "RetrieveWithProgress";
 
     /**
      * Progress bar to show the current download progress of the file.
@@ -48,79 +47,97 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
     private ProgressBar mProgressBar;
 
     /**
-     * File that is selected with the open file activity.
+     * Text view for file contents
      */
-    private DriveId mSelectedFileDriveId;
+    private TextView mFileContents;
+
+    private ExecutorService mExecutorService;
 
     @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar = findViewById(R.id.progressBar);
         mProgressBar.setMax(100);
+        mFileContents = findViewById(R.id.fileContents);
+        mFileContents.setText("");
+        mExecutorService = Executors.newSingleThreadExecutor();
     }
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onConnected(connectionHint);
-
-        // If there is a selected file, open its contents.
-        if (mSelectedFileDriveId != null) {
-            open();
-            return;
-        }
-
-        // Let the user pick an mp4 or a jpeg file if there are
-        // no files selected by the user.
-        IntentSender intentSender = Drive.DriveApi
-                .newOpenFileActivityBuilder()
-                .setMimeType(new String[]{ "video/mp4", "image/jpeg" })
-                .build(getGoogleApiClient());
-        try {
-            startIntentSenderForResult(intentSender, REQUEST_CODE_OPENER, null, 0, 0, 0);
-        } catch (SendIntentException e) {
-          Log.w(TAG, "Unable to send intent", e);
-        }
+    protected void onDriveClientReady() {
+        pickTextFile()
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<DriveId>() {
+                            @Override
+                            public void onSuccess(DriveId driveId) {
+                                retrieveContents(driveId.asDriveFile());
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "No file selected", e);
+                        showMessage(getString(R.string.file_not_selected));
+                        finish();
+                    }
+                });
     }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_OPENER && resultCode == RESULT_OK) {
-            mSelectedFileDriveId = (DriveId) data.getParcelableExtra(
-                    OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+    protected void onDestroy() {
+        super.onDestroy();
+        mExecutorService.shutdown();
     }
 
-    private void open() {
-        // Reset progress dialog back to zero as we're
-        // initiating an opening request.
-        mProgressBar.setProgress(0);
-        DownloadProgressListener listener = new DownloadProgressListener() {
+    private void retrieveContents(DriveFile file) {
+        // [START read_with_progress_listener]
+        OpenFileCallback openCallback = new OpenFileCallback() {
             @Override
             public void onProgress(long bytesDownloaded, long bytesExpected) {
                 // Update progress dialog with the latest progress.
-                int progress = (int)(bytesDownloaded*100/bytesExpected);
+                int progress = (int) (bytesDownloaded * 100 / bytesExpected);
                 Log.d(TAG, String.format("Loading progress: %d percent", progress));
                 mProgressBar.setProgress(progress);
             }
-        };
-        DriveFile driveFile =  mSelectedFileDriveId.asDriveFile();
-        driveFile.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, listener)
-            .setResultCallback(driveContentsCallback);
-        mSelectedFileDriveId = null;
-    }
 
-    private ResultCallback<DriveContentsResult> driveContentsCallback =
-            new ResultCallback<DriveContentsResult>() {
-        @Override
-        public void onResult(DriveContentsResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Error while opening the file contents");
-                return;
+            @Override
+            public void onContents(@NonNull DriveContents driveContents) {
+                // onProgress may not be called for files that are already
+                // available on the device. Mark the progress as complete
+                // when contents available to ensure status is updated.
+                mProgressBar.setProgress(100);
+                // Read contents
+                // [START_EXCLUDE]
+                try {
+                    try (BufferedReader reader = new BufferedReader(
+                                 new InputStreamReader(driveContents.getInputStream()))) {
+                        StringBuilder builder = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            builder.append(line);
+                        }
+                        showMessage(getString(R.string.content_loaded));
+                        mFileContents.setText(builder.toString());
+                        getDriveResourceClient().discardContents(driveContents);
+                    }
+                } catch (IOException e) {
+                    onError(e);
+                }
+                // [END_EXCLUDE]
             }
-            showMessage("File contents opened");
-        }
-    };
+
+            @Override
+            public void onError(@NonNull Exception e) {
+                // Handle error
+                // [START_EXCLUDE]
+                Log.e(TAG, "Unable to read contents", e);
+                showMessage(getString(R.string.read_failed));
+                finish();
+                // [END_EXCLUDE]
+            }
+        };
+
+        getDriveResourceClient().openFile(file, DriveFile.MODE_READ_ONLY, openCallback);
+        // [END read_with_progress_listener]
+    }
 }

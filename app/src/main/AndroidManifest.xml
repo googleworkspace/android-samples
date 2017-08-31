@@ -31,7 +31,13 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
+        <service
+            android:name="com.google.android.gms.drive.sample.demo.events.MyDriveEventService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.drive.events.HANDLE_EVENT" />
+            </intent-filter>
+        </service>
         <activity
             android:name="com.google.android.gms.drive.sample.demo.HomeActivity"
             android:label="@string/app_name" >
@@ -41,7 +47,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListFilesActivity" />
         <activity android:name=".QueryFilesActivity" />
         <activity android:name=".SyncRequestsActivity" />
         <activity android:name=".RetrieveContentsActivity" />
@@ -50,21 +55,21 @@
         <activity android:name=".CreateEmptyFileActivity" />
         <activity android:name=".CreateFileInAppFolderActivity" />
         <activity android:name=".CreateFolderActivity" />
-        <activity android:name=".EditContentsActivity" />
+        <activity android:name=".DeleteFileActivity" />
+        <activity android:name=".AppendContentsActivity" />
+        <activity android:name=".RewriteContentsActivity" />
         <activity android:name=".EditMetadataActivity" />
         <activity android:name=".CreateFileWithCreatorActivity" />
-        <activity android:name=".PickFileWithOpenerActivity" />
-        <activity android:name=".PickFolderWithOpenerActivity" />
         <activity android:name=".RetrieveMetadataActivity" />
         <activity android:name=".CreateFileInFolderActivity" />
         <activity android:name=".CreateFolderInFolderActivity" />
-        <activity android:name=".ListFilesInFolderActivity" />
         <activity android:name=".QueryFilesInFolderActivity" />
         <activity android:name=".PinFileActivity" />
         <activity android:name=".events.ListenChangeEventsForFilesActivity" />
+        <activity android:name=".events.SubscribeChangeEventsForFilesActivity" />
         <activity android:name=".QueryNonTextFilesActivity" />
         <activity android:name=".QueryFilesSharedWithMeActivity" />
-        <activity android:name=".QueryFilesWithAInTitleActivity" />
+        <activity android:name=".QueryFilesWithTitleActivity" />
         <activity android:name=".QueryStarredTextFilesActivity" />
         <activity android:name=".QueryTextOrHtmlFilesActivity" />
         <activity android:name=".InsertUpdateCustomPropertyActivity" />

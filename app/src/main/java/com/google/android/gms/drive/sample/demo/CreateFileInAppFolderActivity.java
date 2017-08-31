@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -14,58 +14,75 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.DriveContentsResult;
-import com.google.android.gms.drive.DriveFolder.DriveFileResult;
+import com.google.android.gms.drive.DriveContents;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 /**
  * An activity that creates a text file in the App Folder.
  */
 public class CreateFileInAppFolderActivity extends BaseDemoActivity {
+    private static final String TAG = "CreateFileInAppFolder";
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onConnected(connectionHint);
-        // create new contents resource
-        Drive.DriveApi.newDriveContents(getGoogleApiClient())
-                .setResultCallback(driveContentsCallback);
+    protected void onDriveClientReady() {
+        createFileInAppFolder();
     }
 
-    // [START drive_contents_callback]
-    final private ResultCallback<DriveContentsResult> driveContentsCallback =
-            new ResultCallback<DriveContentsResult>() {
-        @Override
-        public void onResult(DriveContentsResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Error while trying to create new file contents");
-                return;
-            }
+    // [START create_file_in_appfolder]
+    private void createFileInAppFolder() {
+        final Task<DriveFolder> appFolderTask = getDriveResourceClient().getAppFolder();
+        final Task<DriveContents> createContentsTask = getDriveResourceClient().createContents();
+        Tasks.whenAll(appFolderTask, createContentsTask)
+                .continueWithTask(new Continuation<Void, Task<DriveFile>>() {
+                    @Override
+                    public Task<DriveFile> then(@NonNull Task<Void> task) throws Exception {
+                        DriveFolder parent = appFolderTask.getResult();
+                        DriveContents contents = createContentsTask.getResult();
+                        OutputStream outputStream = contents.getOutputStream();
+                        try (Writer writer = new OutputStreamWriter(outputStream)) {
+                            writer.write("Hello World!");
+                        }
 
-            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                    .setTitle("appconfig.txt")
-                    .setMimeType("text/plain")
-                    .build();
-            Drive.DriveApi.getAppFolder(getGoogleApiClient())
-                    .createFile(getGoogleApiClient(), changeSet, result.getDriveContents())
-                    .setResultCallback(fileCallback);
-        }
-    };
-    // [END drive_contents_callback]
+                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                                              .setTitle("New file")
+                                                              .setMimeType("text/plain")
+                                                              .setStarred(true)
+                                                              .build();
 
-    final private ResultCallback<DriveFileResult> fileCallback = new
-            ResultCallback<DriveFileResult>() {
-        @Override
-        public void onResult(DriveFileResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Error while trying to create the file");
-                return;
-            }
-            showMessage("Created a file in App Folder: "
-                    + result.getDriveFile().getDriveId());
-        }
-    };
+                        return getDriveResourceClient().createFile(parent, changeSet, contents);
+                    }
+                })
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<DriveFile>() {
+                            @Override
+                            public void onSuccess(DriveFile driveFile) {
+                                showMessage(getString(R.string.file_created,
+                                        driveFile.getDriveId().encodeToString()));
+                                finish();
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Unable to create file", e);
+                        showMessage(getString(R.string.file_create_error));
+                        finish();
+                    }
+                });
+    }
+    // [END create_file_in_appfolder]
 }

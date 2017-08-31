@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -14,45 +14,61 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveFolder.DriveFileResult;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 /**
  * An activity to illustrate how to create an empty file.
  */
 public class CreateEmptyFileActivity extends BaseDemoActivity {
+    private static final String TAG = "CreateEmptyFileActivity";
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onConnected(connectionHint);
-
-        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                .setTitle("New file")
-                .setMimeType("text/plain")
-                .setStarred(true).build();
-
-        // Create an empty file on root folder.
-        Drive.DriveApi.getRootFolder(getGoogleApiClient())
-                .createFile(getGoogleApiClient(), changeSet, null /* DriveContents */)
-                .setResultCallback(fileCallback);
+    protected void onDriveClientReady() {
+        createEmptyFile();
     }
 
-    final private ResultCallback<DriveFileResult> fileCallback = new
-            ResultCallback<DriveFileResult>() {
-                @Override
-                public void onResult(DriveFileResult result) {
-                    if (!result.getStatus().isSuccess()) {
-                        showMessage("Error while trying to create the file");
-                        return;
+    private void createEmptyFile() {
+        // [START create_empty_file]
+        getDriveResourceClient()
+                .getRootFolder()
+                .continueWithTask(new Continuation<DriveFolder, Task<DriveFile>>() {
+                    @Override
+                    public Task<DriveFile> then(@NonNull Task<DriveFolder> task) throws Exception {
+                        DriveFolder parentFolder = task.getResult();
+                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                                              .setTitle("New file")
+                                                              .setMimeType("text/plain")
+                                                              .setStarred(true)
+                                                              .build();
+                        return getDriveResourceClient().createFile(parentFolder, changeSet, null);
                     }
-                    showMessage("Created an empty file: "
-                            + result.getDriveFile().getDriveId());
-                }
-            };
-
-
+                })
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<DriveFile>() {
+                            @Override
+                            public void onSuccess(DriveFile driveFile) {
+                                showMessage(getString(R.string.file_created,
+                                        driveFile.getDriveId().encodeToString()));
+                                finish();
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Unable to create file", e);
+                        showMessage(getString(R.string.file_create_error));
+                        finish();
+                    }
+                });
+        // [END create_empty_file]
+    }
 }

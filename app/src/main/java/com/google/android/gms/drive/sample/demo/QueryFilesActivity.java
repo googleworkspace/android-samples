@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -15,30 +15,40 @@
 package com.google.android.gms.drive.sample.demo;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.ListView;
 
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
+import com.google.android.gms.drive.Metadata;
+import com.google.android.gms.drive.MetadataBuffer;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
+import com.google.android.gms.drive.widget.DataBufferAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 /**
  * An activity to illustrate how to query files.
  */
 public class QueryFilesActivity extends BaseDemoActivity {
+    private static final String TAG = "QueryFiles";
 
-    private ListView mResultsListView;
-    private ResultsAdapter mResultsAdapter;
+    private DataBufferAdapter<Metadata> mResultsAdapter;
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.activity_listfiles);
-        mResultsListView = (ListView) findViewById(R.id.listViewResults);
+        ListView mListView = findViewById(R.id.listViewResults);
         mResultsAdapter = new ResultsAdapter(this);
-        mResultsListView.setAdapter(mResultsAdapter);
+        mListView.setAdapter(mResultsAdapter);
+    }
+
+    @Override
+    protected void onDriveClientReady() {
+        listFiles();
     }
 
     /**
@@ -51,26 +61,40 @@ public class QueryFilesActivity extends BaseDemoActivity {
         mResultsAdapter.clear();
     }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onConnected(connectionHint);
+    /**
+     * Retrieves results for the next page. For the first run,
+     * it retrieves results for the first page.
+     */
+    private void listFiles() {
         Query query = new Query.Builder()
-                .addFilter(Filters.eq(SearchableField.MIME_TYPE, "text/plain"))
-                .build();
-        Drive.DriveApi.query(getGoogleApiClient(), query)
-                .setResultCallback(metadataCallback);
+                              .addFilter(Filters.eq(SearchableField.MIME_TYPE, "text/plain"))
+                              .build();
+        // [START query_files]
+        Task<MetadataBuffer> queryTask = getDriveResourceClient().query(query);
+        // [END query_files]
+        // [START query_results]
+        queryTask
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<MetadataBuffer>() {
+                            @Override
+                            public void onSuccess(MetadataBuffer metadataBuffer) {
+                                // Handle results...
+                                // [START_EXCLUDE]
+                                mResultsAdapter.append(metadataBuffer);
+                                // [END_EXCLUDE]
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failure...
+                        // [START_EXCLUDE]
+                        Log.e(TAG, "Error retrieving files", e);
+                        showMessage(getString(R.string.query_failed));
+                        finish();
+                        // [END_EXCLUDE]
+                    }
+                });
+        // [END query_results]
     }
-
-    final private ResultCallback<MetadataBufferResult> metadataCallback = new
-            ResultCallback<MetadataBufferResult>() {
-        @Override
-        public void onResult(MetadataBufferResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Problem while retrieving results");
-                return;
-            }
-            mResultsAdapter.clear();
-            mResultsAdapter.append(result.getMetadataBuffer());
-        }
-    };
 }

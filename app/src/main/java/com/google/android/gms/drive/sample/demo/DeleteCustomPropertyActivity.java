@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -14,60 +14,73 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.DriveResource;
+import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.metadata.CustomPropertyKey;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 /**
  * An activity to illustrate how to delete a custom property from a file.
  */
 public class DeleteCustomPropertyActivity extends BaseDemoActivity {
+    private static final String TAG = "DeleteCustomProperty";
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onConnected(connectionHint);
-        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FILE_ID)
-                .setResultCallback(idCallback);
+    protected void onDriveClientReady() {
+        pickTextFile()
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<DriveId>() {
+                            @Override
+                            public void onSuccess(DriveId driveId) {
+                                deleteCustomProperty(driveId.asDriveFile());
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "No file selected", e);
+                        showMessage(getString(R.string.file_not_selected));
+                        finish();
+                    }
+                });
     }
 
-    final ResultCallback<DriveApi.DriveIdResult> idCallback =
-            new ResultCallback<DriveApi.DriveIdResult>() {
-                @Override
-                public void onResult(DriveApi.DriveIdResult result) {
-                    if (!result.getStatus().isSuccess()) {
-                        showMessage("Cannot find DriveId. Are you authorized to view this file?");
-                        return;
+    private void deleteCustomProperty(DriveFile file) {
+        // [START delete_custom_property]
+        CustomPropertyKey approvalPropertyKey =
+                new CustomPropertyKey("approved", CustomPropertyKey.PUBLIC);
+        CustomPropertyKey submitPropertyKey =
+                new CustomPropertyKey("submitted", CustomPropertyKey.PUBLIC);
+        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                              .deleteCustomProperty(approvalPropertyKey)
+                                              .deleteCustomProperty(submitPropertyKey)
+                                              .build();
+        Task<Metadata> updateMetadataTask =
+                getDriveResourceClient().updateMetadata(file, changeSet);
+        updateMetadataTask
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<Metadata>() {
+                            @Override
+                            public void onSuccess(Metadata metadata) {
+                                showMessage(getString(R.string.custom_property_deleted));
+                                finish();
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Unable to update metadata", e);
+                        showMessage(getString(R.string.update_failed));
+                        finish();
                     }
-                    DriveId driveId = result.getDriveId();
-                    DriveFile file = driveId.asDriveFile();
-                    CustomPropertyKey approvalPropertyKey = new CustomPropertyKey("approved",
-                            CustomPropertyKey.PUBLIC);
-                    CustomPropertyKey submitPropertyKey = new CustomPropertyKey("submitted",
-                            CustomPropertyKey.PUBLIC);
-                    MetadataChangeSet.Builder changeSetBuilder = new MetadataChangeSet.Builder();
-                    changeSetBuilder.deleteCustomProperty(approvalPropertyKey);
-                    changeSetBuilder.deleteCustomProperty(submitPropertyKey);
-                    file.updateMetadata(getGoogleApiClient(), changeSetBuilder.build())
-                            .setResultCallback(metadataCallback);
-                }
-            };
-
-    final ResultCallback<DriveResource.MetadataResult> metadataCallback = new ResultCallback<DriveResource.MetadataResult>() {
-        @Override
-        public void onResult(DriveResource.MetadataResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Problem while trying to delete custom properties.");
-                return;
-            }
-            showMessage("Custom properties successfully deleted.");
-        }
-    };
+                });
+        // [END delete_custom_property]
+    }
 }

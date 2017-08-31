@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -13,74 +13,86 @@
  */
 
 package com.google.android.gms.drive.sample.demo;
-import android.os.Bundle;
 
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.DriveContentsResult;
-import com.google.android.gms.drive.DriveApi.DriveIdResult;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.google.android.gms.drive.DriveContents;
+import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
-import java.lang.Override;
-
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 /**
  * An activity to create a file inside a folder.
  */
 public class CreateFileInFolderActivity extends BaseDemoActivity {
-
-    private DriveId mFolderDriveId;
+    private static final String TAG = "CreateFileActivity";
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onConnected(connectionHint);
-        Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FOLDER_ID)
-                .setResultCallback(idCallback);
+    protected void onDriveClientReady() {
+        pickFolder()
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<DriveId>() {
+                            @Override
+                            public void onSuccess(DriveId driveId) {
+                                createFileInFolder(driveId.asDriveFolder());
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "No folder selected", e);
+                        showMessage(getString(R.string.folder_not_selected));
+                        finish();
+                    }
+                });
     }
 
-    final private ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
-        @Override
-        public void onResult(DriveIdResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Cannot find DriveId. Are you authorized to view this file?");
-                return;
-            }
-            mFolderDriveId = result.getDriveId();
-            Drive.DriveApi.newDriveContents(getGoogleApiClient())
-                    .setResultCallback(driveContentsCallback);
-        }
-    };
+    private void createFileInFolder(final DriveFolder parent) {
+        getDriveResourceClient()
+                .createContents()
+                .continueWithTask(new Continuation<DriveContents, Task<DriveFile>>() {
+                    @Override
+                    public Task<DriveFile> then(@NonNull Task<DriveContents> task)
+                            throws Exception {
+                        DriveContents contents = task.getResult();
+                        OutputStream outputStream = contents.getOutputStream();
+                        try (Writer writer = new OutputStreamWriter(outputStream)) {
+                            writer.write("Hello World!");
+                        }
 
-    final private ResultCallback<DriveContentsResult> driveContentsCallback =
-            new ResultCallback<DriveContentsResult>() {
-        @Override
-        public void onResult(DriveContentsResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Error while trying to create new file contents");
-                return;
-            }
-            DriveFolder folder = mFolderDriveId.asDriveFolder();
-            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                    .setTitle("New file")
-                    .setMimeType("text/plain")
-                    .setStarred(true).build();
-            folder.createFile(getGoogleApiClient(), changeSet, result.getDriveContents())
-                    .setResultCallback(fileCallback);
-        }
-    };
+                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                                              .setTitle("New file")
+                                                              .setMimeType("text/plain")
+                                                              .setStarred(true)
+                                                              .build();
 
-    final private ResultCallback<DriveFileResult> fileCallback =
-            new ResultCallback<DriveFileResult>() {
-        @Override
-        public void onResult(DriveFileResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Error while trying to create the file");
-                return;
-            }
-            showMessage("Created a file: " + result.getDriveFile().getDriveId());
-        }
-    };
+                        return getDriveResourceClient().createFile(parent, changeSet, contents);
+                    }
+                })
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<DriveFile>() {
+                            @Override
+                            public void onSuccess(DriveFile driveFile) {
+                                showMessage(getString(R.string.file_created,
+                                        driveFile.getDriveId().encodeToString()));
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Unable to create file", e);
+                        showMessage(getString(R.string.file_create_error));
+                    }
+                });
+    }
 }

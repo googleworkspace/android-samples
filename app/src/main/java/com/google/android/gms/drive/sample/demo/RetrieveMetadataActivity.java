@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -14,51 +14,62 @@
 
 package com.google.android.gms.drive.sample.demo;
 
-import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.DriveIdResult;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.DriveResource.MetadataResult;
 import com.google.android.gms.drive.Metadata;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 /**
  * An activity to retrieve the metadata of a file.
  */
 public class RetrieveMetadataActivity extends BaseDemoActivity {
+    private static final String TAG = "PinFileActivity";
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-      Drive.DriveApi.fetchDriveId(getGoogleApiClient(), EXISTING_FILE_ID)
-              .setResultCallback(idCallback);
+    protected void onDriveClientReady() {
+        pickTextFile()
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<DriveId>() {
+                            @Override
+                            public void onSuccess(DriveId driveId) {
+                                retrieveMetadata(driveId.asDriveFile());
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "No file selected", e);
+                        showMessage(getString(R.string.file_not_selected));
+                        finish();
+                    }
+                });
     }
-
-    final private ResultCallback<DriveIdResult> idCallback = new ResultCallback<DriveIdResult>() {
-        @Override
-        public void onResult(DriveIdResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Cannot find DriveId. Are you authorized to view this file?");
-                return;
-            }
-            DriveId driveId = result.getDriveId();
-            DriveFile file = driveId.asDriveFile();
-            file.getMetadata(getGoogleApiClient())
-                    .setResultCallback(metadataCallback);
-        }
-    };
-
-    final private ResultCallback<MetadataResult> metadataCallback = new
-            ResultCallback<MetadataResult>() {
-        @Override
-        public void onResult(MetadataResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Problem while trying to fetch metadata");
-                return;
-            }
-            Metadata metadata = result.getMetadata();
-            showMessage("Metadata successfully fetched. Title: " + metadata.getTitle());
-        }
-    };
+    private void retrieveMetadata(final DriveFile file) {
+        // [START retrieve_metadata]
+        Task<Metadata> getMetadataTask = getDriveResourceClient().getMetadata(file);
+        getMetadataTask
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<Metadata>() {
+                            @Override
+                            public void onSuccess(Metadata metadata) {
+                                showMessage(getString(
+                                        R.string.metadata_retrieved, metadata.getTitle()));
+                                finish();
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Unable to retrieve metadata", e);
+                        showMessage(getString(R.string.read_failed));
+                        finish();
+                    }
+                });
+        // [END retrieve_metadata]
+    }
 }

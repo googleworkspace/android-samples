@@ -14,10 +14,15 @@
 
 package com.google.android.gms.drive.sample.demo.events;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,8 +34,6 @@ import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.events.ChangeEvent;
-import com.google.android.gms.drive.events.ListenerToken;
-import com.google.android.gms.drive.events.OnChangeListener;
 import com.google.android.gms.drive.sample.demo.BaseDemoActivity;
 import com.google.android.gms.drive.sample.demo.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,8 +44,8 @@ import java.util.Date;
 /**
  * An activity that listens to change events on a user-picked file.
  */
-public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
-    private static final String TAG = "ListenChangeEvents";
+public class SubscribeChangeEventsForFilesActivity extends BaseDemoActivity {
+    private static final String TAG = "SubscribeChangeEvents";
 
     /*
      * Toggles file change event listening.
@@ -60,14 +63,14 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
     private DriveId mSelectedFileId;
 
     /**
-     * Identifies our change listener so it can be unsubscribed.
-     */
-    private ListenerToken mChangeListenerToken;
-
-    /**
      * Keeps the status whether change events are being listened to or not.
      */
     private boolean mIsSubscribed = false;
+
+    /**
+     * Receive broadcasts from our change event service
+     */
+    protected BroadcastReceiver mBroadcastReceiver;
 
     /**
      * Timer to force periodic tickles of the watched file
@@ -87,12 +90,14 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
                 toggle();
             }
         });
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        stopTimer();
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ChangeEvent event = intent.getParcelableExtra("event");
+                mLogTextView.append(getString(R.string.change_event, event));
+            }
+        };
     }
 
     @Override
@@ -114,6 +119,20 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
                         finish();
                     }
                 });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mBroadcastReceiver, new IntentFilter(MyDriveEventService.CHANGE_EVENT));
+    }
+
+    @Override
+    protected void onStop() {
+        stopTimer();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+        super.onStop();
     }
 
     /**
@@ -148,23 +167,28 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
             Log.d(TAG, "Starting to listen to the file changes.");
             mIsSubscribed = true;
             mCountDownTimer = new TickleTimer(30000 /* 30 seconds total */,
-                    1000 /* tick every 1 second */ );
+                    1000 /* tick every 1 second */);
             mCountDownTimer.start();
-            // [START add_change_listener]
-            getDriveResourceClient()
-                    .addChangeListener(file, changeListener)
-                    .addOnSuccessListener(this, new OnSuccessListener<ListenerToken>() {
+            // [START add_change_subscription]
+            getDriveResourceClient().addChangeSubscription(file).addOnSuccessListener(
+                    new OnSuccessListener<Void>() {
                         @Override
-                        public void onSuccess(ListenerToken listenerToken) {
-                            mChangeListenerToken = listenerToken;
+                        public void onSuccess(Void aVoid) {
+                            showMessage(getString(R.string.subscribed));
                         }
                     });
-            // [END add_change_listener]
+            // [END add_change_subscription]
         } else {
             Log.d(TAG, "Stopping to listen to the file changes.");
             mIsSubscribed = false;
             // [START remove_change_listener]
-            getDriveResourceClient().removeChangeListener(mChangeListenerToken);
+            getDriveResourceClient().removeChangeSubscription(file).addOnSuccessListener(
+                    new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            showMessage(getString(R.string.unsubscribed));
+                        }
+                    });
             // [END remove_change_listener]
         }
         refresh();
@@ -176,18 +200,6 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
             mCountDownTimer = null;
         }
     }
-
-    // [START change_listener]
-    /**
-     * A listener to handle file change events.
-     */
-    final private OnChangeListener changeListener = new OnChangeListener() {
-        @Override
-        public void onChange(ChangeEvent event) {
-            mLogTextView.append(getString(R.string.change_event, event));
-        }
-    };
-    // [END change_listener]
 
     private class TickleTimer extends CountDownTimer {
         TickleTimer(long millisInFuture, long countDownInterval) {
@@ -201,7 +213,7 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
                     new MetadataChangeSet.Builder().setLastViewedByMeDate(new Date()).build();
             getDriveResourceClient()
                     .updateMetadata(mSelectedFileId.asDriveResource(), metadata)
-                    .addOnSuccessListener(ListenChangeEventsForFilesActivity.this,
+                    .addOnSuccessListener(SubscribeChangeEventsForFilesActivity.this,
                             new OnSuccessListener<Metadata>() {
                                 @Override
                                 public void onSuccess(Metadata metadata) {
@@ -209,7 +221,7 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
                                 }
                             })
                     .addOnFailureListener(
-                            ListenChangeEventsForFilesActivity.this, new OnFailureListener() {
+                            SubscribeChangeEventsForFilesActivity.this, new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.e(TAG, "Unable to update metadata", e);

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -26,7 +26,6 @@ import com.google.android.gms.drive.widget.DataBufferAdapter;
  * A DataBufferAdapter to display the results of file listing/querying requests.
  */
 public class ResultsAdapter extends DataBufferAdapter<Metadata> {
-
     public ResultsAdapter(Context context) {
         super(context, android.R.layout.simple_list_item_1);
     }
@@ -34,12 +33,10 @@ public class ResultsAdapter extends DataBufferAdapter<Metadata> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = View.inflate(getContext(),
-                    android.R.layout.simple_list_item_1, null);
+            convertView = View.inflate(getContext(), android.R.layout.simple_list_item_1, null);
         }
         Metadata metadata = getItem(position);
-        TextView titleTextView =
-                (TextView) convertView.findViewById(android.R.id.text1);
+        TextView titleTextView = convertView.findViewById(android.R.id.text1);
         titleTextView.setText(metadata.getTitle());
         return convertView;
     }

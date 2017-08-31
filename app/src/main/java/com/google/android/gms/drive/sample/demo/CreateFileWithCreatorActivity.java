@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -16,16 +16,22 @@ package com.google.android.gms.drive.sample.demo;
 
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.IntentSender.SendIntentException;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.DriveContentsResult;
+import com.google.android.gms.drive.CreateFileActivityOptions;
+import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.OpenFileActivityBuilder;
+import com.google.android.gms.drive.OpenFileActivityOptions;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 /**
  * An activity that illustrates how to use the creator
@@ -34,52 +40,81 @@ import com.google.android.gms.drive.OpenFileActivityBuilder;
  * created file.
  */
 public class CreateFileWithCreatorActivity extends BaseDemoActivity {
+    private static final String TAG = "CreateFileWithCreator";
 
-    private static final String TAG = "CreateFileWithCreatorActivity";
-
-    protected static final int REQUEST_CODE_CREATOR = 1;
+    private static final int REQUEST_CODE_CREATE_FILE = 2;
 
     @Override
-    public void onConnected(Bundle connectionHint) {
-        super.onConnected(connectionHint);
-        Drive.DriveApi.newDriveContents(getGoogleApiClient())
-                .setResultCallback(driveContentsCallback);
+    protected void onDriveClientReady() {
+        createFileWithIntent();
+    }
+
+    private void createFileWithIntent() {
+        // [START create_file_with_intent]
+        Task<DriveContents> createContentsTask = getDriveResourceClient().createContents();
+        createContentsTask
+                .continueWithTask(new Continuation<DriveContents, Task<IntentSender>>() {
+                    @Override
+                    public Task<IntentSender> then(@NonNull Task<DriveContents> task)
+                            throws Exception {
+                        DriveContents contents = task.getResult();
+                        OutputStream outputStream = contents.getOutputStream();
+                        try (Writer writer = new OutputStreamWriter(outputStream)) {
+                            writer.write("Hello World!");
+                        }
+
+                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                                              .setTitle("New file")
+                                                              .setMimeType("text/plain")
+                                                              .setStarred(true)
+                                                              .build();
+
+                        CreateFileActivityOptions createOptions =
+                                new CreateFileActivityOptions.Builder()
+                                        .setInitialDriveContents(contents)
+                                        .setInitialMetadata(changeSet)
+                                        .build();
+                        return getDriveClient().newCreateFileActivityIntentSender(createOptions);
+                    }
+                })
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<IntentSender>() {
+                            @Override
+                            public void onSuccess(IntentSender intentSender) {
+                                try {
+                                    startIntentSenderForResult(
+                                            intentSender, REQUEST_CODE_CREATE_FILE, null, 0, 0, 0);
+                                } catch (IntentSender.SendIntentException e) {
+                                    Log.e(TAG, "Unable to create file", e);
+                                    showMessage(getString(R.string.file_create_error));
+                                    finish();
+                                }
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Unable to create file", e);
+                        showMessage(getString(R.string.file_create_error));
+                        finish();
+                    }
+                });
+        // [END create_file_with_intent]
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-        case REQUEST_CODE_CREATOR:
-            if (resultCode == RESULT_OK) {
-                DriveId driveId = (DriveId) data.getParcelableExtra(
-                        OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-                showMessage("File created with ID: " + driveId);
+        if (requestCode == REQUEST_CODE_CREATE_FILE) {
+            if (resultCode != RESULT_OK) {
+                Log.e(TAG, "Unable to create file");
+                showMessage(getString(R.string.file_create_error));
+            } else {
+                DriveId driveId =
+                        data.getParcelableExtra(OpenFileActivityOptions.EXTRA_RESPONSE_DRIVE_ID);
+                showMessage(getString(R.string.file_created, "File created with ID: " + driveId));
             }
             finish();
-            break;
-        default:
-            super.onActivityResult(requestCode, resultCode, data);
-            break;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
-
-    final ResultCallback<DriveContentsResult> driveContentsCallback =
-            new ResultCallback<DriveContentsResult>() {
-        @Override
-        public void onResult(DriveContentsResult result) {
-            MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-                    .setMimeType("text/html").build();
-            IntentSender intentSender = Drive.DriveApi
-                    .newCreateFileActivityBuilder()
-                    .setInitialMetadata(metadataChangeSet)
-                    .setInitialDriveContents(result.getDriveContents())
-                    .build(getGoogleApiClient());
-            try {
-                startIntentSenderForResult(
-                        intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
-            } catch (SendIntentException e) {
-                Log.w(TAG, "Unable to send intent", e);
-            }
-        }
-    };
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -24,47 +24,25 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.android.gms.drive.sample.demo.events.ListenChangeEventsForFilesActivity;
+import com.google.android.gms.drive.sample.demo.events.SubscribeChangeEventsForFilesActivity;
 
 /**
  * An activity to list all available demo activities.
  */
 public class HomeActivity extends Activity {
-
-    @SuppressWarnings("rawtypes")
-    private final Class[] sActivities = new Class[] {
-            CreateFileActivity.class,
-            CreateEmptyFileActivity.class,
-            CreateFileInAppFolderActivity.class,
-            CreateFolderActivity.class,
-            RetrieveMetadataActivity.class,
-            RetrieveContentsActivity.class,
-            RetrieveContentsWithProgressDialogActivity.class,
-            EditMetadataActivity.class,
-            InsertUpdateCustomPropertyActivity.class,
-            DeleteCustomPropertyActivity.class,
-            EditContentsActivity.class,
-            PinFileActivity.class,
-            SyncRequestsActivity.class,
-            CreateFileWithCreatorActivity.class,
-            PickFileWithOpenerActivity.class,
-            PickFolderWithOpenerActivity.class,
-            CreateFileInFolderActivity.class,
-            CreateFolderInFolderActivity.class,
-            ListFilesInFolderActivity.class,
-            ListFilesActivity.class,
-            QueryFilesActivity.class,
-            QueryFilesInFolderActivity.class,
-            QueryNonTextFilesActivity.class,
-            QuerySortedFilesActivity.class,
-            QueryFilesSharedWithMeActivity.class,
-            QueryFilesWithAInTitleActivity.class,
-            QueryFilesWithCustomPropertyActivity.class,
-            QueryStarredTextFilesActivity.class,
-            QueryTextOrHtmlFilesActivity.class,
-            ListenChangeEventsForFilesActivity.class
-    };
-
-    private ListView mListViewSamples;
+    private final Class[] sActivities = new Class[] {CreateEmptyFileActivity.class,
+            CreateFileActivity.class, CreateFolderActivity.class, CreateFileInFolderActivity.class,
+            CreateFolderInFolderActivity.class, CreateFileInAppFolderActivity.class,
+            CreateFileWithCreatorActivity.class, RetrieveMetadataActivity.class,
+            RetrieveContentsActivity.class, RetrieveContentsWithProgressDialogActivity.class,
+            EditMetadataActivity.class, AppendContentsActivity.class, RewriteContentsActivity.class,
+            PinFileActivity.class, InsertUpdateCustomPropertyActivity.class,
+            DeleteCustomPropertyActivity.class, QueryFilesActivity.class,
+            QueryFilesInFolderActivity.class, QueryNonTextFilesActivity.class,
+            QuerySortedFilesActivity.class, QueryFilesSharedWithMeActivity.class,
+            QueryFilesWithTitleActivity.class, QueryFilesWithCustomPropertyActivity.class,
+            QueryStarredTextFilesActivity.class, QueryTextOrHtmlFilesActivity.class,
+            ListenChangeEventsForFilesActivity.class, SubscribeChangeEventsForFilesActivity.class};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,17 +50,16 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
 
         String[] titles = getResources().getStringArray(R.array.titles_array);
-        mListViewSamples = (ListView) findViewById(R.id.listViewSamples);
+        ListView mListViewSamples = (ListView) findViewById(R.id.listViewSamples);
         mListViewSamples.setAdapter(
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titles));
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, titles));
         mListViewSamples.setOnItemClickListener(new OnItemClickListener() {
 
-                @Override
+            @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int i, long arg3) {
                 Intent intent = new Intent(getBaseContext(), sActivities[i]);
                 startActivity(intent);
             }
         });
     }
-
 }
