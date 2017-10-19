@@ -16,7 +16,6 @@ package com.google.android.gms.drive.sample.quickstart;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.IntentSender.SendIntentException;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,7 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.drive.CreateFileActivityOptions;
@@ -33,8 +31,8 @@ import com.google.android.gms.drive.DriveClient;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -87,9 +85,9 @@ public class MainActivity extends Activity {
     mDriveResourceClient
         .createContents()
         .continueWithTask(
-            new Continuation<DriveContents, Task<IntentSender>>() {
+            new Continuation<DriveContents, Task<Void>>() {
               @Override
-              public Task<IntentSender> then(@NonNull Task<DriveContents> task) throws Exception {
+              public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
                 return createFileIntentSender(task.getResult(), image);
               }
             })
@@ -154,10 +152,14 @@ public class MainActivity extends Activity {
         // Called after user is signed in.
         if (resultCode == RESULT_OK) {
           Log.i(TAG, "Signed in successfully.");
-          // Execute task to get sign in account.
-          Task<GoogleSignInAccount> task =
-              mGoogleSignInClient.getGoogleSignInAccountFromIntent(data);
-          updateViewWithGoogleSignInAccountTask(task);
+          // Use the last signed in account here since it already have a Drive scope.
+          mDriveClient = Drive.getDriveClient(this, GoogleSignIn.getLastSignedInAccount(this));
+          // Build a drive resource client.
+          mDriveResourceClient =
+              Drive.getDriveResourceClient(this, GoogleSignIn.getLastSignedInAccount(this));
+          // Start camera.
+          startActivityForResult(
+              new Intent(MediaStore.ACTION_IMAGE_CAPTURE), REQUEST_CODE_CAPTURE_IMAGE);
         }
         break;
       case REQUEST_CODE_CAPTURE_IMAGE:
@@ -182,35 +184,5 @@ public class MainActivity extends Activity {
         }
         break;
     }
-  }
-
-  /**
-   * Update view with Google SignIn account task. If task was successful, build the drive client and
-   * drive resource client, then start the camera. Otherwise print out the exception stacktrace.
-   */
-  private void updateViewWithGoogleSignInAccountTask(Task<GoogleSignInAccount> task) {
-    Log.i(TAG, "Update view with sign in account task");
-    task.addOnSuccessListener(
-            new OnSuccessListener<GoogleSignInAccount>() {
-              @Override
-              public void onSuccess(GoogleSignInAccount googleSignInAccount) {
-                Log.i(TAG, "Sign in success");
-                // Build a drive client.
-                mDriveClient = Drive.getDriveClient(getApplicationContext(), googleSignInAccount);
-                // Build a drive resource client.
-                mDriveResourceClient =
-                    Drive.getDriveResourceClient(getApplicationContext(), googleSignInAccount);
-                // Start camera.
-                startActivityForResult(
-                    new Intent(MediaStore.ACTION_IMAGE_CAPTURE), REQUEST_CODE_CAPTURE_IMAGE);
-              }
-            })
-        .addOnFailureListener(
-            new OnFailureListener() {
-              @Override
-              public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Sign in failed", e);
-              }
-            });
   }
 }
