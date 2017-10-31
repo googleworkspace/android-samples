@@ -176,7 +176,7 @@ public class MainActivity extends FragmentActivity {
             }
 
             Task<GoogleSignInAccount> getAccountTask =
-                    GoogleSignInClient.getGoogleSignInAccountFromIntent(data);
+                    GoogleSignIn.getSignedInAccountFromIntent(data);
             if (getAccountTask.isSuccessful()) {
                 initializeDriveResourceClient(getAccountTask.getResult());
             } else {
@@ -195,12 +195,7 @@ public class MainActivity extends FragmentActivity {
                         .requestScopes(Drive.SCOPE_FILE)
                         .build();
         GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
-        GoogleSignInAccount signInAccount = googleSignInClient.getLastSignedInAccount();
-        if (signInAccount != null) {
-            initializeDriveResourceClient(signInAccount);
-        } else {
-            startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
-        }
+        startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
     }
 
     /**
