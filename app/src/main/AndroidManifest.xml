@@ -48,7 +48,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".QueryFilesActivity" />
-        <activity android:name=".SyncRequestsActivity" />
         <activity android:name=".RetrieveContentsActivity" />
         <activity android:name=".RetrieveContentsWithProgressDialogActivity" />
         <activity android:name=".CreateFileActivity" />
