@@ -60,7 +60,7 @@ public abstract class BaseDemoActivity extends Activity {
      * Handles resolution callbacks.
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SIGN_IN) {
             if (resultCode != RESULT_OK) {
@@ -71,14 +71,8 @@ public abstract class BaseDemoActivity extends Activity {
                 return;
             }
 
-            Task<GoogleSignInAccount> getAccountTask =
-                    GoogleSignInClient.getGoogleSignInAccountFromIntent(data);
-            if (getAccountTask.isSuccessful()) {
-                initializeDriveClient(getAccountTask.getResult());
-            } else {
-                Log.e(TAG, "Sign-in failed.");
-                finish();
-            }
+            // We can use last signed in account here because we know the account has Drive scopes
+            initializeDriveClient(GoogleSignIn.getLastSignedInAccount(this));
         }
     }
 
@@ -92,12 +86,7 @@ public abstract class BaseDemoActivity extends Activity {
                         .requestScopes(Drive.SCOPE_APPFOLDER)
                         .build();
         GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
-        GoogleSignInAccount signInAccount = googleSignInClient.getLastSignedInAccount();
-        if (signInAccount != null) {
-            initializeDriveClient(signInAccount);
-        } else {
-            startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
-        }
+        startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
     }
 
     /**
