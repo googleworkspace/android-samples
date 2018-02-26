@@ -18,7 +18,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
     <TextView
         android:id="@+id/textViewLog"
         android:layout_weight="1"
@@ -26,11 +25,9 @@
         android:layout_height="0dip"
         android:ems="10">
     </TextView>
-
     <Button
         android:id="@+id/buttonAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_subscribe" />
-
 </LinearLayout>
