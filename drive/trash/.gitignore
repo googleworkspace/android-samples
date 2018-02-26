@@ -1,0 +1,11 @@
+# Android Studio excludes
+.idea/
+*.iml
+
+# Gradle build excludes
+.gradle/
+build/
+local.properties
+
+# Misc
+.DS_Store
