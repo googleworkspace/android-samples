@@ -88,26 +88,19 @@ public class MainActivity extends FragmentActivity {
 
         ListView fileFolderListView = findViewById(R.id.fileListView);
         // Trash or untrash a resource with a long click.
-        fileFolderListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(
-                    AdapterView<?> parent, View view, int position, long id) {
-                // Metadata provides access to a DriveFile or DriveFolder's trash state.
-                Metadata metadata = mFileFolderAdapter.getItem(position);
-                toggleTrashStatus(metadata);
-                return true;
-            }
+        fileFolderListView.setOnItemLongClickListener((parent, view, position, id) -> {
+            // Metadata provides access to a DriveFile or DriveFolder's trash state.
+            Metadata metadata = mFileFolderAdapter.getItem(position);
+            toggleTrashStatus(metadata);
+            return true;
         });
 
         // Show a view of folder contents when a folder is clicked on.
-        fileFolderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Metadata metadata = mFileFolderAdapter.getItem(position);
-                if (metadata != null && metadata.isFolder()) {
-                    DriveId folderId = metadata.getDriveId();
-                    navigateToFolder(folderId);
-                }
+        fileFolderListView.setOnItemClickListener((parent, view, position, id) -> {
+            Metadata metadata = mFileFolderAdapter.getItem(position);
+            if (metadata != null && metadata.isFolder()) {
+                DriveId folderId = metadata.getDriveId();
+                navigateToFolder(folderId);
             }
         });
         fileFolderListView.setAdapter(mFileFolderAdapter);
@@ -115,30 +108,15 @@ public class MainActivity extends FragmentActivity {
 
         mAddFileButton = findViewById(R.id.addFileButton);
         mAddFileButton.setEnabled(false);
-        mAddFileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createFile();
-            }
-        });
+        mAddFileButton.setOnClickListener(v -> createFile());
 
         mAddFolderButton = findViewById(R.id.addFolderButton);
         mAddFolderButton.setEnabled(false);
-        mAddFolderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createFolder();
-            }
-        });
+        mAddFolderButton.setOnClickListener(view -> createFolder());
 
         mPreviousFolderButton = findViewById(R.id.previousButton);
         mPreviousFolderButton.setEnabled(false);
-        mPreviousFolderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateBack();
-            }
-        });
+        mPreviousFolderButton.setOnClickListener(v -> navigateBack());
 
         if (savedInstanceState != null) {
             ArrayList<DriveId> driveIds =
@@ -228,15 +206,12 @@ public class MainActivity extends FragmentActivity {
         } else {
             folderTask = Tasks.forResult(mNavigationPath.peek().asDriveFolder());
         }
-        Task<Void> initFolderTask = folderTask.continueWith(new Continuation<DriveFolder, Void>() {
-            @Override
-            public Void then(@NonNull Task<DriveFolder> task) throws Exception {
-                DriveId id = task.getResult().getDriveId();
-                if (mNavigationPath.isEmpty()) {
-                    mNavigationPath.push(id);
-                }
-                return null;
+        Task<Void> initFolderTask = folderTask.continueWith(task -> {
+            DriveId id = task.getResult().getDriveId();
+            if (mNavigationPath.isEmpty()) {
+                mNavigationPath.push(id);
             }
+            return null;
         });
         return updateUiAfterTask(initFolderTask);
     }
@@ -326,31 +301,28 @@ public class MainActivity extends FragmentActivity {
                 .build();
 
         Task<MetadataBuffer> task = mDriveResourceClient.queryChildren(folder, folderQuery);
-        return task.continueWith(new Continuation<MetadataBuffer, Void>() {
-            @Override
-            public Void then(@NonNull Task<MetadataBuffer> task) throws Exception {
-                MetadataBuffer items = task.getResult();
-                List<Metadata> children = new ArrayList<>(items.getCount());
-                try {
-                    for (int i = 0; i < items.getCount(); i++) {
-                        children.add(items.get(i).freeze());
-                    }
-                    // Show folders first
-                    Collections.sort(children, new Comparator<Metadata>() {
-                        @Override
-                        public int compare(Metadata a, Metadata b) {
-                            int aVal = a.isFolder() ? 1 : 0;
-                            int bVal = b.isFolder() ? 1 : 0;
-                            return bVal - aVal;
-                        }
-                    });
-                    mFileFolderAdapter.setFiles(children);
-                    mFileFolderAdapter.notifyDataSetChanged();
-                } finally {
-                    items.release();
+        return task.continueWith(task1 -> {
+            MetadataBuffer items = task1.getResult();
+            List<Metadata> children = new ArrayList<>(items.getCount());
+            try {
+                for (int i = 0; i < items.getCount(); i++) {
+                    children.add(items.get(i).freeze());
                 }
-                return null;
+                // Show folders first
+                Collections.sort(children, new Comparator<Metadata>() {
+                    @Override
+                    public int compare(Metadata a, Metadata b) {
+                        int aVal = a.isFolder() ? 1 : 0;
+                        int bVal = b.isFolder() ? 1 : 0;
+                        return bVal - aVal;
+                    }
+                });
+                mFileFolderAdapter.setFiles(children);
+                mFileFolderAdapter.notifyDataSetChanged();
+            } finally {
+                items.release();
             }
+            return null;
         });
     }
 
@@ -362,30 +334,19 @@ public class MainActivity extends FragmentActivity {
     private Task<Void> loadFolderName(DriveFolder folder) {
         Log.i(TAG, "Fetching folder metadata for " + folder.getDriveId().encodeToString());
         Task<Metadata> getMetadataTask = mDriveResourceClient.getMetadata(folder);
-        return getMetadataTask.continueWith(new Continuation<Metadata, Void>() {
-            @Override
-            public Void then(@NonNull Task<Metadata> task) throws Exception {
-                mCurrentFolderNameTextView.setText(task.getResult().getTitle());
-                return null;
-            }
+        return getMetadataTask.continueWith(task -> {
+            mCurrentFolderNameTextView.setText(task.getResult().getTitle());
+            return null;
         });
     }
 
     private <T> Task<Void> updateUiAfterTask(Task<T> task) {
-        Task<Void> loadFolderTask = task.continueWithTask(new Continuation<T, Task<Void>>() {
-            @Override
-            public Task<Void> then(@NonNull Task<T> task) throws Exception {
-                DriveFolder currentFolder = mNavigationPath.peek().asDriveFolder();
-                return loadFolderNameAndContents(currentFolder);
-            }
+        Task<Void> loadFolderTask = task.continueWithTask(task1 -> {
+            DriveFolder currentFolder = mNavigationPath.peek().asDriveFolder();
+            return loadFolderNameAndContents(currentFolder);
         });
         // Wait till Metadata is loaded to allow user interaction.
-        loadFolderTask.addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                setUiInteractionsEnabled(true);
-            }
-        });
+        loadFolderTask.addOnCompleteListener(task12 -> setUiInteractionsEnabled(true));
         return loadFolderTask;
     }
 
@@ -396,13 +357,10 @@ public class MainActivity extends FragmentActivity {
      * @param messageResourceId the error message to show
      */
     private <T> Task<T> handleTaskError(Task<T> task, final Integer messageResourceId) {
-        return task.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "Unexpected error", e);
-                if (messageResourceId != null) {
-                    showMessage(messageResourceId);
-                }
+        return task.addOnFailureListener(e -> {
+            Log.e(TAG, "Unexpected error", e);
+            if (messageResourceId != null) {
+                showMessage(messageResourceId);
             }
         });
     }

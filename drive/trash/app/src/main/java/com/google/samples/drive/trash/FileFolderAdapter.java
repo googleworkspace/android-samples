@@ -64,7 +64,6 @@ class FileFolderAdapter extends ArrayAdapter<Metadata> {
             viewHolder.trashStatusTextView =
                     (TextView) rootView.findViewById(R.id.trashStatusTextView);
             viewHolder.fileFolderImageView = (ImageView) rootView.findViewById(R.id.imageView);
-
             convertView = rootView;
             convertView.setTag(viewHolder);
         } else {
@@ -72,9 +71,7 @@ class FileFolderAdapter extends ArrayAdapter<Metadata> {
         }
 
         final Metadata metadata = getItem(position);
-
         assert metadata != null;
-
         viewHolder.filenameTextView.setText(metadata.getTitle());
         viewHolder.trashStatusTextView.setText(metadata.isTrashed()
                         ? getContext().getResources().getString(R.string.trashed_status)
@@ -86,7 +83,6 @@ class FileFolderAdapter extends ArrayAdapter<Metadata> {
             viewHolder.fileFolderImageView.setImageDrawable(getContext().getResources().getDrawable(
                     R.drawable.ic_description_black_18dp, getContext().getTheme()));
         }
-
         return convertView;
     }
 
