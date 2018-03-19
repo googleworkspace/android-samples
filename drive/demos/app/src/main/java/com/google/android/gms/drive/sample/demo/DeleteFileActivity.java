@@ -20,7 +20,6 @@ import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 /**
  * An activity to illustrate how to delete a file.
@@ -32,19 +31,11 @@ public class DeleteFileActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickTextFile()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                deleteFile(driveId.asDriveFile());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        showMessage(getString(R.string.file_not_selected));
-                        finish();
-                    }
+                        driveId -> deleteFile(driveId.asDriveFile()))
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No file selected", e);
+                    showMessage(getString(R.string.file_not_selected));
+                    finish();
                 });
     }
     private void deleteFile(DriveFile file) {
@@ -52,20 +43,14 @@ public class DeleteFileActivity extends BaseDemoActivity {
         getDriveResourceClient()
                 .delete(file)
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                showMessage(getString(R.string.file_deleted));
-                                finish();
-                            }
+                        aVoid -> {
+                            showMessage(getString(R.string.file_deleted));
+                            finish();
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to delete file", e);
-                        showMessage(getString(R.string.delete_failed));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "Unable to delete file", e);
+                    showMessage(getString(R.string.delete_failed));
+                    finish();
                 });
         // [END delete_file]
     }

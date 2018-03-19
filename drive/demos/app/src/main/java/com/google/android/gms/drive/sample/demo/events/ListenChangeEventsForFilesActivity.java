@@ -80,12 +80,7 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
 
         mLogTextView = findViewById(R.id.textViewLog);
         mActionButton = findViewById(R.id.buttonAction);
-        mActionButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggle();
-            }
-        });
+        mActionButton.setOnClickListener(v -> toggle());
     }
 
     @Override
@@ -98,20 +93,14 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickTextFile()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                mSelectedFileId = driveId;
-                                refresh();
-                            }
+                        driveId -> {
+                            mSelectedFileId = driveId;
+                            refresh();
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        showMessage(getString(R.string.file_not_selected));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No file selected", e);
+                    showMessage(getString(R.string.file_not_selected));
+                    finish();
                 });
     }
 
@@ -152,12 +141,7 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
             // [START add_change_listener]
             getDriveResourceClient()
                     .addChangeListener(file, changeListener)
-                    .addOnSuccessListener(this, new OnSuccessListener<ListenerToken>() {
-                        @Override
-                        public void onSuccess(ListenerToken listenerToken) {
-                            mChangeListenerToken = listenerToken;
-                        }
-                    });
+                    .addOnSuccessListener(this, listenerToken -> mChangeListenerToken = listenerToken);
             // [END add_change_listener]
         } else {
             Log.d(TAG, "Stopping to listen to the file changes.");
@@ -201,19 +185,9 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
             getDriveResourceClient()
                     .updateMetadata(mSelectedFileId.asDriveResource(), metadata)
                     .addOnSuccessListener(ListenChangeEventsForFilesActivity.this,
-                            new OnSuccessListener<Metadata>() {
-                                @Override
-                                public void onSuccess(Metadata metadata) {
-                                    Log.d(TAG, "Updated metadata.");
-                                }
-                            })
+                            metadata1 -> Log.d(TAG, "Updated metadata."))
                     .addOnFailureListener(
-                            ListenChangeEventsForFilesActivity.this, new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e(TAG, "Unable to update metadata", e);
-                                }
-                            });
+                            ListenChangeEventsForFilesActivity.this, e -> Log.e(TAG, "Unable to update metadata", e));
         }
 
         @Override

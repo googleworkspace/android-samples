@@ -51,51 +51,41 @@ public class CreateFileWithCreatorActivity extends BaseDemoActivity {
         // [START create_file_with_intent]
         Task<DriveContents> createContentsTask = getDriveResourceClient().createContents();
         createContentsTask
-                .continueWithTask(new Continuation<DriveContents, Task<IntentSender>>() {
-                    @Override
-                    public Task<IntentSender> then(@NonNull Task<DriveContents> task)
-                            throws Exception {
-                        DriveContents contents = task.getResult();
-                        OutputStream outputStream = contents.getOutputStream();
-                        try (Writer writer = new OutputStreamWriter(outputStream)) {
-                            writer.write("Hello World!");
-                        }
-
-                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                                              .setTitle("New file")
-                                                              .setMimeType("text/plain")
-                                                              .setStarred(true)
-                                                              .build();
-
-                        CreateFileActivityOptions createOptions =
-                                new CreateFileActivityOptions.Builder()
-                                        .setInitialDriveContents(contents)
-                                        .setInitialMetadata(changeSet)
-                                        .build();
-                        return getDriveClient().newCreateFileActivityIntentSender(createOptions);
+                .continueWithTask(task -> {
+                    DriveContents contents = task.getResult();
+                    OutputStream outputStream = contents.getOutputStream();
+                    try (Writer writer = new OutputStreamWriter(outputStream)) {
+                        writer.write("Hello World!");
                     }
+
+                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                                          .setTitle("New file")
+                                                          .setMimeType("text/plain")
+                                                          .setStarred(true)
+                                                          .build();
+
+                    CreateFileActivityOptions createOptions =
+                            new CreateFileActivityOptions.Builder()
+                                    .setInitialDriveContents(contents)
+                                    .setInitialMetadata(changeSet)
+                                    .build();
+                    return getDriveClient().newCreateFileActivityIntentSender(createOptions);
                 })
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<IntentSender>() {
-                            @Override
-                            public void onSuccess(IntentSender intentSender) {
-                                try {
-                                    startIntentSenderForResult(
-                                            intentSender, REQUEST_CODE_CREATE_FILE, null, 0, 0, 0);
-                                } catch (IntentSender.SendIntentException e) {
-                                    Log.e(TAG, "Unable to create file", e);
-                                    showMessage(getString(R.string.file_create_error));
-                                    finish();
-                                }
+                        intentSender -> {
+                            try {
+                                startIntentSenderForResult(
+                                        intentSender, REQUEST_CODE_CREATE_FILE, null, 0, 0, 0);
+                            } catch (IntentSender.SendIntentException e) {
+                                Log.e(TAG, "Unable to create file", e);
+                                showMessage(getString(R.string.file_create_error));
+                                finish();
                             }
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to create file", e);
-                        showMessage(getString(R.string.file_create_error));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "Unable to create file", e);
+                    showMessage(getString(R.string.file_create_error));
+                    finish();
                 });
         // [END create_file_with_intent]
     }

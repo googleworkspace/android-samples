@@ -33,19 +33,11 @@ public class RetrieveMetadataActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickTextFile()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                retrieveMetadata(driveId.asDriveFile());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        showMessage(getString(R.string.file_not_selected));
-                        finish();
-                    }
+                        driveId -> retrieveMetadata(driveId.asDriveFile()))
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No file selected", e);
+                    showMessage(getString(R.string.file_not_selected));
+                    finish();
                 });
     }
     private void retrieveMetadata(final DriveFile file) {
@@ -53,21 +45,15 @@ public class RetrieveMetadataActivity extends BaseDemoActivity {
         Task<Metadata> getMetadataTask = getDriveResourceClient().getMetadata(file);
         getMetadataTask
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<Metadata>() {
-                            @Override
-                            public void onSuccess(Metadata metadata) {
-                                showMessage(getString(
-                                        R.string.metadata_retrieved, metadata.getTitle()));
-                                finish();
-                            }
+                        metadata -> {
+                            showMessage(getString(
+                                    R.string.metadata_retrieved, metadata.getTitle()));
+                            finish();
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to retrieve metadata", e);
-                        showMessage(getString(R.string.read_failed));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "Unable to retrieve metadata", e);
+                    showMessage(getString(R.string.read_failed));
+                    finish();
                 });
         // [END retrieve_metadata]
     }

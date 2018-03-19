@@ -15,11 +15,9 @@
   limitations under the License.
 -->
 <resources>
-
     <string name="app_name">Google Drive Android API Demos</string>
     <string name="download_progress">Download Progress:</string>
     <string name="menu_settings">Settings</string>
-
     <string name="button_subscribe">Listen for Changes</string>
     <string name="button_unsubscribe">Stop Listening for Changes</string>
     <string name="file_created">Created file: %1$s.</string>
@@ -47,5 +45,4 @@
     <string name="init_failed">Unable to initialize activity.</string>
     <string name="file_not_selected">No file selected, can not continue.</string>
     <string name="folder_not_selected">No folder selected, can not continue.</string>
-
 </resources>

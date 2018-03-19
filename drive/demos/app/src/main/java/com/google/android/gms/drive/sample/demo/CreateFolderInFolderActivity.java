@@ -32,19 +32,11 @@ public class CreateFolderInFolderActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickFolder()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                createFolderInFolder(driveId.asDriveFolder());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No folder selected", e);
-                        showMessage(getString(R.string.folder_not_selected));
-                        finish();
-                    }
+                        driveId -> createFolderInFolder(driveId.asDriveFolder()))
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No folder selected", e);
+                    showMessage(getString(R.string.folder_not_selected));
+                    finish();
                 });
     }
 
@@ -58,21 +50,15 @@ public class CreateFolderInFolderActivity extends BaseDemoActivity {
         getDriveResourceClient()
                 .createFolder(parent, changeSet)
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveFolder>() {
-                            @Override
-                            public void onSuccess(DriveFolder driveFolder) {
-                                showMessage(getString(R.string.file_created,
-                                        driveFolder.getDriveId().encodeToString()));
-                                finish();
-                            }
+                        driveFolder -> {
+                            showMessage(getString(R.string.file_created,
+                                    driveFolder.getDriveId().encodeToString()));
+                            finish();
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to create file", e);
-                        showMessage(getString(R.string.file_create_error));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "Unable to create file", e);
+                    showMessage(getString(R.string.file_create_error));
+                    finish();
                 });
     }
 }

@@ -52,13 +52,9 @@ public class HomeActivity extends Activity {
         ListView mListViewSamples = (ListView) findViewById(R.id.listViewSamples);
         mListViewSamples.setAdapter(
                 new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, titles));
-        mListViewSamples.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int i, long arg3) {
-                Intent intent = new Intent(getBaseContext(), sActivities[i]);
-                startActivity(intent);
-            }
+        mListViewSamples.setOnItemClickListener((arg0, arg1, i, arg3) -> {
+            Intent intent = new Intent(getBaseContext(), sActivities[i]);
+            startActivity(intent);
         });
     }
 }

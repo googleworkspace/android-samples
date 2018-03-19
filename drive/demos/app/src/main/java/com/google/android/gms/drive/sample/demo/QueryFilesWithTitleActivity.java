@@ -74,19 +74,11 @@ public class QueryFilesWithTitleActivity extends BaseDemoActivity {
                 getDriveResourceClient()
                         .query(query)
                         .addOnSuccessListener(this,
-                                new OnSuccessListener<MetadataBuffer>() {
-                                    @Override
-                                    public void onSuccess(MetadataBuffer metadataBuffer) {
-                                        mResultsAdapter.append(metadataBuffer);
-                                    }
-                                })
-                        .addOnFailureListener(this, new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "Error retrieving files", e);
-                                showMessage(getString(R.string.query_failed));
-                                finish();
-                            }
+                                metadataBuffer -> mResultsAdapter.append(metadataBuffer))
+                        .addOnFailureListener(this, e -> {
+                            Log.e(TAG, "Error retrieving files", e);
+                            showMessage(getString(R.string.query_failed));
+                            finish();
                         });
     }
 }

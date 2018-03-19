@@ -186,13 +186,10 @@ public abstract class BaseDemoActivity extends Activity {
         mOpenItemTaskSource = new TaskCompletionSource<>();
         getDriveClient()
                 .newOpenFileActivityIntentSender(openOptions)
-                .continueWith(new Continuation<IntentSender, Void>() {
-                    @Override
-                    public Void then(@NonNull Task<IntentSender> task) throws Exception {
-                        startIntentSenderForResult(
-                                task.getResult(), REQUEST_CODE_OPEN_ITEM, null, 0, 0, 0);
-                        return null;
-                    }
+                .continueWith((Continuation<IntentSender, Void>) task -> {
+                    startIntentSenderForResult(
+                            task.getResult(), REQUEST_CODE_OPEN_ITEM, null, 0, 0, 0);
+                    return null;
                 });
         return mOpenItemTaskSource.getTask();
     }

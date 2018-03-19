@@ -38,35 +38,25 @@ public class CreateFolderActivity extends BaseDemoActivity {
     private void createFolder() {
         getDriveResourceClient()
                 .getRootFolder()
-                .continueWithTask(new Continuation<DriveFolder, Task<DriveFolder>>() {
-                    @Override
-                    public Task<DriveFolder> then(@NonNull Task<DriveFolder> task)
-                            throws Exception {
-                        DriveFolder parentFolder = task.getResult();
-                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                                              .setTitle("New folder")
-                                                              .setMimeType(DriveFolder.MIME_TYPE)
-                                                              .setStarred(true)
-                                                              .build();
-                        return getDriveResourceClient().createFolder(parentFolder, changeSet);
-                    }
+                .continueWithTask(task -> {
+                    DriveFolder parentFolder = task.getResult();
+                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                                          .setTitle("New folder")
+                                                          .setMimeType(DriveFolder.MIME_TYPE)
+                                                          .setStarred(true)
+                                                          .build();
+                    return getDriveResourceClient().createFolder(parentFolder, changeSet);
                 })
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveFolder>() {
-                            @Override
-                            public void onSuccess(DriveFolder driveFolder) {
-                                showMessage(getString(R.string.file_created,
-                                        driveFolder.getDriveId().encodeToString()));
-                                finish();
-                            }
+                        driveFolder -> {
+                            showMessage(getString(R.string.file_created,
+                                    driveFolder.getDriveId().encodeToString()));
+                            finish();
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to create file", e);
-                        showMessage(getString(R.string.file_create_error));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "Unable to create file", e);
+                    showMessage(getString(R.string.file_create_error));
+                    finish();
                 });
     }
     // [END create_folder]
