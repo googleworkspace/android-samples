@@ -1,4 +1,4 @@
-# AndroidStudio excludes
+# Android Studio excludes
 .idea/
 *.iml
 

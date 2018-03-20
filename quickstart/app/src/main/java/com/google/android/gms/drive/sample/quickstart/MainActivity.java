@@ -1,12 +1,12 @@
 /**
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
- * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
  *
- * <p>http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * Unless required by applicable law or agreed to in writing, software distributed under the
  * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
@@ -49,7 +49,6 @@ public class MainActivity extends Activity {
   private static final int REQUEST_CODE_CAPTURE_IMAGE = 1;
   private static final int REQUEST_CODE_CREATOR = 2;
 
-  private GoogleSignInClient mGoogleSignInClient;
   private DriveClient mDriveClient;
   private DriveResourceClient mDriveResourceClient;
   private Bitmap mBitmapToSave;
@@ -63,8 +62,8 @@ public class MainActivity extends Activity {
   /** Start sign in activity. */
   private void signIn() {
     Log.i(TAG, "Start sign in");
-    mGoogleSignInClient = buildGoogleSignInClient();
-    startActivityForResult(mGoogleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
+    GoogleSignInClient GoogleSignInClient = buildGoogleSignInClient();
+    startActivityForResult(GoogleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
   }
 
   /** Build a Google SignIn client. */
@@ -85,19 +84,9 @@ public class MainActivity extends Activity {
     mDriveResourceClient
         .createContents()
         .continueWithTask(
-            new Continuation<DriveContents, Task<Void>>() {
-              @Override
-              public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
-                return createFileIntentSender(task.getResult(), image);
-              }
-            })
+                task -> createFileIntentSender(task.getResult(), image))
         .addOnFailureListener(
-            new OnFailureListener() {
-              @Override
-              public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Failed to create new contents.", e);
-              }
-            });
+                e -> Log.w(TAG, "Failed to create new contents.", e));
   }
 
   /**
@@ -134,13 +123,10 @@ public class MainActivity extends Activity {
     return mDriveClient
         .newCreateFileActivityIntentSender(createFileActivityOptions)
         .continueWith(
-            new Continuation<IntentSender, Void>() {
-              @Override
-              public Void then(@NonNull Task<IntentSender> task) throws Exception {
-                startIntentSenderForResult(task.getResult(), REQUEST_CODE_CREATOR, null, 0, 0, 0);
-                return null;
-              }
-            });
+                task -> {
+                  startIntentSenderForResult(task.getResult(), REQUEST_CODE_CREATOR, null, 0, 0, 0);
+                  return null;
+                });
   }
 
   @Override

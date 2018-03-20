@@ -1,17 +1,16 @@
 /*
  * Copyright 2014 Google Inc. All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software distributed under the
+ * Unless required by applicable law or agreed to in writing, software distributed under the
  * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.android.gms.drive.sample.conflict;
 
 import android.app.Activity;
@@ -26,7 +25,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveClient;
 import com.google.android.gms.drive.DriveResourceClient;
-import com.google.android.gms.tasks.Task;
 
 /**
  * An abstract activity that handles authorization and connection to the Drive
@@ -38,15 +36,15 @@ public abstract class BaseDemoActivity extends Activity {
     /**
      * Request code for auto Google Play Services error resolution.
      */
-    protected static final int REQUEST_CODE_SIGN_IN = 0;
+    private static final int REQUEST_CODE_SIGN_IN = 0;
 
     /**
-     * Handles high-level drive functions like sync
+     * Handles high-level drive functions like sync.
      */
     private DriveClient mDriveClient;
 
     /**
-     * Handle access to Drive resources/files.
+     * Handles access to Drive resources/files.
      */
     private DriveResourceClient mDriveResourceClient;
 
@@ -65,13 +63,13 @@ public abstract class BaseDemoActivity extends Activity {
         if (requestCode == REQUEST_CODE_SIGN_IN) {
             if (resultCode != RESULT_OK) {
                 // Sign-in may fail or be cancelled by the user. For this sample, sign-in is
-                // required and is fatal. For apps where sign-in is optional, handle appropriately
+                // required and is fatal. For apps where sign-in is optional, handle appropriately.
                 Log.e(TAG, "Sign-in failed.");
                 finish();
                 return;
             }
 
-            // We can use last signed in account here because we know the account has Drive scopes
+            // We can use last signed in account here because we know the account has Drive scopes.
             initializeDriveClient(GoogleSignIn.getLastSignedInAccount(this));
         }
     }
@@ -79,7 +77,7 @@ public abstract class BaseDemoActivity extends Activity {
     /**
      * Starts the sign-in process and initializes the Drive client.
      */
-    protected void signIn() {
+    private void signIn() {
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestScopes(Drive.SCOPE_FILE)
@@ -102,7 +100,7 @@ public abstract class BaseDemoActivity extends Activity {
     /**
      * Shows a toast message.
      */
-    protected void showMessage(String message) {
+    void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
@@ -111,11 +109,11 @@ public abstract class BaseDemoActivity extends Activity {
      */
     protected abstract void onDriveClientReady();
 
-    protected DriveClient getDriveClient() {
+    DriveClient getDriveClient() {
         return mDriveClient;
     }
 
-    protected DriveResourceClient getDriveResourceClient() {
+    DriveResourceClient getDriveResourceClient() {
         return mDriveResourceClient;
     }
 }

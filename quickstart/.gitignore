@@ -1,4 +1,4 @@
-# AndroidStudio excludes
+# Android Studio excludes
 .idea/
 *.iml
 
@@ -6,7 +6,6 @@
 .gradle/
 build/
 local.properties
-gradle.properties
 
 # Misc
 .DS_Store

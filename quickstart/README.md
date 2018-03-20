@@ -1,7 +1,7 @@
 # Google Drive Android Quickstart
 
 This application provides a
-[single activity](https://github.com/googledrive/android-quickstart/blob/master/app/src/main/java/com/google/android/gms/drive/sample/quickstart/MainActivity.java)
+[single activity](src/com/google/android/gms/drive/sample/quickstart/MainActivity.java)
 designed to get you up and running with the [Google Drive API for Android](https://developers.google.com/drive/android).
 
 # What does it do?
@@ -11,12 +11,17 @@ designed to get you up and running with the [Google Drive API for Android](https
 * Shows you how to write file content
 * Shows you how to set file metadata including title and MIME type
 
-# How can I run it?
+# Set Up
 
-1. Create an OAuth 2.0 client as described in the [Getting Started guide](https://developers.google.com/drive/android/get-started).
-1. Make sure you have [Google Play Services development](http://developer.android.com/google/play-services/setup.html) set up correctly.
-1. Grab the source and create a project in your IDE
-1. Run and edit!
+1. Install the [Android SDK](https://developer.android.com/sdk/index.html).
+1. Download and configure the
+[Google Play services SDK](https://developer.android.com/google/play-services/setup.html),
+which includes the Google Drive Android API.
+1. Create [Google API Console](https://console.developers.google.com/projectselector/apis/dashboard)
+project and/or enable the Drive API for an existing project.
+1. Register an OAuth 2.0 client for the package 'com.google.android.gms.drive.sample.quickstart'
+with your own [debug keys](https://developers.google.com/drive/android/auth).
+See full instructions in the [Getting Started guide](https://developers.google.com/drive/android/get-started)
 
 # What does it look like?
 

@@ -21,37 +21,31 @@
               android:layout_height="match_parent"
               android:padding="@dimen/side_margin"
               android:weightSum="1">
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/glist_heading"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/headderTextView"
+        android:id="@+id/headerTextView"
         android:layout_gravity="center_horizontal"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/conflict_instruction"
         android:id="@+id/instructionTextView"
         android:layout_gravity="center_horizontal"/>
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:id="@+id/editText"
-        android:text="Loading..."
+        android:text="@string/loading"
         android:layout_gravity="center_horizontal"
-        android:gravity="left|top"/>
-
+        android:gravity="start|top"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Update List"
+        android:text="@string/update_list"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal"/>
-
-
 </LinearLayout>

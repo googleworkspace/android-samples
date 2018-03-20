@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2013 Google, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<resources>
+    <string name="app_name">Google Drive Android API Demos</string>
+    <string name="download_progress">Download Progress:</string>
+    <string name="menu_settings">Settings</string>
+    <string name="button_subscribe">Listen for Changes</string>
+    <string name="button_unsubscribe">Stop Listening for Changes</string>
+    <string name="file_created">Created file: %1$s.</string>
+    <string name="file_create_error">Error while trying to create the file.</string>
+    <string name="select_folder">Select a folder</string>
+    <string name="select_file">Select file</string>
+    <string name="custom_property_deleted">Custom properties successfully deleted.</string>
+    <string name="update_failed">Unable to update file.</string>
+    <string name="change_event">File change event: %1$s</string>
+    <string name="tickle_finished">Finished tickling. Restart watch to resume.</string>
+    <string name="content_updated">Successfully edited contents.</string>
+    <string name="content_update_failed">Error while editing contents.</string>
+    <string name="metadata_updated">Successfully updated metadata.</string>
+    <string name="custom_property_updated">Custom property successfully inserted or updated.</string>
+    <string name="file_not_pinnable">File is not pinnable.</string>
+    <string name="file_already_pinned">File is already pinned.</string>
+    <string name="query_failed">Problem while retrieving files.</string>
+    <string name="read_failed">Error while retrieving file.</string>
+    <string name="metadata_retrieved">Metadata successfully fetched. Title: %1$s</string>
+    <string name="content_loaded">File contents successfully read.</string>
+    <string name="file_deleted">File deleted.</string>
+    <string name="delete_failed">Unable to delete file.</string>
+    <string name="subscribed">Subscribed.</string>
+    <string name="unsubscribed">Unsubscribed.</string>
+    <string name="init_failed">Unable to initialize activity.</string>
+    <string name="file_not_selected">No file selected, can not continue.</string>
+    <string name="folder_not_selected">No folder selected, can not continue.</string>
+</resources>

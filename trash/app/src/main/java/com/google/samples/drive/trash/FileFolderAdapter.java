@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.samples.drive.trash;
 
 import android.content.Context;
@@ -55,6 +54,7 @@ class FileFolderAdapter extends ArrayAdapter<Metadata> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder viewHolder;
+        // Creates view for single file to show filename and trashed status.
         if (convertView == null) {
             LayoutInflater inflater =
                     (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -64,7 +64,6 @@ class FileFolderAdapter extends ArrayAdapter<Metadata> {
             viewHolder.trashStatusTextView =
                     (TextView) rootView.findViewById(R.id.trashStatusTextView);
             viewHolder.fileFolderImageView = (ImageView) rootView.findViewById(R.id.imageView);
-
             convertView = rootView;
             convertView.setTag(viewHolder);
         } else {
@@ -72,9 +71,7 @@ class FileFolderAdapter extends ArrayAdapter<Metadata> {
         }
 
         final Metadata metadata = getItem(position);
-
         assert metadata != null;
-
         viewHolder.filenameTextView.setText(metadata.getTitle());
         viewHolder.trashStatusTextView.setText(metadata.isTrashed()
                         ? getContext().getResources().getString(R.string.trashed_status)
@@ -86,7 +83,6 @@ class FileFolderAdapter extends ArrayAdapter<Metadata> {
             viewHolder.fileFolderImageView.setImageDrawable(getContext().getResources().getDrawable(
                     R.drawable.ic_description_black_18dp, getContext().getTheme()));
         }
-
         return convertView;
     }
 

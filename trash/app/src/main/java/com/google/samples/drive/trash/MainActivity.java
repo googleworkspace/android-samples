@@ -1,12 +1,12 @@
-/*
+/**
  * Copyright 2015 Google Inc. All Rights Reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,16 +57,13 @@ import java.util.Stack;
 
 /**
  * Google Drive Android API Trash sample.
- * <p>
  * This sample demonstrates how DriveFiles and DriveFolders can be trashed and untrashed.
  */
 public class MainActivity extends FragmentActivity {
     private static final String TAG = "MainActivity";
     private static final int REQUEST_CODE_SIGN_IN = 0;
 
-    /**
-     * Handles access to files in Drive
-     */
+    // Handles access to files in Drive
     private DriveResourceClient mDriveResourceClient;
 
     private Stack<DriveId> mNavigationPath;
@@ -85,29 +82,25 @@ public class MainActivity extends FragmentActivity {
         mNavigationPath = new Stack<>();
         mCurrentFolderNameTextView = findViewById(R.id.folderNameTextView);
 
+        // An adapter for accessing and displaying resources (files and folders).
         mFileFolderAdapter = new FileFolderAdapter(
                 this, R.layout.resource_item, Collections.<Metadata>emptyList());
 
         ListView fileFolderListView = findViewById(R.id.fileListView);
-        fileFolderListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(
-                    AdapterView<?> parent, View view, int position, long id) {
-                // Metadata provides access to a DriveFile or DriveFolder's trash state.
-                Metadata metadata = mFileFolderAdapter.getItem(position);
-                toggleTrashStatus(metadata);
-                return true;
-            }
+        // Trash or untrash a resource with a long click.
+        fileFolderListView.setOnItemLongClickListener((parent, view, position, id) -> {
+            // Metadata provides access to a DriveFile or DriveFolder's trash state.
+            Metadata metadata = mFileFolderAdapter.getItem(position);
+            toggleTrashStatus(metadata);
+            return true;
         });
 
-        fileFolderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Metadata metadata = mFileFolderAdapter.getItem(position);
-                if (metadata != null && metadata.isFolder()) {
-                    DriveId folderId = metadata.getDriveId();
-                    navigateToFolder(folderId);
-                }
+        // Show a view of folder contents when a folder is clicked on.
+        fileFolderListView.setOnItemClickListener((parent, view, position, id) -> {
+            Metadata metadata = mFileFolderAdapter.getItem(position);
+            if (metadata != null && metadata.isFolder()) {
+                DriveId folderId = metadata.getDriveId();
+                navigateToFolder(folderId);
             }
         });
         fileFolderListView.setAdapter(mFileFolderAdapter);
@@ -115,30 +108,15 @@ public class MainActivity extends FragmentActivity {
 
         mAddFileButton = findViewById(R.id.addFileButton);
         mAddFileButton.setEnabled(false);
-        mAddFileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createFile();
-            }
-        });
+        mAddFileButton.setOnClickListener(v -> createFile());
 
         mAddFolderButton = findViewById(R.id.addFolderButton);
         mAddFolderButton.setEnabled(false);
-        mAddFolderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createFolder();
-            }
-        });
+        mAddFolderButton.setOnClickListener(view -> createFolder());
 
         mPreviousFolderButton = findViewById(R.id.previousButton);
         mPreviousFolderButton.setEnabled(false);
-        mPreviousFolderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateBack();
-            }
-        });
+        mPreviousFolderButton.setOnClickListener(v -> navigateBack());
 
         if (savedInstanceState != null) {
             ArrayList<DriveId> driveIds =
@@ -174,7 +152,6 @@ public class MainActivity extends FragmentActivity {
                 finish();
                 return;
             }
-
             Task<GoogleSignInAccount> getAccountTask =
                     GoogleSignIn.getSignedInAccountFromIntent(data);
             if (getAccountTask.isSuccessful()) {
@@ -229,15 +206,12 @@ public class MainActivity extends FragmentActivity {
         } else {
             folderTask = Tasks.forResult(mNavigationPath.peek().asDriveFolder());
         }
-        Task<Void> initFolderTask = folderTask.continueWith(new Continuation<DriveFolder, Void>() {
-            @Override
-            public Void then(@NonNull Task<DriveFolder> task) throws Exception {
-                DriveId id = task.getResult().getDriveId();
-                if (mNavigationPath.isEmpty()) {
-                    mNavigationPath.push(id);
-                }
-                return null;
+        Task<Void> initFolderTask = folderTask.continueWith(task -> {
+            DriveId id = task.getResult().getDriveId();
+            if (mNavigationPath.isEmpty()) {
+                mNavigationPath.push(id);
             }
+            return null;
         });
         return updateUiAfterTask(initFolderTask);
     }
@@ -253,7 +227,6 @@ public class MainActivity extends FragmentActivity {
             showMessage(R.string.trashable_error);
             return;
         }
-
         DriveResource driveResource = metadata.getDriveId().asDriveResource();
         Task<Void> toggleTrashTask;
         if (metadata.isTrashed()) {
@@ -266,35 +239,33 @@ public class MainActivity extends FragmentActivity {
         // [END trash]
     }
 
+    /**
+     * Creates an empty file in the current folder.
+     */
     private void createFile() {
         setUiInteractionsEnabled(false);
-
         int fileCount = mFileFolderAdapter.getCount();
-
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                              .setTitle("sample file " + (fileCount + 1))
-                                              .setMimeType("text/plain")
-                                              .build();
-
+                .setTitle("sample file " + (fileCount + 1))
+                .setMimeType("text/plain")
+                .build();
         DriveFolder driveFolder = mNavigationPath.peek().asDriveFolder();
-
         Task<DriveFile> createFileTask =
                 mDriveResourceClient.createFile(driveFolder, changeSet, null);
         Task<Void> updateTask = updateUiAfterTask(createFileTask);
         handleTaskError(updateTask, R.string.unexpected_error);
     }
 
+    /**
+     * Creates an empty folder in the current folder.
+     */
     private void createFolder() {
         setUiInteractionsEnabled(false);
-
         int fileCount = mFileFolderAdapter.getCount();
-
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                              .setTitle("sample folder " + (fileCount + 1))
-                                              .build();
-
+                .setTitle("sample folder " + (fileCount + 1))
+                .build();
         DriveFolder driveFolder = mNavigationPath.peek().asDriveFolder();
-
         Task<DriveFolder> createFolderTask =
                 mDriveResourceClient.createFolder(driveFolder, changeSet);
         Task<Void> updateTask = updateUiAfterTask(createFolderTask);
@@ -308,6 +279,9 @@ public class MainActivity extends FragmentActivity {
         handleTaskError(navigationTask, R.string.change_folder_error);
     }
 
+    /**
+     * Returns to previous folder view if available.
+     */
     private void navigateBack() {
         setUiInteractionsEnabled(false);
         mNavigationPath.pop();
@@ -320,39 +294,35 @@ public class MainActivity extends FragmentActivity {
     }
 
     private Task<Void> loadFolderContents(DriveFolder folder) {
-        Query folderQuery =
-                new Query.Builder()
-                        .setSortOrder(new SortOrder.Builder()
-                                              .addSortAscending(SortableField.CREATED_DATE)
-                                              .build())
-                        .build();
+        Query folderQuery = new Query.Builder()
+                .setSortOrder(new SortOrder.Builder()
+                        .addSortAscending(SortableField.CREATED_DATE)
+                        .build())
+                .build();
 
         Task<MetadataBuffer> task = mDriveResourceClient.queryChildren(folder, folderQuery);
-        return task.continueWith(new Continuation<MetadataBuffer, Void>() {
-            @Override
-            public Void then(@NonNull Task<MetadataBuffer> task) throws Exception {
-                MetadataBuffer items = task.getResult();
-                List<Metadata> children = new ArrayList<>(items.getCount());
-                try {
-                    for (int i = 0; i < items.getCount(); i++) {
-                        children.add(items.get(i).freeze());
-                    }
-                    // Show folders first
-                    Collections.sort(children, new Comparator<Metadata>() {
-                        @Override
-                        public int compare(Metadata a, Metadata b) {
-                            int aVal = a.isFolder() ? 1 : 0;
-                            int bVal = b.isFolder() ? 1 : 0;
-                            return bVal - aVal;
-                        }
-                    });
-                    mFileFolderAdapter.setFiles(children);
-                    mFileFolderAdapter.notifyDataSetChanged();
-                } finally {
-                    items.release();
+        return task.continueWith(task1 -> {
+            MetadataBuffer items = task1.getResult();
+            List<Metadata> children = new ArrayList<>(items.getCount());
+            try {
+                for (int i = 0; i < items.getCount(); i++) {
+                    children.add(items.get(i).freeze());
                 }
-                return null;
+                // Show folders first
+                Collections.sort(children, new Comparator<Metadata>() {
+                    @Override
+                    public int compare(Metadata a, Metadata b) {
+                        int aVal = a.isFolder() ? 1 : 0;
+                        int bVal = b.isFolder() ? 1 : 0;
+                        return bVal - aVal;
+                    }
+                });
+                mFileFolderAdapter.setFiles(children);
+                mFileFolderAdapter.notifyDataSetChanged();
+            } finally {
+                items.release();
             }
+            return null;
         });
     }
 
@@ -364,40 +334,33 @@ public class MainActivity extends FragmentActivity {
     private Task<Void> loadFolderName(DriveFolder folder) {
         Log.i(TAG, "Fetching folder metadata for " + folder.getDriveId().encodeToString());
         Task<Metadata> getMetadataTask = mDriveResourceClient.getMetadata(folder);
-        return getMetadataTask.continueWith(new Continuation<Metadata, Void>() {
-            @Override
-            public Void then(@NonNull Task<Metadata> task) throws Exception {
-                mCurrentFolderNameTextView.setText(task.getResult().getTitle());
-                return null;
-            }
+        return getMetadataTask.continueWith(task -> {
+            mCurrentFolderNameTextView.setText(task.getResult().getTitle());
+            return null;
         });
     }
 
     private <T> Task<Void> updateUiAfterTask(Task<T> task) {
-        Task<Void> loadFolderTask = task.continueWithTask(new Continuation<T, Task<Void>>() {
-            @Override
-            public Task<Void> then(@NonNull Task<T> task) throws Exception {
-                DriveFolder currentFolder = mNavigationPath.peek().asDriveFolder();
-                return loadFolderNameAndContents(currentFolder);
-            }
+        Task<Void> loadFolderTask = task.continueWithTask(task1 -> {
+            DriveFolder currentFolder = mNavigationPath.peek().asDriveFolder();
+            return loadFolderNameAndContents(currentFolder);
         });
-        loadFolderTask.addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                setUiInteractionsEnabled(true);
-            }
-        });
+        // Wait till Metadata is loaded to allow user interaction.
+        loadFolderTask.addOnCompleteListener(task12 -> setUiInteractionsEnabled(true));
         return loadFolderTask;
     }
 
+    /**
+     * Display error if task fails.
+     *
+     * @param task the task
+     * @param messageResourceId the error message to show
+     */
     private <T> Task<T> handleTaskError(Task<T> task, final Integer messageResourceId) {
-        return task.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "Unexpected error", e);
-                if (messageResourceId != null) {
-                    showMessage(messageResourceId);
-                }
+        return task.addOnFailureListener(e -> {
+            Log.e(TAG, "Unexpected error", e);
+            if (messageResourceId != null) {
+                showMessage(messageResourceId);
             }
         });
     }

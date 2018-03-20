@@ -15,7 +15,5 @@
   limitations under the License.
 -->
 <resources>
-
     <string name="app_name">Google Drive Android API Quickstart</string>
-
 </resources>
