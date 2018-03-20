@@ -25,7 +25,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveClient;
 import com.google.android.gms.drive.DriveResourceClient;
-import com.google.android.gms.tasks.Task;
 
 /**
  * An abstract activity that handles authorization and connection to the Drive
@@ -37,7 +36,7 @@ public abstract class BaseDemoActivity extends Activity {
     /**
      * Request code for auto Google Play Services error resolution.
      */
-    protected static final int REQUEST_CODE_SIGN_IN = 0;
+    private static final int REQUEST_CODE_SIGN_IN = 0;
 
     /**
      * Handles high-level drive functions like sync.
@@ -78,7 +77,7 @@ public abstract class BaseDemoActivity extends Activity {
     /**
      * Starts the sign-in process and initializes the Drive client.
      */
-    protected void signIn() {
+    private void signIn() {
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestScopes(Drive.SCOPE_FILE)
@@ -101,7 +100,7 @@ public abstract class BaseDemoActivity extends Activity {
     /**
      * Shows a toast message.
      */
-    protected void showMessage(String message) {
+    void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
@@ -110,11 +109,11 @@ public abstract class BaseDemoActivity extends Activity {
      */
     protected abstract void onDriveClientReady();
 
-    protected DriveClient getDriveClient() {
+    DriveClient getDriveClient() {
         return mDriveClient;
     }
 
-    protected DriveResourceClient getDriveResourceClient() {
+    DriveResourceClient getDriveResourceClient() {
         return mDriveResourceClient;
     }
 }

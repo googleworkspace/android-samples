@@ -8,4 +8,6 @@
     <string name="conflict_instruction">Start app on two devices. Add items to the list on one device then hit the \"Update List\" button. Then  add items on second device and hit \"Update List\" button. Notice the resolved list on second device.</string>
     <string name="unexpected_error">An unexpected error occurred.</string>
     <string name="reload_after_conflict">A conflict was detected. Reloaded content.</string>
+    <string name="loading">Loading...</string>
+    <string name="update_list">Update List</string>
 </resources>
