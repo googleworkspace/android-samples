@@ -66,19 +66,11 @@ public class QueryFilesSharedWithMeActivity extends BaseDemoActivity {
         Query query = new Query.Builder().addFilter(Filters.sharedWithMe()).build();
         getDriveResourceClient()
                 .query(query)
-                .addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
-                    @Override
-                    public void onSuccess(MetadataBuffer metadatabuffer) {
-                        mResultsAdapter.append(metadatabuffer);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Error retrieving files", e);
-                        showMessage(getString(R.string.query_failed));
-                        finish();
-                    }
+                .addOnSuccessListener(metadatabuffer -> mResultsAdapter.append(metadatabuffer))
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error retrieving files", e);
+                    showMessage(getString(R.string.query_failed));
+                    finish();
                 });
     }
 }

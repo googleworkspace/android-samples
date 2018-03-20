@@ -35,19 +35,11 @@ public class DeleteCustomPropertyActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickTextFile()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                deleteCustomProperty(driveId.asDriveFile());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        showMessage(getString(R.string.file_not_selected));
-                        finish();
-                    }
+                        driveId -> deleteCustomProperty(driveId.asDriveFile()))
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No file selected", e);
+                    showMessage(getString(R.string.file_not_selected));
+                    finish();
                 });
     }
 
@@ -65,20 +57,14 @@ public class DeleteCustomPropertyActivity extends BaseDemoActivity {
                 getDriveResourceClient().updateMetadata(file, changeSet);
         updateMetadataTask
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<Metadata>() {
-                            @Override
-                            public void onSuccess(Metadata metadata) {
-                                showMessage(getString(R.string.custom_property_deleted));
-                                finish();
-                            }
+                        metadata -> {
+                            showMessage(getString(R.string.custom_property_deleted));
+                            finish();
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to update metadata", e);
-                        showMessage(getString(R.string.update_failed));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "Unable to update metadata", e);
+                    showMessage(getString(R.string.update_failed));
+                    finish();
                 });
         // [END delete_custom_property]
     }

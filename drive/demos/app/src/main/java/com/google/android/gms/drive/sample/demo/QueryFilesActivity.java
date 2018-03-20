@@ -74,25 +74,19 @@ public class QueryFilesActivity extends BaseDemoActivity {
         // [START query_results]
         queryTask
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<MetadataBuffer>() {
-                            @Override
-                            public void onSuccess(MetadataBuffer metadataBuffer) {
-                                // Handle results...
-                                // [START_EXCLUDE]
-                                mResultsAdapter.append(metadataBuffer);
-                                // [END_EXCLUDE]
-                            }
+                        metadataBuffer -> {
+                            // Handle results...
+                            // [START_EXCLUDE]
+                            mResultsAdapter.append(metadataBuffer);
+                            // [END_EXCLUDE]
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Handle failure...
-                        // [START_EXCLUDE]
-                        Log.e(TAG, "Error retrieving files", e);
-                        showMessage(getString(R.string.query_failed));
-                        finish();
-                        // [END_EXCLUDE]
-                    }
+                .addOnFailureListener(this, e -> {
+                    // Handle failure...
+                    // [START_EXCLUDE]
+                    Log.e(TAG, "Error retrieving files", e);
+                    showMessage(getString(R.string.query_failed));
+                    finish();
+                    // [END_EXCLUDE]
                 });
         // [END query_results]
     }

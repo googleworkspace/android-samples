@@ -53,19 +53,11 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickTextFile()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                retrieveContents(driveId.asDriveFile());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        showMessage(getString(R.string.file_not_selected));
-                        finish();
-                    }
+                        driveId -> retrieveContents(driveId.asDriveFile()))
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No file selected", e);
+                    showMessage(getString(R.string.file_not_selected));
+                    finish();
                 });
     }
 
@@ -76,41 +68,35 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
         // [END open_file]
         // [START read_contents]
         openFileTask
-                .continueWithTask(new Continuation<DriveContents, Task<Void>>() {
-                    @Override
-                    public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
-                        DriveContents contents = task.getResult();
-                        // Process contents...
-                        // [START_EXCLUDE]
-                        // [START read_as_string]
-                        try (BufferedReader reader = new BufferedReader(
-                                     new InputStreamReader(contents.getInputStream()))) {
-                            StringBuilder builder = new StringBuilder();
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                builder.append(line).append("\n");
-                            }
-                            showMessage(getString(R.string.content_loaded));
-                            mFileContents.setText(builder.toString());
+                .continueWithTask(task -> {
+                    DriveContents contents = task.getResult();
+                    // Process contents...
+                    // [START_EXCLUDE]
+                    // [START read_as_string]
+                    try (BufferedReader reader = new BufferedReader(
+                                 new InputStreamReader(contents.getInputStream()))) {
+                        StringBuilder builder = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            builder.append(line).append("\n");
                         }
-                        // [END read_as_string]
-                        // [END_EXCLUDE]
-                        // [START discard_contents]
-                        Task<Void> discardTask = getDriveResourceClient().discardContents(contents);
-                        // [END discard_contents]
-                        return discardTask;
+                        showMessage(getString(R.string.content_loaded));
+                        mFileContents.setText(builder.toString());
                     }
+                    // [END read_as_string]
+                    // [END_EXCLUDE]
+                    // [START discard_contents]
+                    Task<Void> discardTask = getDriveResourceClient().discardContents(contents);
+                    // [END discard_contents]
+                    return discardTask;
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Handle failure
-                        // [START_EXCLUDE]
-                        Log.e(TAG, "Unable to read contents", e);
-                        showMessage(getString(R.string.read_failed));
-                        finish();
-                        // [END_EXCLUDE]
-                    }
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    // [START_EXCLUDE]
+                    Log.e(TAG, "Unable to read contents", e);
+                    showMessage(getString(R.string.read_failed));
+                    finish();
+                    // [END_EXCLUDE]
                 });
         // [END read_contents]
     }

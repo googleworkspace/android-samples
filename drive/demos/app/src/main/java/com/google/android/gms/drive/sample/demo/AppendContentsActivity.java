@@ -42,19 +42,11 @@ public class AppendContentsActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickTextFile()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                appendContents(driveId.asDriveFile());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        showMessage(getString(R.string.file_not_selected));
-                        finish();
-                    }
+                        driveId -> appendContents(driveId.asDriveFile()))
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No file selected", e);
+                    showMessage(getString(R.string.file_not_selected));
+                    finish();
                 });
     }
 
@@ -64,48 +56,39 @@ public class AppendContentsActivity extends BaseDemoActivity {
                 getDriveResourceClient().openFile(file, DriveFile.MODE_READ_WRITE);
         // [END open_for_append]
         // [START append_contents]
-        openTask.continueWithTask(new Continuation<DriveContents, Task<Void>>() {
-                    @Override
-                    public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
-                        DriveContents driveContents = task.getResult();
-                        ParcelFileDescriptor pfd = driveContents.getParcelFileDescriptor();
-                        long bytesToSkip = pfd.getStatSize();
-                        try (InputStream in = new FileInputStream(pfd.getFileDescriptor())) {
-                            // Skip to end of file
-                            while (bytesToSkip > 0) {
-                                long skipped = in.skip(bytesToSkip);
-                                bytesToSkip -= skipped;
-                            }
-                        }
-                        try (OutputStream out = new FileOutputStream(pfd.getFileDescriptor())) {
-                            out.write("Hello world".getBytes());
-                        }
-                        // [START commit_contents_with_metadata]
-                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                                              .setStarred(true)
-                                                              .setLastViewedByMeDate(new Date())
-                                                              .build();
-                        Task<Void> commitTask =
-                                getDriveResourceClient().commitContents(driveContents, changeSet);
-                        // [END commit_contents_with_metadata]
-                        return commitTask;
-                    }
-                })
+        openTask.continueWithTask(task -> {
+            DriveContents driveContents = task.getResult();
+            ParcelFileDescriptor pfd = driveContents.getParcelFileDescriptor();
+            long bytesToSkip = pfd.getStatSize();
+            try (InputStream in = new FileInputStream(pfd.getFileDescriptor())) {
+                // Skip to end of file
+                while (bytesToSkip > 0) {
+                    long skipped = in.skip(bytesToSkip);
+                    bytesToSkip -= skipped;
+                }
+            }
+            try (OutputStream out = new FileOutputStream(pfd.getFileDescriptor())) {
+                out.write("Hello world".getBytes());
+            }
+            // [START commit_contents_with_metadata]
+            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                                  .setStarred(true)
+                                                  .setLastViewedByMeDate(new Date())
+                                                  .build();
+            Task<Void> commitTask =
+                    getDriveResourceClient().commitContents(driveContents, changeSet);
+            // [END commit_contents_with_metadata]
+            return commitTask;
+        })
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                showMessage(getString(R.string.content_updated));
-                                finish();
-                            }
+                        aVoid -> {
+                            showMessage(getString(R.string.content_updated));
+                            finish();
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to update contents", e);
-                        showMessage(getString(R.string.content_update_failed));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "Unable to update contents", e);
+                    showMessage(getString(R.string.content_update_failed));
+                    finish();
                 });
         // [END append_contents]
     }

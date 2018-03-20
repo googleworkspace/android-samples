@@ -83,12 +83,7 @@ public class SubscribeChangeEventsForFilesActivity extends BaseDemoActivity {
 
         mLogTextView = findViewById(R.id.textViewLog);
         mActionButton = findViewById(R.id.buttonAction);
-        mActionButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggle();
-            }
-        });
+        mActionButton.setOnClickListener(v -> toggle());
 
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -103,20 +98,14 @@ public class SubscribeChangeEventsForFilesActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickTextFile()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                mSelectedFileId = driveId;
-                                refresh();
-                            }
+                        driveId -> {
+                            mSelectedFileId = driveId;
+                            refresh();
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        showMessage(getString(R.string.file_not_selected));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No file selected", e);
+                    showMessage(getString(R.string.file_not_selected));
+                    finish();
                 });
     }
 
@@ -170,24 +159,14 @@ public class SubscribeChangeEventsForFilesActivity extends BaseDemoActivity {
             mCountDownTimer.start();
             // [START add_change_subscription]
             getDriveResourceClient().addChangeSubscription(file).addOnSuccessListener(
-                    new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            showMessage(getString(R.string.subscribed));
-                        }
-                    });
+                    aVoid -> showMessage(getString(R.string.subscribed)));
             // [END add_change_subscription]
         } else {
             Log.d(TAG, "Stopping to listen to the file changes.");
             mIsSubscribed = false;
             // [START remove_change_listener]
             getDriveResourceClient().removeChangeSubscription(file).addOnSuccessListener(
-                    new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            showMessage(getString(R.string.unsubscribed));
-                        }
-                    });
+                    aVoid -> showMessage(getString(R.string.unsubscribed)));
             // [END remove_change_listener]
         }
         refresh();
@@ -213,19 +192,9 @@ public class SubscribeChangeEventsForFilesActivity extends BaseDemoActivity {
             getDriveResourceClient()
                     .updateMetadata(mSelectedFileId.asDriveResource(), metadata)
                     .addOnSuccessListener(SubscribeChangeEventsForFilesActivity.this,
-                            new OnSuccessListener<Metadata>() {
-                                @Override
-                                public void onSuccess(Metadata metadata) {
-                                    Log.d(TAG, "Updated metadata.");
-                                }
-                            })
+                            metadata1 -> Log.d(TAG, "Updated metadata."))
                     .addOnFailureListener(
-                            SubscribeChangeEventsForFilesActivity.this, new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e(TAG, "Unable to update metadata", e);
-                                }
-                            });
+                            SubscribeChangeEventsForFilesActivity.this, e -> Log.e(TAG, "Unable to update metadata", e));
         }
 
         @Override

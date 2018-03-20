@@ -36,19 +36,11 @@ public class RewriteContentsActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickTextFile()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                rewriteContents(driveId.asDriveFile());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No file selected", e);
-                        showMessage(getString(R.string.file_not_selected));
-                        finish();
-                    }
+                        driveId -> rewriteContents(driveId.asDriveFile()))
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No file selected", e);
+                    showMessage(getString(R.string.file_not_selected));
+                    finish();
                 });
     }
     private void rewriteContents(DriveFile file) {
@@ -57,35 +49,26 @@ public class RewriteContentsActivity extends BaseDemoActivity {
                 getDriveResourceClient().openFile(file, DriveFile.MODE_WRITE_ONLY);
         // [END open_for_write]
         // [START rewrite_contents]
-        openTask.continueWithTask(new Continuation<DriveContents, Task<Void>>() {
-                    @Override
-                    public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
-                        DriveContents driveContents = task.getResult();
-                        try (OutputStream out = driveContents.getOutputStream()) {
-                            out.write("Hello world".getBytes());
-                        }
-                        // [START commit_content]
-                        Task<Void> commitTask =
-                                getDriveResourceClient().commitContents(driveContents, null);
-                        // [END commit_content]
-                        return commitTask;
-                    }
-                })
+        openTask.continueWithTask(task -> {
+            DriveContents driveContents = task.getResult();
+            try (OutputStream out = driveContents.getOutputStream()) {
+                out.write("Hello world".getBytes());
+            }
+            // [START commit_content]
+            Task<Void> commitTask =
+                    getDriveResourceClient().commitContents(driveContents, null);
+            // [END commit_content]
+            return commitTask;
+        })
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                showMessage(getString(R.string.content_updated));
-                                finish();
-                            }
+                        aVoid -> {
+                            showMessage(getString(R.string.content_updated));
+                            finish();
                         })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unable to update contents", e);
-                        showMessage(getString(R.string.content_update_failed));
-                        finish();
-                    }
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "Unable to update contents", e);
+                    showMessage(getString(R.string.content_update_failed));
+                    finish();
                 });
         // [END rewrite_contents]
     }

@@ -51,19 +51,11 @@ public class QueryFilesInFolderActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         pickFolder()
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<DriveId>() {
-                            @Override
-                            public void onSuccess(DriveId driveId) {
-                                listFilesInFolder(driveId.asDriveFolder());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "No folder selected", e);
-                        showMessage(getString(R.string.folder_not_selected));
-                        finish();
-                    }
+                        driveId -> listFilesInFolder(driveId.asDriveFolder()))
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "No folder selected", e);
+                    showMessage(getString(R.string.folder_not_selected));
+                    finish();
                 });
     }
 
@@ -90,19 +82,11 @@ public class QueryFilesInFolderActivity extends BaseDemoActivity {
         // END query_children]
         queryTask
                 .addOnSuccessListener(this,
-                        new OnSuccessListener<MetadataBuffer>() {
-                            @Override
-                            public void onSuccess(MetadataBuffer metadataBuffer) {
-                                mResultsAdapter.append(metadataBuffer);
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Error retrieving files", e);
-                        showMessage(getString(R.string.query_failed));
-                        finish();
-                    }
+                        metadataBuffer -> mResultsAdapter.append(metadataBuffer))
+                .addOnFailureListener(this, e -> {
+                    Log.e(TAG, "Error retrieving files", e);
+                    showMessage(getString(R.string.query_failed));
+                    finish();
                 });
     }
 }
