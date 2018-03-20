@@ -18,10 +18,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -35,9 +33,6 @@ import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
@@ -52,13 +47,13 @@ import java.io.Writer;
 public class MainActivity extends BaseDemoActivity {
     private static final String TAG = "MainActivity";
 
-    protected EditText mEditText;
-    protected Button mUpdateGroceryListButton;
+    private EditText mEditText;
+    private Button mUpdateGroceryListButton;
     // Instance variables used for DriveFile and DriveContents to help initiate file conflicts.
-    protected DriveFile mGroceryListFile;
-    protected DriveContents mDriveContents;
+    private DriveFile mGroceryListFile;
+    private DriveContents mDriveContents;
     // Receiver used to update the EditText once conflicts have been resolved.
-    protected BroadcastReceiver mBroadcastReceiver;
+    private BroadcastReceiver mBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -67,28 +62,19 @@ public class MainActivity extends BaseDemoActivity {
 
         mEditText = findViewById(R.id.editText);
         mUpdateGroceryListButton = findViewById(R.id.button);
-        mUpdateGroceryListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mGroceryListFile != null) {
-                    mUpdateGroceryListButton.setEnabled(false);
-                    mEditText.setEnabled(false);
-                    saveFile()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    mEditText.setEnabled(true);
-                                    mUpdateGroceryListButton.setEnabled(true);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e(TAG, "Unexpected error", e);
-                                    showMessage(getString(R.string.unexpected_error));
-                                }
-                            });
-                }
+        mUpdateGroceryListButton.setOnClickListener(view -> {
+            if (mGroceryListFile != null) {
+                mUpdateGroceryListButton.setEnabled(false);
+                mEditText.setEnabled(false);
+                saveFile()
+                        .addOnCompleteListener(task -> {
+                            mEditText.setEnabled(true);
+                            mUpdateGroceryListButton.setEnabled(true);
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e(TAG, "Unexpected error", e);
+                            showMessage(getString(R.string.unexpected_error));
+                        });
             }
         });
 
@@ -100,12 +86,9 @@ public class MainActivity extends BaseDemoActivity {
                 if (intent.getAction().equals(ConflictResolver.CONFLICT_RESOLVED)) {
                     Log.d(TAG, "Received intent to update edit text.");
                     showMessage(getString(R.string.reload_after_conflict));
-                    loadContents(mGroceryListFile).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, "Unexpected error", e);
-                            showMessage(getString(R.string.unexpected_error));
-                        }
+                    loadContents(mGroceryListFile).addOnFailureListener(e -> {
+                        Log.e(TAG, "Unexpected error", e);
+                        showMessage(getString(R.string.unexpected_error));
                     });
                 }
             }
@@ -129,18 +112,10 @@ public class MainActivity extends BaseDemoActivity {
     protected void onDriveClientReady() {
         getDriveClient()
                 .requestSync()
-                .continueWithTask(new Continuation<Void, Task<Void>>() {
-                    @Override
-                    public Task<Void> then(@NonNull Task<Void> task) throws Exception {
-                        return initializeGroceryList();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Unexpected error", e);
-                        showMessage(getString(R.string.unexpected_error));
-                    }
+                .continueWithTask(task -> initializeGroceryList())
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Unexpected error", e);
+                    showMessage(getString(R.string.unexpected_error));
                 });
     }
 
@@ -155,29 +130,20 @@ public class MainActivity extends BaseDemoActivity {
                               .build();
         return getDriveResourceClient()
                 .query(query)
-                .continueWithTask(new Continuation<MetadataBuffer, Task<DriveFile>>() {
-                    @Override
-                    public Task<DriveFile> then(@NonNull Task<MetadataBuffer> task)
-                            throws Exception {
-                        MetadataBuffer metadataBuffer = task.getResult();
-                        try {
-                            if (metadataBuffer.getCount() == 0) {
-                                return createNewFile();
-                            } else {
-                                DriveId id = metadataBuffer.get(0).getDriveId();
-                                return Tasks.forResult(id.asDriveFile());
-                            }
-                        } finally {
-                            metadataBuffer.release();
+                .continueWithTask(task -> {
+                    MetadataBuffer metadataBuffer = task.getResult();
+                    try {
+                        if (metadataBuffer.getCount() == 0) {
+                            return createNewFile();
+                        } else {
+                            DriveId id = metadataBuffer.get(0).getDriveId();
+                            return Tasks.forResult(id.asDriveFile());
                         }
+                    } finally {
+                        metadataBuffer.release();
                     }
                 })
-                .continueWithTask(new Continuation<DriveFile, Task<Void>>() {
-                    @Override
-                    public Task<Void> then(@NonNull Task<DriveFile> task) throws Exception {
-                        return loadContents(task.getResult());
-                    }
-                });
+                .continueWithTask(task -> loadContents(task.getResult()));
     }
 
     /**
@@ -187,35 +153,29 @@ public class MainActivity extends BaseDemoActivity {
         mGroceryListFile = file;
         Task<DriveContents> loadTask =
                 getDriveResourceClient().openFile(file, DriveFile.MODE_READ_ONLY);
-        return loadTask.continueWith(new Continuation<DriveContents, Void>() {
-            @Override
-            public Void then(@NonNull Task<DriveContents> task) throws Exception {
-                Log.d(TAG, "Reading file contents.");
-                mDriveContents = task.getResult();
-                InputStream inputStream = mDriveContents.getInputStream();
-                String groceryListStr = ConflictUtil.getStringFromInputStream(inputStream);
+        return loadTask.continueWith(task -> {
+            Log.d(TAG, "Reading file contents.");
+            mDriveContents = task.getResult();
+            InputStream inputStream = mDriveContents.getInputStream();
+            String groceryListStr = ConflictUtil.getStringFromInputStream(inputStream);
 
-                mEditText.setText(groceryListStr);
-                return null;
-            }
+            mEditText.setText(groceryListStr);
+            return null;
         });
     }
 
     private Task<DriveFile> createNewFile() {
         Log.d(TAG, "Creating new grocery list.");
         return getDriveResourceClient().getRootFolder().continueWithTask(
-                new Continuation<DriveFolder, Task<DriveFile>>() {
-                    @Override
-                    public Task<DriveFile> then(@NonNull Task<DriveFolder> task) throws Exception {
-                        DriveFolder folder = task.getResult();
-                        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                                                              .setTitle(getResources().getString(
-                                                                      R.string.groceryListFileName))
-                                                              .setMimeType("text/plain")
-                                                              .build();
+                task -> {
+                    DriveFolder folder = task.getResult();
+                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                                          .setTitle(getResources().getString(
+                                                                  R.string.groceryListFileName))
+                                                          .setMimeType("text/plain")
+                                                          .build();
 
-                        return getDriveResourceClient().createFile(folder, changeSet, null);
-                    }
+                    return getDriveResourceClient().createFile(folder, changeSet, null);
                 });
     }
 
@@ -226,36 +186,30 @@ public class MainActivity extends BaseDemoActivity {
                 getDriveResourceClient().reopenContentsForWrite(mDriveContents);
         // [END reopen_for_write]
         return reopenTask
-                .continueWithTask(new Continuation<DriveContents, Task<Void>>() {
-                    @Override
-                    public Task<Void> then(@NonNull Task<DriveContents> task) throws Exception {
-                        // [START write_conflict_strategy]
-                        DriveContents driveContents = task.getResult();
-                        OutputStream outputStream = driveContents.getOutputStream();
-                        try (Writer writer = new OutputStreamWriter(outputStream)) {
-                            writer.write(mEditText.getText().toString());
-                        }
-                        // ExecutionOptions define the conflict strategy to be used.
-                        // [START execution_options]
-                        ExecutionOptions executionOptions =
-                                new ExecutionOptions.Builder()
-                                        .setNotifyOnCompletion(true)
-                                        .setConflictStrategy(
-                                                ExecutionOptions.CONFLICT_STRATEGY_KEEP_REMOTE)
-                                        .build();
-                        return getDriveResourceClient().commitContents(
-                                driveContents, null, executionOptions);
-                        // [END execution_options]
-                        // [END write_conflict_strategy]
+                .continueWithTask(task -> {
+                    // [START write_conflict_strategy]
+                    DriveContents driveContents = task.getResult();
+                    OutputStream outputStream = driveContents.getOutputStream();
+                    try (Writer writer = new OutputStreamWriter(outputStream)) {
+                        writer.write(mEditText.getText().toString());
                     }
+                    // ExecutionOptions define the conflict strategy to be used.
+                    // [START execution_options]
+                    ExecutionOptions executionOptions =
+                            new ExecutionOptions.Builder()
+                                    .setNotifyOnCompletion(true)
+                                    .setConflictStrategy(
+                                            ExecutionOptions.CONFLICT_STRATEGY_KEEP_REMOTE)
+                                    .build();
+                    return getDriveResourceClient().commitContents(
+                            driveContents, null, executionOptions);
+                    // [END execution_options]
+                    // [END write_conflict_strategy]
                 })
-                .continueWithTask(new Continuation<Void, Task<Void>>() {
-                    @Override
-                    public Task<Void> then(@NonNull Task<Void> task) throws Exception {
-                        showMessage(getString(R.string.file_saved));
-                        Log.d(TAG, "Reopening file for read.");
-                        return loadContents(mGroceryListFile);
-                    }
+                .continueWithTask(task -> {
+                    showMessage(getString(R.string.file_saved));
+                    Log.d(TAG, "Reopening file for read.");
+                    return loadContents(mGroceryListFile);
                 });
     }
 }
