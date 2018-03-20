@@ -12,6 +12,7 @@ designed to get you up and running with the [Google Drive API for Android](https
 * Shows you how to set file metadata including title and MIME type
 
 # Set Up
+
 1. Install the [Android SDK](https://developer.android.com/sdk/index.html).
 1. Download and configure the
 [Google Play services SDK](https://developer.android.com/google/play-services/setup.html),
