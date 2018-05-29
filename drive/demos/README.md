@@ -43,11 +43,6 @@ If you actually want to run this sample app (though it is mostly provided so you
 can read the code), you will need to register an OAuth 2.0 client for the
 package `com.google.android.gms.drive.sample.demo` with your own debug keys.
 See instructions in the [Getting Started guide](https://developers.google.com/drive/android/get-started).
-Set any resource IDs to those that you have access to. Resource ID definitions
-are on:
-
-* com.google.android.gms.drive.sample.demo.BaseDemoActivity.EXISTING_FOLDER_ID
-* com.google.android.gms.drive.sample.demo.BaseDemoActivity.EXISTING_FILE_ID
 
 ![Home Screen](images/demos_home.png)
 
