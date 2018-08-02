@@ -157,17 +157,17 @@ public class SubscribeChangeEventsForFilesActivity extends BaseDemoActivity {
             mCountDownTimer = new TickleTimer(30000 /* 30 seconds total */,
                     1000 /* tick every 1 second */);
             mCountDownTimer.start();
-            // [START add_change_subscription]
+            // [START drive_android_add_change_subscription]
             getDriveResourceClient().addChangeSubscription(file).addOnSuccessListener(
                     aVoid -> showMessage(getString(R.string.subscribed)));
-            // [END add_change_subscription]
+            // [END drive_android_add_change_subscription]
         } else {
             Log.d(TAG, "Stopping to listen to the file changes.");
             mIsSubscribed = false;
-            // [START remove_change_listener]
+            // [START drive_android_remove_change_listener]
             getDriveResourceClient().removeChangeSubscription(file).addOnSuccessListener(
                     aVoid -> showMessage(getString(R.string.unsubscribed)));
-            // [END remove_change_listener]
+            // [END drive_android_remove_change_listener]
         }
         refresh();
     }

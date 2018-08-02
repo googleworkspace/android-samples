@@ -138,17 +138,17 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
             mCountDownTimer = new TickleTimer(30000 /* 30 seconds total */,
                     1000 /* tick every 1 second */ );
             mCountDownTimer.start();
-            // [START add_change_listener]
+            // [START drive_android_add_change_listener]
             getDriveResourceClient()
                     .addChangeListener(file, changeListener)
                     .addOnSuccessListener(this, listenerToken -> mChangeListenerToken = listenerToken);
-            // [END add_change_listener]
+            // [END drive_android_add_change_listener]
         } else {
             Log.d(TAG, "Stopping to listen to the file changes.");
             mIsSubscribed = false;
-            // [START remove_change_listener]
+            // [START drive_android_remove_change_listener]
             getDriveResourceClient().removeChangeListener(mChangeListenerToken);
-            // [END remove_change_listener]
+            // [END drive_android_remove_change_listener]
         }
         refresh();
     }
@@ -160,7 +160,7 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
         }
     }
 
-    // [START change_listener]
+    // [START drive_android_change_listener]
     /**
      * A listener to handle file change events.
      */
@@ -170,7 +170,7 @@ public class ListenChangeEventsForFilesActivity extends BaseDemoActivity {
             mLogTextView.append(getString(R.string.change_event, event));
         }
     };
-    // [END change_listener]
+    // [END drive_android_change_listener]
 
     private class TickleTimer extends CountDownTimer {
         TickleTimer(long millisInFuture, long countDownInterval) {

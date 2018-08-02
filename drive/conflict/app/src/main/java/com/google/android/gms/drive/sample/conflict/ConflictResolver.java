@@ -138,7 +138,6 @@ class ConflictResolver {
                                     mConflictedCompletionEvent.getModifiedMetadataChangeSet();
                             return mDriveResourceClient.commitContents(contentsForWrite,
                                     modifiedMetadataChangeSet, executionOptions);
-                        })
                 })
                 .addOnSuccessListener(aVoid -> {
                     mConflictedCompletionEvent.dismiss();
