@@ -222,7 +222,7 @@ public class MainActivity extends FragmentActivity {
      * @param metadata Item to (un)trash
      */
     private void toggleTrashStatus(Metadata metadata) {
-        // [START trash]
+        // [START drive_android_trash]
         if (!metadata.isTrashable()) {
             showMessage(R.string.trashable_error);
             return;
@@ -236,7 +236,7 @@ public class MainActivity extends FragmentActivity {
         }
         toggleTrashTask = updateUiAfterTask(toggleTrashTask);
         handleTaskError(toggleTrashTask, R.string.unexpected_error);
-        // [END trash]
+        // [END drive_android_trash]
     }
 
     /**
