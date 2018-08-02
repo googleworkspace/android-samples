@@ -48,7 +48,7 @@ public class CreateFileWithCreatorActivity extends BaseDemoActivity {
     }
 
     private void createFileWithIntent() {
-        // [START create_file_with_intent]
+        // [START drive_android_create_file_with_intent]
         Task<DriveContents> createContentsTask = getDriveResourceClient().createContents();
         createContentsTask
                 .continueWithTask(task -> {
@@ -87,7 +87,7 @@ public class CreateFileWithCreatorActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.file_create_error));
                     finish();
                 });
-        // [END create_file_with_intent]
+        // [END drive_android_create_file_with_intent]
     }
 
     @Override

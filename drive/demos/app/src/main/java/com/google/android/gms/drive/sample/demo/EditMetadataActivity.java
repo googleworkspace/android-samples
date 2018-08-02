@@ -42,7 +42,7 @@ public class EditMetadataActivity extends BaseDemoActivity {
                 });
     }
     private void editMetadata(DriveFile file) {
-        // [START update_metadata]
+        // [START drive_android_update_metadata]
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                                               .setStarred(true)
                                               .setIndexableText("Description about the file")
@@ -61,6 +61,6 @@ public class EditMetadataActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.update_failed));
                     finish();
                 });
-        // [END update_metadata]
+        // [END drive_android_update_metadata]
     }
 }

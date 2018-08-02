@@ -41,7 +41,7 @@ public class RetrieveMetadataActivity extends BaseDemoActivity {
                 });
     }
     private void retrieveMetadata(final DriveFile file) {
-        // [START retrieve_metadata]
+        // [START drive_android_retrieve_metadata]
         Task<Metadata> getMetadataTask = getDriveResourceClient().getMetadata(file);
         getMetadataTask
                 .addOnSuccessListener(this,
@@ -55,6 +55,6 @@ public class RetrieveMetadataActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.read_failed));
                     finish();
                 });
-        // [END retrieve_metadata]
+        // [END drive_android_retrieve_metadata]
     }
 }

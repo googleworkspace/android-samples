@@ -64,13 +64,13 @@ public class QueryStarredTextFilesActivity extends BaseDemoActivity {
      * it retrieves results for the first page.
      */
     private void listFiles() {
-        // [START query_conditions]
+        // [START drive_android_query_conditions]
         Query query =
                 new Query.Builder()
                         .addFilter(Filters.and(Filters.eq(SearchableField.MIME_TYPE, "text/plain"),
                                 Filters.eq(SearchableField.STARRED, true)))
                         .build();
-        // [END query_conditions]
+        // [END drive_android_query_conditions]
         getDriveResourceClient()
                 .query(query)
                 .addOnSuccessListener(this,

@@ -44,7 +44,7 @@ public class DeleteCustomPropertyActivity extends BaseDemoActivity {
     }
 
     private void deleteCustomProperty(DriveFile file) {
-        // [START delete_custom_property]
+        // [START drive_android_delete_custom_property]
         CustomPropertyKey approvalPropertyKey =
                 new CustomPropertyKey("approved", CustomPropertyKey.PUBLIC);
         CustomPropertyKey submitPropertyKey =
@@ -66,6 +66,6 @@ public class DeleteCustomPropertyActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.update_failed));
                     finish();
                 });
-        // [END delete_custom_property]
+        // [END drive_android_delete_custom_property]
     }
 }

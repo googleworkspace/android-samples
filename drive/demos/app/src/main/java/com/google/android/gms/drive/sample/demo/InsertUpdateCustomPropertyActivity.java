@@ -45,7 +45,7 @@ public class InsertUpdateCustomPropertyActivity extends BaseDemoActivity {
     }
 
     private void updateCustomProperty(DriveFile file) {
-        // [START update_custom_property]
+        // [START drive_android_update_custom_property]
         CustomPropertyKey approvalPropertyKey =
                 new CustomPropertyKey("approved", CustomPropertyKey.PUBLIC);
         CustomPropertyKey submitPropertyKey =
@@ -67,6 +67,6 @@ public class InsertUpdateCustomPropertyActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.update_failed));
                     finish();
                 });
-        // [END update_custom_property]
+        // [END drive_android_update_custom_property]
     }
 }

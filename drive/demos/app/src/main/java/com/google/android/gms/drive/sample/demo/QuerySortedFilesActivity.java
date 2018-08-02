@@ -64,10 +64,10 @@ public class QuerySortedFilesActivity extends BaseDemoActivity {
      * it retrieves results for the first page.
      */
     private void listFiles() {
-        // [START query_sorted]
+        // [START drive_android_query_sorted]
         SortOrder sortOrder = new SortOrder.Builder().addSortAscending(SortableField.TITLE).build();
         Query query = new Query.Builder().setSortOrder(sortOrder).build();
-        // [END query_sorted]
+        // [END drive_android_query_sorted]
         getDriveResourceClient()
                 .query(query)
                 .addOnSuccessListener(this,

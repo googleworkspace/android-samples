@@ -69,7 +69,7 @@ class ConflictResolver {
      * Initiate the resolution process by connecting the GoogleApiClient.
      */
     void resolve() {
-        // [START resolve_conflict]
+        // [START drive_android_resolve_conflict]
         // A new DriveResourceClient should be created to handle each new CompletionEvent since each
         // event is tied to a specific user account. Any DriveFile action taken must be done using
         // the correct account.
@@ -139,6 +139,7 @@ class ConflictResolver {
                             return mDriveResourceClient.commitContents(contentsForWrite,
                                     modifiedMetadataChangeSet, executionOptions);
                         })
+                })
                 .addOnSuccessListener(aVoid -> {
                     mConflictedCompletionEvent.dismiss();
                     Log.d(TAG, "resolved list");
@@ -154,7 +155,7 @@ class ConflictResolver {
                         mDriveResourceClient.discardContents(mDriveContents);
                     }
                 });
-        // [END resolve_conflict]
+        // [END drive_android_resolve_conflict]
     }
 
     /**

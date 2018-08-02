@@ -41,7 +41,7 @@ public class CreateFileInAppFolderActivity extends BaseDemoActivity {
         createFileInAppFolder();
     }
 
-    // [START create_file_in_appfolder]
+    // [START drive_android_create_file_in_appfolder]
     private void createFileInAppFolder() {
         final Task<DriveFolder> appFolderTask = getDriveResourceClient().getAppFolder();
         final Task<DriveContents> createContentsTask = getDriveResourceClient().createContents();
@@ -74,5 +74,5 @@ public class CreateFileInAppFolderActivity extends BaseDemoActivity {
                     finish();
                 });
     }
-    // [END create_file_in_appfolder]
+    // [END drive_android_create_file_in_appfolder]
 }

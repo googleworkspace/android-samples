@@ -21,7 +21,7 @@ import com.google.android.gms.drive.events.DriveEventService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-// [START on_completion]
+// [START drive_android_on_completion]
 public class MyDriveEventService extends DriveEventService {
     private static final String TAG = "MyDriveEventService";
     private ExecutorService mExecutorService;
@@ -81,4 +81,4 @@ public class MyDriveEventService extends DriveEventService {
         }
     }
 }
-// [END on_completion]
+// [END drive_android_on_completion]

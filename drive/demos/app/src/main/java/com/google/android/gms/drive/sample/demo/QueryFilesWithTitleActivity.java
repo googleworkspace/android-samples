@@ -65,11 +65,11 @@ public class QueryFilesWithTitleActivity extends BaseDemoActivity {
      * it retrieves results for the first page.
      */
     private void listFiles() {
-        // [START query_title]
+        // [START drive_android_query_title]
         Query query = new Query.Builder()
                               .addFilter(Filters.eq(SearchableField.TITLE, "HelloWorld.txt"))
                               .build();
-        // [END query_title]
+        // [END drive_android_query_title]
         Task<MetadataBuffer> queryTask =
                 getDriveResourceClient()
                         .query(query)

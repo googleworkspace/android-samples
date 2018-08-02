@@ -44,11 +44,11 @@ public class RewriteContentsActivity extends BaseDemoActivity {
                 });
     }
     private void rewriteContents(DriveFile file) {
-        // [START open_for_write]
+        // [START drive_android_open_for_write]
         Task<DriveContents> openTask =
                 getDriveResourceClient().openFile(file, DriveFile.MODE_WRITE_ONLY);
-        // [END open_for_write]
-        // [START rewrite_contents]
+        // [END drive_android_open_for_write]
+        // [START drive_android_rewrite_contents]
         openTask.continueWithTask(task -> {
             DriveContents driveContents = task.getResult();
             try (OutputStream out = driveContents.getOutputStream()) {
@@ -70,6 +70,6 @@ public class RewriteContentsActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.content_update_failed));
                     finish();
                 });
-        // [END rewrite_contents]
+        // [END drive_android_rewrite_contents]
     }
 }

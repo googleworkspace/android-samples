@@ -17,7 +17,7 @@ limitations under the License.
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.google.android.gms.drive.sample.conflict" >
-    <!-- [START add_service] -->
+    <!-- [START drive_android_add_service] -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -44,5 +44,5 @@ limitations under the License.
         </activity>
         <!-- [END_EXCLUDE] -->
     </application>
-    <!-- [END add_service] -->
+    <!-- [END drive_android_add_service] -->
 </manifest>

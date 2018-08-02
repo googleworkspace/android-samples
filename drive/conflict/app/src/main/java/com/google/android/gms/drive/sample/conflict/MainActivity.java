@@ -181,20 +181,20 @@ public class MainActivity extends BaseDemoActivity {
 
     private Task<Void> saveFile() {
         Log.d(TAG, "Saving file.");
-        // [START reopen_for_write]
+        // [START drive_android_reopen_for_write]
         Task<DriveContents> reopenTask =
                 getDriveResourceClient().reopenContentsForWrite(mDriveContents);
-        // [END reopen_for_write]
+        // [END drive_android_reopen_for_write]
         return reopenTask
                 .continueWithTask(task -> {
-                    // [START write_conflict_strategy]
+                    // [START drive_android_write_conflict_strategy]
                     DriveContents driveContents = task.getResult();
                     OutputStream outputStream = driveContents.getOutputStream();
                     try (Writer writer = new OutputStreamWriter(outputStream)) {
                         writer.write(mEditText.getText().toString());
                     }
                     // ExecutionOptions define the conflict strategy to be used.
-                    // [START execution_options]
+                    // [START drive_android_execution_options]
                     ExecutionOptions executionOptions =
                             new ExecutionOptions.Builder()
                                     .setNotifyOnCompletion(true)
@@ -203,8 +203,8 @@ public class MainActivity extends BaseDemoActivity {
                                     .build();
                     return getDriveResourceClient().commitContents(
                             driveContents, null, executionOptions);
-                    // [END execution_options]
-                    // [END write_conflict_strategy]
+                    // [END drive_android_execution_options]
+                    // [END drive_android_write_conflict_strategy]
                 })
                 .continueWithTask(task -> {
                     showMessage(getString(R.string.file_saved));

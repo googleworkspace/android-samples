@@ -39,7 +39,7 @@ public class DeleteFileActivity extends BaseDemoActivity {
                 });
     }
     private void deleteFile(DriveFile file) {
-        // [START delete_file]
+        // [START drive_android_delete_file]
         getDriveResourceClient()
                 .delete(file)
                 .addOnSuccessListener(this,
@@ -52,6 +52,6 @@ public class DeleteFileActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.delete_failed));
                     finish();
                 });
-        // [END delete_file]
+        // [END drive_android_delete_file]
     }
 }

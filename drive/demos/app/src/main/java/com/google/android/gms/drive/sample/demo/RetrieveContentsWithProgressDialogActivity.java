@@ -81,7 +81,7 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
     }
 
     private void retrieveContents(DriveFile file) {
-        // [START read_with_progress_listener]
+        // [START drive_android_read_with_progress_listener]
         OpenFileCallback openCallback = new OpenFileCallback() {
             @Override
             public void onProgress(long bytesDownloaded, long bytesExpected) {
@@ -129,6 +129,6 @@ public class RetrieveContentsWithProgressDialogActivity extends BaseDemoActivity
         };
 
         getDriveResourceClient().openFile(file, DriveFile.MODE_READ_ONLY, openCallback);
-        // [END read_with_progress_listener]
+        // [END drive_android_read_with_progress_listener]
     }
 }

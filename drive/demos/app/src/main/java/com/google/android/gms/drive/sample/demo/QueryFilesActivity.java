@@ -68,10 +68,10 @@ public class QueryFilesActivity extends BaseDemoActivity {
         Query query = new Query.Builder()
                               .addFilter(Filters.eq(SearchableField.MIME_TYPE, "text/plain"))
                               .build();
-        // [START query_files]
+        // [START drive_android_query_files]
         Task<MetadataBuffer> queryTask = getDriveResourceClient().query(query);
-        // [END query_files]
-        // [START query_results]
+        // [END drive_android_query_files]
+        // [START drive_android_query_results]
         queryTask
                 .addOnSuccessListener(this,
                         metadataBuffer -> {
@@ -88,6 +88,6 @@ public class QueryFilesActivity extends BaseDemoActivity {
                     finish();
                     // [END_EXCLUDE]
                 });
-        // [END query_results]
+        // [END drive_android_query_results]
     }
 }

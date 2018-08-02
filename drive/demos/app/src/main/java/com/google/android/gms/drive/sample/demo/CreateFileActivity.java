@@ -42,7 +42,7 @@ public class CreateFileActivity extends BaseDemoActivity {
     }
 
     private void createFile() {
-        // [START create_file]
+        // [START drive_android_create_file]
         final Task<DriveFolder> rootFolderTask = getDriveResourceClient().getRootFolder();
         final Task<DriveContents> createContentsTask = getDriveResourceClient().createContents();
         Tasks.whenAll(rootFolderTask, createContentsTask)
@@ -73,6 +73,6 @@ public class CreateFileActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.file_create_error));
                     finish();
                 });
-        // [END create_file]
+        // [END drive_android_create_file]
     }
 }

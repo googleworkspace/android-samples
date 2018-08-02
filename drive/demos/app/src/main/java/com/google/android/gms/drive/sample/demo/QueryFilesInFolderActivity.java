@@ -77,9 +77,9 @@ public class QueryFilesInFolderActivity extends BaseDemoActivity {
         Query query = new Query.Builder()
                               .addFilter(Filters.eq(SearchableField.MIME_TYPE, "text/plain"))
                               .build();
-        // [START query_children]
+        // [START drive_android_query_children]
         Task<MetadataBuffer> queryTask = getDriveResourceClient().queryChildren(folder, query);
-        // END query_children]
+        // END drive_android_query_children]
         queryTask
                 .addOnSuccessListener(this,
                         metadataBuffer -> mResultsAdapter.append(metadataBuffer))

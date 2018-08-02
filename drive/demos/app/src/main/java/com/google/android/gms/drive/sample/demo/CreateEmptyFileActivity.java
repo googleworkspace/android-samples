@@ -36,7 +36,7 @@ public class CreateEmptyFileActivity extends BaseDemoActivity {
     }
 
     private void createEmptyFile() {
-        // [START create_empty_file]
+        // [START drive_android_create_empty_file]
         getDriveResourceClient()
                 .getRootFolder()
                 .continueWithTask(task -> {
@@ -59,6 +59,6 @@ public class CreateEmptyFileActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.file_create_error));
                     finish();
                 });
-        // [END create_empty_file]
+        // [END drive_android_create_empty_file]
     }
 }

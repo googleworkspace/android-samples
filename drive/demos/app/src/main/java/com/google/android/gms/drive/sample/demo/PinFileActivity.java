@@ -48,7 +48,7 @@ public class PinFileActivity extends BaseDemoActivity {
     }
 
     private void pinFile(final DriveFile file) {
-        // [START pin_file]
+        // [START drive_android_pin_file]
         Task<Metadata> pinFileTask = getDriveResourceClient().getMetadata(file).continueWithTask(
                 task -> {
                     Metadata metadata = task.getResult();
@@ -64,8 +64,8 @@ public class PinFileActivity extends BaseDemoActivity {
                             new MetadataChangeSet.Builder().setPinned(true).build();
                     return getDriveResourceClient().updateMetadata(file, changeSet);
                 });
-        // [END pin_file]
-        // [START pin_file_completion]
+        // [END drive_android_pin_file]
+        // [START drive_android_pin_file_completion]
         pinFileTask
                 .addOnSuccessListener(this,
                         metadata -> {
@@ -77,6 +77,6 @@ public class PinFileActivity extends BaseDemoActivity {
                     showMessage(getString(R.string.update_failed));
                     finish();
                 });
-        // [END pin_file_completion]
+        // [END drive_android_pin_file_completion]
     }
 }

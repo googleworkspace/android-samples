@@ -51,11 +51,11 @@ public class AppendContentsActivity extends BaseDemoActivity {
     }
 
     private void appendContents(DriveFile file) {
-        // [START open_for_append]
+        // [START drive_android_open_for_append]
         Task<DriveContents> openTask =
                 getDriveResourceClient().openFile(file, DriveFile.MODE_READ_WRITE);
-        // [END open_for_append]
-        // [START append_contents]
+        // [END drive_android_open_for_append]
+        // [START drive_android_append_contents]
         openTask.continueWithTask(task -> {
             DriveContents driveContents = task.getResult();
             ParcelFileDescriptor pfd = driveContents.getParcelFileDescriptor();
@@ -80,16 +80,16 @@ public class AppendContentsActivity extends BaseDemoActivity {
             // [END commit_contents_with_metadata]
             return commitTask;
         })
-                .addOnSuccessListener(this,
-                        aVoid -> {
-                            showMessage(getString(R.string.content_updated));
-                            finish();
-                        })
-                .addOnFailureListener(this, e -> {
-                    Log.e(TAG, "Unable to update contents", e);
-                    showMessage(getString(R.string.content_update_failed));
-                    finish();
-                });
-        // [END append_contents]
+            .addOnSuccessListener(this,
+                    aVoid -> {
+                        showMessage(getString(R.string.content_updated));
+                        finish();
+                    })
+            .addOnFailureListener(this, e -> {
+                Log.e(TAG, "Unable to update contents", e);
+                showMessage(getString(R.string.content_update_failed));
+                finish();
+            });
+        // [END drive_android_append_contents]
     }
 }

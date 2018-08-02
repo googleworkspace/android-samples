@@ -34,7 +34,7 @@ public class CreateFolderActivity extends BaseDemoActivity {
         createFolder();
     }
 
-    // [START create_folder]
+    // [START drive_android_create_folder]
     private void createFolder() {
         getDriveResourceClient()
                 .getRootFolder()
@@ -59,5 +59,5 @@ public class CreateFolderActivity extends BaseDemoActivity {
                     finish();
                 });
     }
-    // [END create_folder]
+    // [END drive_android_create_folder]
 }

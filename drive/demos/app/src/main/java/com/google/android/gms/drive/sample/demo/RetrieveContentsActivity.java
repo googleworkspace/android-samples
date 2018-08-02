@@ -62,11 +62,11 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
     }
 
     private void retrieveContents(DriveFile file) {
-        // [START open_file]
+        // [START drive_android_open_file]
         Task<DriveContents> openFileTask =
                 getDriveResourceClient().openFile(file, DriveFile.MODE_READ_ONLY);
-        // [END open_file]
-        // [START read_contents]
+        // [END drive_android_open_file]
+        // [START drive_android_read_contents]
         openFileTask
                 .continueWithTask(task -> {
                     DriveContents contents = task.getResult();
@@ -98,6 +98,6 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
                     finish();
                     // [END_EXCLUDE]
                 });
-        // [END read_contents]
+        // [END drive_android_read_contents]
     }
 }
