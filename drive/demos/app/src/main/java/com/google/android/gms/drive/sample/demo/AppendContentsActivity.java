@@ -70,14 +70,14 @@ public class AppendContentsActivity extends BaseDemoActivity {
             try (OutputStream out = new FileOutputStream(pfd.getFileDescriptor())) {
                 out.write("Hello world".getBytes());
             }
-            // [START commit_contents_with_metadata]
+            // [START drive_android_commit_contents_with_metadata]
             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                                                   .setStarred(true)
                                                   .setLastViewedByMeDate(new Date())
                                                   .build();
             Task<Void> commitTask =
                     getDriveResourceClient().commitContents(driveContents, changeSet);
-            // [END commit_contents_with_metadata]
+            // [END drive_android_commit_contents_with_metadata]
             return commitTask;
         })
             .addOnSuccessListener(this,
