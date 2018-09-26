@@ -72,7 +72,7 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
                     DriveContents contents = task.getResult();
                     // Process contents...
                     // [START_EXCLUDE]
-                    // [START read_as_string]
+                    // [START drive_android_read_as_string]
                     try (BufferedReader reader = new BufferedReader(
                                  new InputStreamReader(contents.getInputStream()))) {
                         StringBuilder builder = new StringBuilder();
@@ -83,11 +83,11 @@ public class RetrieveContentsActivity extends BaseDemoActivity {
                         showMessage(getString(R.string.content_loaded));
                         mFileContents.setText(builder.toString());
                     }
-                    // [END read_as_string]
+                    // [END drive_android_read_as_string]
                     // [END_EXCLUDE]
-                    // [START discard_contents]
+                    // [START drive_android_discard_contents]
                     Task<Void> discardTask = getDriveResourceClient().discardContents(contents);
-                    // [END discard_contents]
+                    // [END drive_android_discard_contents]
                     return discardTask;
                 })
                 .addOnFailureListener(e -> {

@@ -54,10 +54,10 @@ public class RewriteContentsActivity extends BaseDemoActivity {
             try (OutputStream out = driveContents.getOutputStream()) {
                 out.write("Hello world".getBytes());
             }
-            // [START commit_content]
+            // [START drive_android_commit_content]
             Task<Void> commitTask =
                     getDriveResourceClient().commitContents(driveContents, null);
-            // [END commit_content]
+            // [END drive_android_commit_content]
             return commitTask;
         })
                 .addOnSuccessListener(this,

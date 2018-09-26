@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// [START apps_script_execute]
+// [START apps_script_api_execute]
 /**
  * Call the API to run an Apps Script function that returns a list
  * of folders within the user's root directory on Drive.
@@ -97,4 +97,4 @@ private String getScriptError(Operation op) {
     sb.append("\n");
     return sb.toString();
 }
-// [END apps_script_execute]
+// [END apps_script_api_execute]

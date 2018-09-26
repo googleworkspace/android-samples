@@ -20,7 +20,7 @@ import android.util.Log;
 import com.google.android.gms.drive.events.ChangeEvent;
 import com.google.android.gms.drive.events.DriveEventService;
 
-// [START on_change]
+// [START drive_android_on_change]
 /**
  * Listens for file change events when subscribed to a file.
  * [START_EXCLUDE]
@@ -54,4 +54,4 @@ public class MyDriveEventService extends DriveEventService {
         // [END_EXCLUDE]
     }
 }
-// [END on_change]
+// [END drive_android_on_change]
