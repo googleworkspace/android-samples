@@ -24,6 +24,7 @@ an overview of the migration steps.
 1.  Register an OAuth 2.0 client for the package
     `com.google.android.gms.drive.sample.driveapimigration` with your own
     [debug keys](https://developers.google.com/drive/android/auth).
+1.  Add the `../auth/drive.file` scope to the OAuth consent screen.
 
 See full instructions in the
 [Getting Started guide](https://developers.google.com/drive/android/get-started).
