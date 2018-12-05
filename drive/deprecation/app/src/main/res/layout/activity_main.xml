@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    tools:context=".MainActivity">
+
+  <EditText
+      android:id="@+id/file_title_edittext"
+      android:layout_height="48dp"
+      android:layout_width="match_parent"
+      android:layout_alignParentTop="true" />
+
+  <EditText
+      android:id="@+id/doc_content_edittext"
+      android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:layout_below="@id/file_title_edittext"
+      android:layout_above="@id/btn_layout" />
+
+  <LinearLayout
+      android:id="@+id/btn_layout"
+      android:layout_width="match_parent"
+      android:layout_height="48dp"
+      android:orientation="horizontal"
+      android:layout_alignParentBottom="true">
+
+    <Button
+        android:id="@+id/open_btn"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:text="Open"
+        style="?attr/buttonBarButtonStyle" />
+
+    <Button
+        android:id="@+id/create_btn"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:text="Create"
+        style="?attr/buttonBarButtonStyle" />
+
+    <Button
+        android:id="@+id/save_btn"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:text="Save"
+        style="?attr/buttonBarButtonStyle" />
+
+    <Button
+        android:id="@+id/query_btn"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:text="Query"
+        style="?attr/buttonBarButtonStyle" />
+
+  </LinearLayout>
+
+</RelativeLayout>
