@@ -16,15 +16,15 @@ an overview of the migration steps.
 
 1.  Install the [Android SDK](https://developer.android.com/sdk/index.html).
 1.  Download and configure the
-    [Google Play services SDK](https://developer.android.com/google/play-services/setup.html),
-    which includes the Google Drive Android API.
+    [Google Play services SDK](https://developer.android.com/google/play-services/setup.html).
 1.  Create a
     [Google API Console](https://console.developers.google.com/projectselector/apis/dashboard)
     project and enable the Drive API library.
 1.  Register an OAuth 2.0 client for the package
     `com.google.android.gms.drive.sample.driveapimigration` with your own
     [debug keys](https://developers.google.com/drive/android/auth).
-1.  Add the `../auth/drive.file` scope to the OAuth consent screen.
+1.  Add the `../auth/drive.file` scope to the OAuth consent screen in the API
+    Console.
 
 See full instructions in the
 [Getting Started guide](https://developers.google.com/drive/android/get-started).
