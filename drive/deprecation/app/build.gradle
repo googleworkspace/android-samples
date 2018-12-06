@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'android'
-            keyPassword 'android'
-            storeFile file('/usr/local/google/home/rbstarbuck/Projects/keystore.jks')
-            storePassword 'android'
-        }
-    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.google.android.gms.drive.sample.driveapimigration"
