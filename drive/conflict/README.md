@@ -1,4 +1,10 @@
-# Google Drive Android API Conflict Sample
+# [DEPRECATED] Google Drive Android API Conflict Sample
+
+The Drive Android API used in this sample is now deprecated. Please see the
+[migration guide](https://developers.google.com/drive/android/deprecation)
+for more information.
+
+---
 
 This application demonstrates how to resolve remote [conflicts](https://developers.google.com/drive/android/completion#conflict) using
 the [Google Android Drive API](https://developers.google.com/drive/android/intro). Keep in mind the default behavior is to

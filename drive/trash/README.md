@@ -1,4 +1,10 @@
-# Google Drive Android API Trash Sample
+# [DEPRECATED] Google Drive Android API Trash Sample
+
+The Drive Android API used in this sample is now deprecated. Please see the
+[migration guide](https://developers.google.com/drive/android/deprecation)
+for more information.
+
+---
 
 Google Drive Android API Trash Sample app demonstrates trashing of
 DriveResources via the [Google Drive Android API](https://developers.google.com/drive/android/intro)

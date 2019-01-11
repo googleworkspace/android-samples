@@ -1,4 +1,10 @@
-# Google Drive Android Quickstart
+# [DEPRECATED] Google Drive Android Quickstart
+
+The Drive Android API used in this sample is now deprecated. Please see the
+[migration guide](https://developers.google.com/drive/android/deprecation)
+for more information.
+
+---
 
 This application provides a
 [single activity](src/com/google/android/gms/drive/sample/quickstart/MainActivity.java)

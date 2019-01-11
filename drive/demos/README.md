@@ -1,4 +1,10 @@
-# Google Drive Android API Demos
+# [DEPRECATED] Google Drive Android API Demos
+
+The Drive Android API used in this sample is now deprecated. Please see the
+[migration guide](https://developers.google.com/drive/android/deprecation)
+for more information.
+
+---
 
 Google Drive Android API Demos app illustrates all possible ways to talk to
 Drive service with the use of interfaces available in [Google Play
