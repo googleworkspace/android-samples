@@ -169,10 +169,7 @@ public class MainActivity extends AppCompatActivity {
                             mFileTitleEditText.setText(name);
                             mDocContentEditText.setText(content);
 
-                            // Files opened through SAF cannot be modified, except by retrieving the
-                            // fileId from its metadata and updating it via the REST API. To modify
-                            // files not created by your app, you will need to request the Drive
-                            // Full Scope and submit your app to Google for review.
+                            // Files opened through SAF cannot be modified.
                             setReadOnlyMode();
                         })
                     .addOnFailureListener(exception ->
