@@ -1,6 +1,6 @@
-# G Suite Android Samples [![Build Status](https://travis-ci.org/gsuitedevs/android-samples.svg?branch=master)](https://travis-ci.org/gsuitedevs/android-samples)
+# Google Workspace Android Samples [![Build Status](https://travis-ci.org/gsuitedevs/android-samples.svg?branch=master)](https://travis-ci.org/gsuitedevs/android-samples)
 
-A collection of samples that demonstrate how to call G Suite APIs from Android.
+A collection of samples that demonstrate how to call Google Workspace APIs from Android.
 
 ## Products
 
