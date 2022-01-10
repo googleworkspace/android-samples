@@ -1,8 +1,0 @@
-language: java
-jdk:
-  - oraclejdk8
-  # - oraclejdk9
-# Use a Build Matrix for subdirs (https://lord.io/blog/2014/travis-multiple-subdirs/)
-env:
-  - DIR=drive/quickstart/
-script: cd $DIR && gradle build # gradle -q run
